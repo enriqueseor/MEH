@@ -9,10 +9,9 @@ import us.plxhack.MEH.UI.MainGUI;
 
 import javax.swing.*;
 
-public class Main
-{
-	public static void main(String args[]) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException
-	{
+public class Main {
+
+	public static void main(String args[]) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		// Override for window managers such as bspwm and i3 where they may not
 		// properly fetch the right L&F
@@ -33,12 +32,9 @@ public class Main
 		window.setMinimumSize(new Dimension(516,338));
 		BankLoader.reset();
 		window.setVisible(true);
-		try
-		{
+		try {
 			PluginManager.loadAllPlugins();
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
