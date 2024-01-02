@@ -1,7 +1,2 @@
-/bin
-*.gba
-*.bak
-*.sgm
-*.sav
-*.log
-*.*~
+.idea/
+.idea
