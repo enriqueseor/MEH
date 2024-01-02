@@ -6,6 +6,17 @@
 	<version>0.4.0-SNAPSHOT</version>
 	<name>MEH</name>
 	<description>Map Editor of Happiness</description>
+
+	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.ini4j/ini4j -->
+		<dependency>
+			<groupId>org.ini4j</groupId>
+			<artifactId>ini4j</artifactId>
+			<version>0.5.4</version>
+		</dependency>
+
+	</dependencies>
+
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<resources>
@@ -17,14 +28,6 @@
 			</resource>
 		</resources>
 		<plugins>
-			<!--  <plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>-->
 			
 			<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -112,18 +115,5 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	<dependencies>
-		<dependency>
-			<groupId>GBAUtils</groupId>
-			<artifactId>GBAUtils</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<!--<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>javafx</artifactId>
-			<version>2.2</version>
-			<systemPath>/root/jfxrt.jar</systemPath>
-			<scope>system</scope>
-		</dependency-->
-	</dependencies>
+
 </project>
