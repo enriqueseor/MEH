@@ -3,7 +3,6 @@ package org.zzl.minegaming.GBAUtils;
 import org.ini4j.Ini;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class DataStore {
@@ -14,55 +13,38 @@ public class DataStore {
 
 	// private Parser p;//For when we have YAML reading as well
 	public static float Str2Float(String nkey) {
-		int CommentIndex = -1;
-		float ReturnValue = 0;
-		String FinalString = "";
-		try
-		{
-			CommentIndex = nkey.indexOf(";");
-			if (CommentIndex != -1)
-			{
-
-				nkey = nkey.substring(0, CommentIndex);// Get rid of the comment
-			}
-			FinalString = nkey;
-
-			ReturnValue = Float.parseFloat(FinalString);
-		}
-		catch (Exception e)
-		{
-			// There's a chance the key may not exist, let's come up with a way
-			// to handle this case
-			//
-			ReturnValue = 0;
-
-		}
-		return ReturnValue;
-	}
-
-	public static long Str2Num(String nkey) {
-		int CommentIndex = -1;
-		long ReturnValue = 0;
-		String FinalString = "";
+		int CommentIndex;
+		float ReturnValue;
+		String FinalString;
 		try {
 			CommentIndex = nkey.indexOf(";");
 			if (CommentIndex != -1) {
 				nkey = nkey.substring(0, CommentIndex);// Get rid of the comment
 			}
 			FinalString = nkey;
-			if (nkey.indexOf("0x") != -1) {
+			ReturnValue = Float.parseFloat(FinalString);
+		} catch (Exception e) {
+			ReturnValue = 0;
+		}
+		return ReturnValue;
+	}
+
+	public static long Str2Num(String nkey) {
+		int CommentIndex;
+		long ReturnValue;
+		String FinalString;
+		try {
+			CommentIndex = nkey.indexOf(";");
+			if (CommentIndex != -1) {
+				nkey = nkey.substring(0, CommentIndex);// Get rid of the comment
+			}
+			FinalString = nkey;
+			if (nkey.contains("0x")) {
 				FinalString = nkey.substring(2);
 				ReturnValue = Long.parseLong(FinalString, 16);
-			}
-			else
-				ReturnValue = Long.parseLong(FinalString);
-		}
-		catch (Exception e) {
-			// There's a chance the key may not exist, let's come up with a way
-			// to handle this case
-			//
+			} else ReturnValue = Long.parseLong(FinalString);
+		} catch (Exception e) {
 			ReturnValue = 0;
-
 		}
 		return ReturnValue;
 	}
@@ -84,33 +66,25 @@ public class DataStore {
 
 	public static String ReadString(String Section, String key) {
 		String nkey = iP.get(Section, key);
-
-		int CommentIndex = -1;
-		String ReturnValue = "";
-		String FinalString = "";
+		int CommentIndex;
+		String ReturnValue;
+		String FinalString;
 		try {
 			CommentIndex = nkey.indexOf(";");
-			if (CommentIndex != -1)
-			{
+			if (CommentIndex != -1) {
 
 				nkey = nkey.substring(0, CommentIndex);// Get rid of the comment
 			}
 			FinalString = nkey;
 			ReturnValue = FinalString;
-		}
-		catch (Exception e) {
-			// There's a chance the key may not exist, let's come up with a way
-			// to handle this case
-			//
-			//e.printStackTrace();
+		} catch (Exception e) {
 			ReturnValue = "";
-
 		}
 		return ReturnValue;
 	}
 
 	public static boolean ReadBoolean(String Section, String key) {
-		return (ReadString(Section, key).toLowerCase().equals("true") || ReadString(Section, key).toLowerCase().equals("yes") || ReadString(Section, key).toLowerCase().equals("1"));
+		return (ReadString(Section, key).equalsIgnoreCase("true") || ReadString(Section, key).equalsIgnoreCase("yes") || ReadString(Section, key).equalsIgnoreCase("1"));
 	}
 	
 	public static void WriteBoolean(String Section, String key, boolean bool) {
@@ -120,7 +94,7 @@ public class DataStore {
 	void ReadData(String ROMHeader) {
 		// Read all the entries.
 		Inherit = iP.get(ROMHeader, "Inherit");
-		if (passedTraits = false && !Inherit.equals("")) {
+		if (passedTraits = false) {
 			// Genes passed, let's snip the traits.
 			passedTraits = true;
 			ReadData(Inherit);// Grab inherited values
@@ -178,12 +152,10 @@ public class DataStore {
 		String[] mBS = ReadString(ROMHeader, "MapBankSize").split(",");
 		MapBankSize = new int[NumBanks];
 
-		int i = 0;
-		for (i = 0; i < mBS.length; i++)
-		{
+		int i;
+		for (i = 0; i < mBS.length; i++) {
 			MapBankSize[i] = Integer.parseInt(mBS[i]);
 		}
-		// Name=ip.getString(ROMHeader, "Name");
 		// Read the data for MEH
 		String[] awmgfx = (ReadString(ROMHeader, "WorldMapGFX")).split(",");
 		String[] wmdp = ReadString(ROMHeader, "WorldMapPal").split(",");
@@ -198,14 +170,11 @@ public class DataStore {
 		WorldMapTileMap = new int[WorldMapCount];
 		WorldMapSlot = new int[WorldMapCount];
 		WorldMapPalSize = new int[WorldMapCount];
-		for (i = 0; i < WorldMapCount; i++)
-		{
+		for (i = 0; i < WorldMapCount; i++) {
 			// Sometimes weird things happen
-
 			WorldMapGFX[i] = (int) Str2Num(awmgfx[i]);
 			WorldMapPal[i] = (int) Str2Num(wmdp[i]);
 			WorldMapTileMap[i] = (int) Str2Num(wmptm[i]);
-			;
 			WorldMapSlot[i] = (int) Str2Num(wmpds[i]);
 			WorldMapPalSize[i] = (int) Str2Num(ps[i]);
 		}
@@ -216,47 +185,22 @@ public class DataStore {
 		mehPermissionTranslucency = ReadFloatEntry("MEH", "mehPermissionTranslucency");
 		mehMetTripleTiles = ReadBoolean("MEH", "mehMetTripleTiles");
 		mehTripleEditByte = (int) ReadNumberEntry("MEH", "mehTripleEditByte");
-		
-		//if(mehTripleEditByte == 0)
-			//mehTripleEditByte = 0x60;
 	}
 	
 	public static String getBehaviorString(int num)
 	{
-		return ReadString("Behaviors" + EngineVersion, "b" + num + "");
+		return ReadString("Behaviors" + EngineVersion, "b" + num);
 	}
 
-	public static void WriteNumberEntry(String Section, String key, int val)// Writes
-	// can
-	// happen
-	// at
-	// any
-	// time...currently....
-	// move
-	// to
-	// mapsave
-	// function
-	// for
-	// later
-	{
-
+	public static void WriteNumberEntry(String Section, String key, int val) {
 		String nkey = iP.get(Section, key);
-
 		int CommentIndex = -1;
 		long ReturnValue = 0;
-		String FinalString = "";
+		String FinalString;
 		try {
 			FinalString = Integer.toString(val);
 			iP.put(Section, key, FinalString);
-		}
-		catch (Exception e) {
-			// There's a chance the key may not exist, let's come up with a way
-			// to handle this case
-			//
-			ReturnValue = 0;
-
-		}
-
+		} catch (Exception ignored) {}
 	}
 
 	public DataStore(String FilePath, String ROMHeader) {
@@ -266,16 +210,9 @@ public class DataStore {
 			passedTraits = false;
 			Inherit = "";
 			ReadData(ROMHeader);
-		}
-		catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 	}
 
 	public static long EngineVersion;
@@ -342,9 +279,7 @@ public class DataStore {
 	public static int NumPokemon = 412;
 	public static int SpeciesNames;
 	public static boolean mehMetTripleTiles = false;
-
 	public static boolean bDataStoreInited;// Not stored in INI :p
-
 	public static void meetTripleTiles()
 	{
 		WriteBoolean("MEH", "mehMetTripleTiles", true);

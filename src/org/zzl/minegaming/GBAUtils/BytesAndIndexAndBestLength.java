@@ -1,13 +1,12 @@
 package org.zzl.minegaming.GBAUtils;
 
-public class BytesAndIndexAndBestLength
-{
+public class BytesAndIndexAndBestLength {
+
 	private byte[] bytes;
 	private int index;
 	private int bestlength;
 
-	public BytesAndIndexAndBestLength(byte[] bytes, int index, int bestlength)
-	{
+	public BytesAndIndexAndBestLength(byte[] bytes, int index, int bestlength) {
 		this.bytes = bytes;
 		this.index = index;
 	}

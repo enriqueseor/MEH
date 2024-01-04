@@ -1,12 +1,8 @@
 package org.zzl.minegaming.GBAUtils;
 
 import java.awt.Point;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.ArrayList;
 
 public class LZ77Test {
 	public static byte[] ROM = { 
@@ -337,14 +333,10 @@ public class LZ77Test {
 		
 		try {
 			String decodedPath = URLDecoder.decode(path, "UTF-8");
-			//Sorry Java 7, but we're going to Java 6 now.
 			data = BitConverter.toBytes(uncompressed);
 			paldats = BitConverter.toBytes(palette);
-			//data = Files.readAllBytes(Paths.get(decodedPath + "/resources/ditto.img.bin"));
-			//paldats = Files.readAllBytes(Paths.get(decodedPath + "/resources/ditto.pal.bin"));
 		}
 		catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		GBAImage g = new GBAImage(BitConverter.ToInts(data), new Palette(GBAImageType.c16,BitConverter.ToInts(paldats)), new Point(64,64));	

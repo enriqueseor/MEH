@@ -5,7 +5,7 @@ public class BitConverter {
 	
 	public static long ToInt32(byte[] bytez) {
 		//AB CD EF 08 -> 08EFCDAB
-		return (long)((bytez[0] & 0xFF) + ((bytez[1] & 0xFF) << 8) + ((bytez[2] & 0xFF) << 16) + ((bytez[3] & 0xFF) << 24));
+		return (bytez[0] & 0xFF) + ((bytez[1] & 0xFF) << 8) + ((bytez[2] & 0xFF) << 16) + ((bytez[3] & 0xFF) << 24);
 	}
 	
 	public static int shortenPointer(long pointer)
@@ -14,17 +14,16 @@ public class BitConverter {
 	}
 	
 	public static byte[] GetBytes(long i) {
-		return new byte[] { (byte)((i & 0xFF000000) >> 24), (byte)((i & 0x00FF0000) >> 16), (byte)((i & 0x0000FF00) >> 8), (byte)((i & 0x000000FF)) };
+		return new byte[] { (byte)((i & 0xFF000000L) >> 24), (byte)((i & 0x00FF0000) >> 16), (byte)((i & 0x0000FF00) >> 8), (byte)((i & 0x000000FF)) };
 	}
 	
 	public static int[] GetInts(long i) {
-		return new int[] { (int)((i & 0xFF000000) >> 24), (int)((i & 0x00FF0000) >> 16), (int)((i & 0x0000FF00) >> 8), (int)((i & 0x000000FF)) };
+		return new int[] { (int)((i & 0xFF000000L) >> 24), (int)((i & 0x00FF0000) >> 16), (int)((i & 0x0000FF00) >> 8), (int)((i & 0x000000FF)) };
 	}
-	
+
 	public static byte[] ReverseBytes(byte[] bytes) {
 		byte[] toReturn = new byte[bytes.length];
-		for(int i = 0; i < bytes.length; i++)
-		{
+		for(int i = 0; i < bytes.length; i++) {
 			toReturn[i] = bytes[bytes.length-1-i];
 		}
 		return toReturn;
@@ -32,14 +31,10 @@ public class BitConverter {
 
 	public static byte[] GrabBytes(byte[] array, int offset, int length) {
 		byte[] result = new byte[length];
-		for(int i = 0; i < length; i++)
-		{
-			try
-			{
+		for(int i = 0; i < length; i++) {
+			try {
 				result[i] = array[offset+i];
-			}
-			catch(Exception e)
-			{
+			} catch(Exception e) {
 				System.out.println("Tried to read outside of bounds! (" + offset + ", " + i + ")");
 			}
 		}
@@ -50,18 +45,14 @@ public class BitConverter {
 		if(length > array.length)
 			length = array.length;
 		int[] result = new int[length];
-		for(int i = 0; i < length; i++)
-		{
+		for(int i = 0; i < length; i++) {
 			result[i] = (array[offset+i] & 0xFF);
 		}
 		return result;
 	}
 
 	public static byte[] PutBytes(byte[] array, byte[] toPut, int offset) {
-		for(int i = 0; i < toPut.length; i++)
-		{
-			array[offset+i] = toPut[i];
-		}
+        System.arraycopy(toPut, 0, array, offset, toPut.length);
 		return array;
 	}
 	

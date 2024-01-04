@@ -1,11 +1,6 @@
 package org.zzl.minegaming.GBAUtils;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 public class NewLz77 {
 	public enum CheckLz77Type {
