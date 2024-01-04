@@ -3,6 +3,7 @@ package us.plxhack.MEH.MapElements;
 import org.zzl.minegaming.GBAUtils.GBARom;
 
 public class HeaderSprites {
+
 	public   byte bNumNPC;
 	public   byte bNumExits;
 	public   byte bNumTraps;
@@ -11,14 +12,14 @@ public class HeaderSprites {
 	public  long pExits;
 	public  long pTraps;
 	public  long pSigns;
-	private int pData;
-	private GBARom rom;
-	public HeaderSprites(GBARom rom){
+	private final int pData;
+	private final GBARom rom;
 
+	public HeaderSprites(GBARom rom){
 		this(rom,rom.internalOffset);
 	}	  
-	public HeaderSprites(GBARom rom, int offset){
 
+	public HeaderSprites(GBARom rom, int offset){
 		pData = offset;
 		this.rom = rom;
 		rom.Seek(offset&0x1FFFFFF);
@@ -32,14 +33,12 @@ public class HeaderSprites {
 		pSigns=rom.getPointer();
 	}
 
-	public void save()
-	{
+	public void save() {
 		rom.Seek(pData&0x1FFFFFF);
 		rom.writeByte(bNumNPC);
 		rom.writeByte(bNumExits);
 		rom.writeByte(bNumTraps);
 		rom.writeByte(bNumSigns);
-		
 		rom.writePointer((int)pNPC);
 		rom.writePointer((int)pExits);
 		rom.writePointer((int)pTraps);

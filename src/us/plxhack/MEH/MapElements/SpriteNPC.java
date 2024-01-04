@@ -3,8 +3,8 @@ package us.plxhack.MEH.MapElements;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ISaveable;
 
-public class SpriteNPC implements ISaveable
-{
+public class SpriteNPC implements ISaveable {
+
 	public byte b1;
 	public int bSpriteSet;
 	public byte b4;
@@ -26,15 +26,14 @@ public class SpriteNPC implements ISaveable
 	public byte b24;
 
 	// Non struct vars
-	private GBARom rom;
+	private final GBARom rom;
 
 	public SpriteNPC(GBARom rom)
 	{
 		this(rom, rom.internalOffset);
 	}
 
-	public SpriteNPC(GBARom rom, int offset)
-	{
+	public SpriteNPC(GBARom rom, int offset) {
 		this.rom = rom;
 		rom.Seek(offset);
 		b1 = rom.readByte();
@@ -58,8 +57,7 @@ public class SpriteNPC implements ISaveable
 		b24 = rom.readByte();
 	}
 	
-	public SpriteNPC(GBARom rom, byte x, byte y)
-	{
+	public SpriteNPC(GBARom rom, byte x, byte y) {
 		this.rom = rom;
 		b1 = 0;
 		bSpriteSet = 0;
@@ -87,8 +85,7 @@ public class SpriteNPC implements ISaveable
 		return 24;
 	}
 
-	public void save()
-	{
+	public void save() {
 		rom.writeByte(b1);
 		rom.writeWord(bSpriteSet);
 		rom.writeByte(b4);

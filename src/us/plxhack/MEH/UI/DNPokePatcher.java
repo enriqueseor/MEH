@@ -6,18 +6,16 @@ import org.zzl.minegaming.GBAUtils.ROMManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class DNPokePatcher extends JFrame
-{
-	private JTextField txtFreespace;
-	private JTextField txtStatusByte;
+public class DNPokePatcher extends JFrame {
+
+	private final JTextField txtFreespace;
+	private final JTextField txtStatusByte;
 	final JLabel lblError;
 	final JButton btnPatch;
 	final JButton btnCancel;
 	
-	byte frPatch[] = {
+	byte[] frPatch = {
 			(byte)0x00, (byte)0x1B, (byte)0x11, (byte)0x4A, (byte)0x12, (byte)0x78,
 			(byte)0x12, (byte)0x49, (byte)0x8A, (byte)0x5C, (byte)0x82, (byte)0x18,
 			(byte)0x01, (byte)0xE0, (byte)0x02, (byte)0x1C, (byte)0x10, (byte)0x32,
@@ -112,10 +110,9 @@ public class DNPokePatcher extends JFrame
 		};
 	
 	private byte[] emPkmnPatch = {1, (byte) 0xB4, 0, (byte)0x48, 0, (byte)0x47, 0,0,0,0};
-	
 	private boolean successfulPatch = false;
-	public DNPokePatcher()
-	{		
+
+	public DNPokePatcher() {
 		setResizable(false);
 		setTitle("Day/Night Pokemon Patcher");
 		this.setSize(371, 237);
@@ -126,14 +123,10 @@ public class DNPokePatcher extends JFrame
 		getContentPane().add(btnPatch);
 		
 		btnCancel = new JButton("Cancel");
-		btnCancel.addActionListener(new ActionListener() 
-		{
-			public void actionPerformed(ActionEvent e) 
-			{
-				setVisible(false);
-				dispose();
-			}
-		});
+		btnCancel.addActionListener(e -> {
+            setVisible(false);
+            dispose();
+        });
 		btnCancel.setBounds(178, 174, 81, 25);
 		getContentPane().add(btnCancel);
 		
@@ -169,60 +162,41 @@ public class DNPokePatcher extends JFrame
 		lblBytes.setBounds(280, 97, 80, 15);
 		getContentPane().add(lblBytes);
 		
-		btnPatch.addActionListener(new ActionListener() 
-		{
-			public void actionPerformed(ActionEvent e) 
-			{
-				if(successfulPatch)
-				{
-					setVisible(false);
-					dispose();
-				}
-				
-				int freespace;
-				int status;
-				try
-				{
-					freespace = Integer.parseInt(txtFreespace.getText(),16);
-				}
-				catch(Exception ex)
-				{
-					lblError.setForeground(Color.RED);
-					lblError.setText("<html><center>Invalid Freespace Specified!</center></html>");
-					return;
-				}
-				
-				try
-				{
-					status = Integer.parseInt(txtStatusByte.getText(),16);
-				}
-				catch(Exception ex)
-				{
-					lblError.setForeground(Color.RED);
-					lblError.setText("<html><center>Invalid Status RAM Specified!</center></html>");
-					return;
-				}
-				
-				if(patchROM(freespace, status))
-				{
-					lblError.setForeground(MainGUI.uiSettings.cursorColor);
-					lblError.setText("<html><center>Success!</center></html>");
-					btnCancel.setVisible(false);
-					btnPatch.setText("Close");
-					txtFreespace.setEditable(false);
-					txtStatusByte.setEditable(false);
-					successfulPatch = true;
-				}
-			}
-		});
-		
-		if(ROMManager.getActiveROM() == null)
-		{
+		btnPatch.addActionListener(e -> {
+            if(successfulPatch) {
+                setVisible(false);
+                dispose();
+            }
+            int freespace;
+            int status;
+            try {
+                freespace = Integer.parseInt(txtFreespace.getText(),16);
+            } catch(Exception ex) {
+                lblError.setForeground(Color.RED);
+                lblError.setText("<html><center>Invalid Freespace Specified!</center></html>");
+                return;
+            }
+            try {
+                status = Integer.parseInt(txtStatusByte.getText(),16);
+            } catch(Exception ex) {
+                lblError.setForeground(Color.RED);
+                lblError.setText("<html><center>Invalid Status RAM Specified!</center></html>");
+                return;
+            }
+			if(patchROM(freespace, status)) {
+                lblError.setForeground(MainGUI.uiSettings.cursorColor);
+                lblError.setText("<html><center>Success!</center></html>");
+                btnCancel.setVisible(false);
+                btnPatch.setText("Close");
+                txtFreespace.setEditable(false);
+                txtStatusByte.setEditable(false);
+                successfulPatch = true;
+            }
+        });
+		if(ROMManager.getActiveROM() == null) {
 			this.setVisible(false);
 			this.dispose();
-		}
-		else
-		{
+		} else {
 			txtFreespace.setText("" + Integer.toHexString(ROMManager.getActiveROM().findFreespace(0x108, (int)DataStore.FreespaceStart, true)));
 			if(ROMManager.getActiveROM().getGameCode().equalsIgnoreCase("BPRE"))
 				lblBytes.setText("(0x" + Integer.toHexString(frPatch.length) + " bytes)");
@@ -236,10 +210,8 @@ public class DNPokePatcher extends JFrame
 		return successfulPatch;
 	}
 	
-	private boolean patchROM(int freespace, int status)
-	{
-		if(!ROMManager.getActiveROM().getGameCode().equalsIgnoreCase("BPRE") & !ROMManager.getActiveROM().getGameCode().equalsIgnoreCase("BPEE"))
-		{
+	private boolean patchROM(int freespace, int status) {
+		if(!ROMManager.getActiveROM().getGameCode().equalsIgnoreCase("BPRE") & !ROMManager.getActiveROM().getGameCode().equalsIgnoreCase("BPEE")) {
 			lblError.setForeground(Color.RED);
 			lblError.setText("<html><center>Invalid ROM!<br/>Only Fire Red is currently supported!</center></html>");
 			
@@ -250,14 +222,12 @@ public class DNPokePatcher extends JFrame
 			successfulPatch = true;
 			return false;
 		}
-		if((freespace & 0xF) != 0x0 && (freespace & 0xF) != 0x4 && (freespace & 0xF) != 0x8 && (freespace & 0xF) != 0xC)
-		{
+		if((freespace & 0xF) != 0x0 && (freespace & 0xF) != 0x4 && (freespace & 0xF) != 0x8 && (freespace & 0xF) != 0xC) {
 			lblError.setForeground(Color.RED);
 			lblError.setText("<html><center>Freespace offset must end in 0, 4, 8, or C!</center></html>");
 			return false;
 		}
-		if (ROMManager.getActiveROM().getGameCode().equalsIgnoreCase("BPRE"))
-		{
+		if (ROMManager.getActiveROM().getGameCode().equalsIgnoreCase("BPRE")) {
 			frPatch = BitConverter.PutBytes(frPatch, BitConverter.ReverseBytes(BitConverter.GetBytes(freespace + 0x54 + 0x08000000)), 0x50);
 			frPatch = BitConverter.PutBytes(frPatch, BitConverter.ReverseBytes(BitConverter.GetBytes(freespace + 0xFC + 0x08000000)), 0xF8);
 
@@ -272,8 +242,7 @@ public class DNPokePatcher extends JFrame
 			ROMManager.getActiveROM().writeBytes(frPkmnLoc, frPkmnPatch);
 			ROMManager.getActiveROM().updateFlags();
 		}
-		else if(ROMManager.getActiveROM().getGameCode().equalsIgnoreCase("BPEE"))
-		{
+		else if(ROMManager.getActiveROM().getGameCode().equalsIgnoreCase("BPEE")) {
 			emPatch = BitConverter.PutBytes(emPatch, BitConverter.ReverseBytes(BitConverter.GetBytes(freespace + 0x54 + 0x08000000)), 0x50);
 			emPatch = BitConverter.PutBytes(emPatch, BitConverter.ReverseBytes(BitConverter.GetBytes(freespace + 0xCC + 0x08000000)), 0xC8);
 
@@ -288,7 +257,6 @@ public class DNPokePatcher extends JFrame
 			ROMManager.getActiveROM().writeBytes(emPkmnLoc, emPkmnPatch);
 			ROMManager.getActiveROM().updateFlags();
 		}
-		
 		return true;
 	}
 }

@@ -13,8 +13,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ConnectionAddGUI extends JFrame
-{
+public class ConnectionAddGUI extends JFrame {
+
 	PanelMapPreview panelMap;
 	final JSpinner spinnerBank;
 	public boolean hasResult;
@@ -22,8 +22,7 @@ public class ConnectionAddGUI extends JFrame
 	public int map = 0;
 	ConnectionType cType;
 	
-	public ConnectionAddGUI(ConnectionType c) 
-	{
+	public ConnectionAddGUI(ConnectionType c) {
 		cType = c;
 		setSize(new Dimension(450, 300));
 		setTitle("Choose a map...");
@@ -38,10 +37,8 @@ public class ConnectionAddGUI extends JFrame
 		getContentPane().add(lblNewLabel_1);
 		
 		final JSpinner spinnerMap = new JSpinner();
-		spinnerMap.addChangeListener(new ChangeListener() 
-		{
-			public void stateChanged(ChangeEvent e) 
-			{
+		spinnerMap.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
 				map = (Integer)spinnerMap.getValue();
 				changePreview(bank,map);
 			}
@@ -52,16 +49,12 @@ public class ConnectionAddGUI extends JFrame
 		getContentPane().add(spinnerMap);
 		
 		spinnerBank = new JSpinner();
-		spinnerBank.addChangeListener(new ChangeListener() 
-		{
-			public void stateChanged(ChangeEvent e) 
-			{
+		spinnerBank.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
 				spinnerMap.setModel(new SpinnerNumberModel(0, 0, DataStore.MapBankSize[(Integer)spinnerBank.getValue()], 1));
 				int i = (Integer)spinnerMap.getValue();
 				if(i > DataStore.MapBankSize[(Integer)spinnerBank.getValue()])
 					spinnerMap.setValue(DataStore.MapBankSize[(Integer)spinnerBank.getValue()]-1);
-				
-				//map = (Integer)spinnerMap.getValue();
 				bank = (Integer)spinnerBank.getValue();
 				changePreview(bank,map);
 			}
@@ -76,21 +69,16 @@ public class ConnectionAddGUI extends JFrame
 		getContentPane().add(panelMap);
 		
 		JButton btnNewButton = new JButton("Add Connection");
-		btnNewButton.addActionListener(new ActionListener() 
-		{
-			public void actionPerformed(ActionEvent e) 
-			{
-				map = (Integer)spinnerMap.getValue();
-				bank = (Integer)spinnerBank.getValue();
-				MapIO.loadedMap.mapConnections.addConnection(cType, (byte)bank, (byte)map);
-			}
-		});
+		btnNewButton.addActionListener(e -> {
+            map = (Integer)spinnerMap.getValue();
+            bank = (Integer)spinnerBank.getValue();
+            MapIO.loadedMap.mapConnections.addConnection(cType, (byte)bank, (byte)map);
+        });
 		btnNewButton.setBounds(284, 224, 134, 25);
 		getContentPane().add(btnNewButton);
 	}
 	
-	public void changePreview(int bank, int map)
-	{
+	public void changePreview(int bank, int map) {
 		panelMap.setMap(bank, map);
 		panelMap.repaint();
 	}

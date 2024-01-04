@@ -47,9 +47,7 @@ public class BlockEditorPanel extends JPanel {
 							block.setTile(DrawX + x, DrawY + y, TilesetPickerPanel.selectBuffer[DrawX][DrawY]);
 					block.save();
 					host.rerenderTiles();
-				}
-				else 
-				{
+				} else {
 					TilesetPickerPanel.calculateSelectBox(e);
 				}
                 repaint();
@@ -75,14 +73,11 @@ public class BlockEditorPanel extends JPanel {
 
 		});
 
-		this.addMouseListener(new MouseListener()
-		{
-			public void mouseClicked(MouseEvent e)
-			{
+		this.addMouseListener(new MouseListener() {
+			public void mouseClicked(MouseEvent e) {
 				int x = (e.getX() / 16);
 				int y = (e.getY() / 16);
-				if(e.getButton() == MouseEvent.BUTTON1)
-				{
+				if(e.getButton() == MouseEvent.BUTTON1) {
 					int bufWidth = (TilesetPickerPanel.bufferWidth > 4 ? 4 : TilesetPickerPanel.bufferWidth);
 					int bufHeight = (TilesetPickerPanel.bufferHeight > 2 ? 2 : TilesetPickerPanel.bufferHeight);
 					for(int DrawX=0; DrawX < bufWidth; DrawX++)
@@ -92,8 +87,7 @@ public class BlockEditorPanel extends JPanel {
 					host.rerenderTiles();
 					repaint();
 				}
-				else if(e.getButton() == 3)
-				{
+				else if(e.getButton() == 3) {
 					host.tpp.baseSelectedTile = block.getTile(x, y).getTileNumber();
 					host.cmbBoxPalette.setSelectedIndex(block.getTile(x, y).getPaletteNum());
 					host.xFlip = block.getTile(x, y).xFlip;
@@ -104,10 +98,8 @@ public class BlockEditorPanel extends JPanel {
 				}
 			}
 
-			public void mouseReleased(MouseEvent e)
-			{
-				if(e.getButton() == 3)
-				{
+			public void mouseReleased(MouseEvent e) {
+				if(e.getButton() == 3) {
 					TilesetPickerPanel.calculateSelectBox(e);
 
 					//Fill the tile buffer
@@ -127,64 +119,51 @@ public class BlockEditorPanel extends JPanel {
 				}
 			}
 
-			public void mousePressed(MouseEvent e)
-			{
-				if(e.getButton() == 3)
-				{
+			public void mousePressed(MouseEvent e) {
+				if(e.getButton() == 3) {
 					TilesetPickerPanel.selectBox = new Rectangle(e.getX(),e.getY(),0,0);
 				}
 			}
 
-			public void mouseEntered(MouseEvent e)
-			{
-				// TODO Auto-generated method stub
-				
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub}
 			}
 
-			public void mouseExited(MouseEvent e)
-			{
+			public void mouseExited(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
 			}
 		});
 	}
 
-	public void setGlobalTileset(Tileset global)
-	{
+	public void setGlobalTileset(Tileset global) {
 		globalTiles = global;
 		blockRenderer.setGlobalTileset(global);
 	}
 
-	public void setLocalTileset(Tileset local)
-	{
+	public void setLocalTileset(Tileset local) {
 		localTiles = local;
 		blockRenderer.setLocalTileset(local);
 	}
 
-	public void setBlock(Block b)
-	{
+	public void setBlock(Block b) {
 		block = b;
-		if((MapIO.blockRenderer.getBehaviorByte(b.blockID) >> (DataStore.EngineVersion == 1 ? 24 : 8) & 0x60) == 0x60 && DataStore.EngineVersion == 1)
-		{
+		if((MapIO.blockRenderer.getBehaviorByte(b.blockID) >> (DataStore.EngineVersion == 1 ? 24 : 8) & 0x60) == 0x60 && DataStore.EngineVersion == 1) {
 			int tripNum = (int) ((MapIO.blockRenderer.getBehaviorByte(block.blockID) >> 14) & 0x3FF);
 			host.tripleEditorPanel.setBlock(MapIO.blockRenderer.getBlock(tripNum));
 		}
 	}
 	
-	public Block getBlock()
-	{
+	public Block getBlock() {
 		return block;
 	}
 	
-	public void setTriple(Block b)
-	{
+	public void setTriple(Block b) {
 		host.tripleEditorPanel.setBlock(b);
-		
 		int id = b.blockID;
 		long behavior = block.backgroundMetaData;
-		behavior &= 0x8F003FFF;
+		behavior &= 0x8F003FFFL;
 		if(id != 0)
-			behavior |= (id << 14) + (0x60 << 24);
+			behavior |= ((long) id << 14) + (0x60 << 24);
 		else
 			behavior |= 0x20 << 24; //Default to 0x20 because if they had 0x10 previously they should not have been using triple tiles.
 		block.backgroundMetaData = behavior;
@@ -193,21 +172,15 @@ public class BlockEditorPanel extends JPanel {
 	}
 
 	@Override
-	protected void paintComponent(Graphics g) 
-	{
+	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		for (int y = 0; y < 2; y++)
-		{
-			for (int x = 0; x < 4; x++)
-			{
-				if (block.getTile(x, y).getTileNumber() < DataStore.MainTSSize)
-				{
+		for (int y = 0; y < 2; y++) {
+			for (int x = 0; x < 4; x++) {
+				if (block.getTile(x, y).getTileNumber() < DataStore.MainTSSize) {
 					g.setColor(host.tpp.global.getPalette(MapIO.blockRenderer.currentTime)[block.getTile(x, y).getPaletteNum()].getIndex(0)); //Set default background color
 					g.fillRect(x * 16, y * 16,16,16);
 					g.drawImage(host.tpp.global.getTile(block.getTile(x, y).getTileNumber(), block.getTile(x, y).getPaletteNum(), block.getTile(x, y).xFlip, block.getTile(x, y).yFlip, MapIO.blockRenderer.currentTime).getScaledInstance(16, 16, Image.SCALE_FAST), x * 16, y * 16, null);
-				}
-				else
-				{
+				} else {
 					g.setColor(host.tpp.local.getPalette(MapIO.blockRenderer.currentTime)[block.getTile(x, y).getPaletteNum()].getIndex(0)); //Set default background color
 					g.fillRect(x * 16, y * 16,16,16);
 					g.drawImage(host.tpp.local.getTile(block.getTile(x, y).getTileNumber() - DataStore.MainTSSize, block.getTile(x, y).getPaletteNum(), block.getTile(x, y).xFlip, block.getTile(x, y).yFlip, MapIO.blockRenderer.currentTime).getScaledInstance(16, 16, Image.SCALE_FAST), x * 16, y * 16, null);
@@ -216,27 +189,12 @@ public class BlockEditorPanel extends JPanel {
 		}
 
 		g.setColor(MainGUI.uiSettings.cursorColor);
-		try
-		{
+		try {
 			g.drawRect((((mouseX) % 4) * 16), (mouseY * 16), TilesetPickerPanel.selectBox.width - 1, TilesetPickerPanel.selectBox.height - 1);
-		}
-		catch (Exception e)
-		{
-
-		}
-		try
-		{
-			// g.drawImage(ImageIO.read(MainGUI.class.getResourceAsStream("/resources/smeargle.png")),
-			// 100, 240, null);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		} catch (Exception ignored) {}
 	}
 
-	public void reset()
-	{
+	public void reset() {
 		globalTiles = null;
 		localTiles = null;
 		block = null;

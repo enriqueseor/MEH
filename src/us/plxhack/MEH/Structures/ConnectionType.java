@@ -1,7 +1,6 @@
 package us.plxhack.MEH.Structures;
 
-public enum ConnectionType
-{
+public enum ConnectionType {
 	NULL,
 	DOWN,
 	UP,

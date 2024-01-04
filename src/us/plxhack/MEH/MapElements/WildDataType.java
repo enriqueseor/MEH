@@ -1,7 +1,6 @@
 package us.plxhack.MEH.MapElements;
 
-public enum WildDataType
-{
+public enum WildDataType {
 	GRASS,
 	WATER,
 	TREE,

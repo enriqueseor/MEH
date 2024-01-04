@@ -4,6 +4,7 @@ import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ISaveable;
 
 public class SpriteExit implements ISaveable {
+
 	public  byte bX;
 	public byte b2;
 	public byte bY;
@@ -12,16 +13,15 @@ public class SpriteExit implements ISaveable {
 	public byte b6;
 	public byte bMap;
 	public byte bBank;
-	private GBARom rom;
+	private final GBARom rom;
 	
 	public  SpriteExit(GBARom rom){
 		this(rom,rom.internalOffset);
 	}
-	public SpriteExit(GBARom rom, int offset)
-	{
+
+	public SpriteExit(GBARom rom, int offset) {
 		this.rom = rom; 
 		rom.Seek(offset);
-
 		bX=rom.readByte();
 		b2=rom.readByte();
 		bY=rom.readByte();
@@ -32,10 +32,8 @@ public class SpriteExit implements ISaveable {
 		bBank=rom.readByte();
 	}
 	
-	public SpriteExit(GBARom rom, byte x, byte y)
-	{
-		this.rom = rom; 
-		
+	public SpriteExit(GBARom rom, byte x, byte y) {
+		this.rom = rom;
 		bX = x;
 		bY = y;
 		b2 = 0;
@@ -51,8 +49,7 @@ public class SpriteExit implements ISaveable {
 		return 8;
 	}
 	
-	public void save()
-	{
+	public void save() {
 		rom.writeByte(bX);
 		rom.writeByte(b2);
 		rom.writeByte(bY);

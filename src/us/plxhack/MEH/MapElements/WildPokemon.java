@@ -3,21 +3,20 @@ package us.plxhack.MEH.MapElements;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ISaveable;
 
-public class WildPokemon implements ISaveable
-{
-	private GBARom rom;
+public class WildPokemon implements ISaveable {
+
+	private final GBARom rom;
 	public byte bMinLV, bMaxLV;
 	public int wNum;
-	public WildPokemon(GBARom rom)
-	{
+
+	public WildPokemon(GBARom rom) {
 		this.rom = rom;
 		bMinLV = rom.readByte();
 		bMaxLV = rom.readByte();
 		wNum = rom.readWord();
 	}
 	
-	public WildPokemon(GBARom rom, int minLV, int maxLV, int pokemon)
-	{
+	public WildPokemon(GBARom rom, int minLV, int maxLV, int pokemon) {
 		this.rom = rom;
 		bMinLV = (byte)minLV;
 		bMaxLV = (byte)maxLV;
@@ -29,8 +28,7 @@ public class WildPokemon implements ISaveable
 		return 4;
 	}
 	
-	public void save()
-	{
+	public void save() {
 		rom.writeByte(bMinLV);
 		rom.writeByte(bMaxLV);
 		rom.writeWord(wNum);

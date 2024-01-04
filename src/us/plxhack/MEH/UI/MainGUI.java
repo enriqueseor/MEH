@@ -38,18 +38,15 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 
 public class MainGUI extends JFrame {
+
     public static  UISettings uiSettings;
-
     public static JFrame frmAbout;
-
 	public int paneSize = 0;
 	public int initEditorPanePos = -1;
-
 	public static JLabel lblInfo;
     public static JLabel lblX;
     public static JLabel lblY;
 	public static JTree mapBanks;
-	
 	private static int eventIndex;
 	private static EventType eventType;
 	public static int currentType = 0;
@@ -57,7 +54,6 @@ public class MainGUI extends JFrame {
 	private static int popupX;
 	private static int popupY;
 	int paneSize2;
-
 	private JTabbedPane editorTabs;
 	private JSplitPane splitPane;
 	public static JLabel lblWidth;
@@ -272,8 +268,7 @@ public class MainGUI extends JFrame {
                 try {
                     String[] Params = new String[] { ROMManager.currentROM.input_filepath, Long.toHexString(offset) };
                     Process p = Runtime.getRuntime().exec(DataStore.mehSettingCallScriptEditor + " " + ROMManager.currentROM.input_filepath + ":" + Long.toHexString(offset));// ",Params);
-                }
-                catch (Exception e1) {
+                } catch (Exception e1) {
                     setStatus("Script failed to load, please check to see if " + DataStore.mehSettingCallScriptEditor + " exists");
                 }
             }
@@ -2192,9 +2187,7 @@ public class MainGUI extends JFrame {
 			g.fillRect(0, 0, img.getWidth(), img.getHeight());
 			try {
 				ImageIO.write(img, "png", new File("cycle/time" + String.format("%03d", i) + ".png"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			} catch (IOException e) {e.printStackTrace();}
 		}
 		
 		BufferedImage b = new BufferedImage(gradient.length * 8, 8, BufferedImage.TYPE_INT_ARGB);
@@ -2205,12 +2198,9 @@ public class MainGUI extends JFrame {
 		}
 		try {
 			ImageIO.write(b, "png", new File("cycle/gradient.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		} catch (IOException e) {e.printStackTrace();}
 		System.out.println();
-		for(Color c : gradient)
-		{
+		for(Color c : gradient) {
 			System.out.print("0x" + String.format("%02X", c.getAlpha()) + String.format("%02X", c.getRed()) + String.format("%02X", c.getGreen()) + String.format("%02X", c.getBlue()) + ", ");
 		}
 	}

@@ -21,8 +21,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 
-public class EventEditorPanel extends JPanel
-{
+public class EventEditorPanel extends JPanel {
 	private static final long serialVersionUID = -877213633894324075L;
 	private Tileset globalTiles;
 	private Tileset localTiles;
@@ -40,66 +39,43 @@ public class EventEditorPanel extends JPanel
 	Point pointEvent;
 	int moveSrcX;
 	int moveSrcY;
-	EventType selectedEvent;// -1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3
-							// is Trigger
+	EventType selectedEvent;// -1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is Trigger
 	int IndexNPC;
 	int IndexSign;
 	int IndexExit;
 	int IndexTriggers;
 
-	public void Grab(MouseEvent e)
-	{
+	public void Grab(MouseEvent e) {
 		int x = (e.getX() / 16);
 		int y = (e.getY() / 16);
 		IndexNPC = map.mapNPCManager.getSpriteIndexAt(x, y);
-		if (IndexNPC != -1)
-		{
-
-			selectedEvent = EventType.NPC;// -1 is nothing, 0 is NPC, 1 is Sign,
-											// 2 is Exit, 3 is Trigger
-			// return;
+		if (IndexNPC != -1) {
+			selectedEvent = EventType.NPC;
 		}
 		IndexSign = map.mapSignManager.getSpriteIndexAt(x, y);
-		if (IndexSign != -1)
-		{
-
-			selectedEvent = EventType.SIGN;// -1 is nothing, 0 is NPC, 1 is
-											// Sign, 2 is Exit, 3 is Trigger
-			return;
+		if (IndexSign != -1) {
+			selectedEvent = EventType.SIGN;
 		}
 		IndexExit = map.mapExitManager.getSpriteIndexAt(x, y);
-		if (IndexExit != -1)
-		{
-
-			selectedEvent = EventType.WARP;// -1 is nothing, 0 is NPC, 1 is
-											// Sign, 2 is Exit, 3 is Trigger
-			return;
+		if (IndexExit != -1) {
+			selectedEvent = EventType.WARP;
 		}
 		IndexTriggers = map.mapTriggerManager.getSpriteIndexAt(x, y);
-		if (IndexTriggers != -1)
-		{
-
-			selectedEvent = EventType.TRIGGER;// -1 is nothing, 0 is NPC, 1 is
-												// Sign, 2 is Exit, 3 is Trigger
-			return;
+		if (IndexTriggers != -1) {
+			selectedEvent = EventType.TRIGGER;
 		}
 	}
 
 	public EventEditorPanel() {
 		selectedEvent = null;
-
 		try {
 			imgTrigger = ImageIO.read(MainGUI.class.getResource("/resources/trigger.png").openStream());
 			imgWarp = ImageIO.read(MainGUI.class.getResource("/resources/warp.png").openStream());
 			imgSign = ImageIO.read(MainGUI.class.getResource("/resources/sign.png").openStream());
 			imgNPC = ImageIO.read(MainGUI.class.getResource("/resources/npc.png").openStream());
-		}
-		catch (IOException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
-		this.addMouseMotionListener(new MouseMotionListener() {
+		} catch (IOException e2) {e2.printStackTrace();}
 
+		this.addMouseMotionListener(new MouseMotionListener() {
 			public void mouseDragged(MouseEvent e) {
 				if(selectedEvent != null) {
 					int x = (e.getX() / 16);
@@ -107,15 +83,11 @@ public class EventEditorPanel extends JPanel
 					moveEvent(x,y);
 				}
 			}
-
 			public void mouseMoved(MouseEvent e) {
 			}
-
 		});
 
 		this.addMouseListener(new MouseListener() {
-
-			@SuppressWarnings("unused")
 			public void mouseClicked(MouseEvent e) {
 				int x = (e.getX() / 16);
 				int y = (e.getY() / 16);
@@ -127,10 +99,8 @@ public class EventEditorPanel extends JPanel
 
 				System.out.println(e.getButton());
 				if (e.getButton() == MouseEvent.BUTTON1 && selectedEvent != null) {
-
 					MainGUI.eventScrollPanel.removeAll();
-					// If there's two events on tile, we'll handle that later
-					// with some kind of picker
+					// If there's two events on tile, we'll handle that later with some kind of picker
 					switch (selectedEvent) {
 						case NPC:
 							MainGUI.eventScrollPanel.add(new NPCPane(map.mapNPCManager, IndexNPC));
@@ -152,12 +122,9 @@ public class EventEditorPanel extends JPanel
 								MainGUI.eventScrollPanel.add(new ExitPanel(map.mapExitManager, IndexExit));
 							break;
 						case TRIGGER:
-
 							MainGUI.eventScrollPanel.add(new TriggerPanel(map.mapTriggerManager, IndexTriggers));
 							break;
-
 					}
-
 					MainGUI.eventScrollPanel.revalidate();
 					MainGUI.eventScrollPanel.repaint();
 					Redraw = true;
@@ -184,27 +151,18 @@ public class EventEditorPanel extends JPanel
 			public void mousePressed(MouseEvent e) {
 				int x = (e.getX() / 16);
 				int y = (e.getY() / 16);
-
 				if (x > map.getMapData().mapWidth || y > map.getMapData().mapHeight) {
 					return;
 				}
-
 				Grab(e);
-
 				if (e.getButton() == MouseEvent.BUTTON1) {
 					moveSrcX = x;
 					moveSrcY = y;
-
 				}
 			}
 
-			public void mouseExited(MouseEvent e) {
-
-			}
-
-			public void mouseEntered(MouseEvent e) {
-
-			}
+			public void mouseExited(MouseEvent e) {}
+			public void mouseEntered(MouseEvent e) {}
 
 			public void mouseReleased(MouseEvent e) {
 				int x = (e.getX() / 16);
@@ -222,8 +180,6 @@ public class EventEditorPanel extends JPanel
 		if (srcX != x || srcY != y) {
 			try {
 				switch (s) {
-				    // -1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is
-					// Trigger)
 					case NPC:
 						map.mapNPCManager.mapNPCs.get(IndexNPC).bX = (byte) x;
 						map.mapNPCManager.mapNPCs.get(IndexNPC).bY = (byte) y;
@@ -241,9 +197,7 @@ public class EventEditorPanel extends JPanel
 						map.mapTriggerManager.mapTriggers.get(IndexTriggers).bY = (byte) y;
 						break;
 				}
-				;
-			}
-			catch (Exception e1) {
+			} catch (Exception e1) {
 				System.out.println(e1.getMessage());
 			}
 			DrawMap();
@@ -283,82 +237,56 @@ public class EventEditorPanel extends JPanel
 			DrawExits();
 			DrawNPCs();
 			DrawTriggers();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (Exception e) {e.printStackTrace();}
 	}
 
-	void DrawText(String Text, int x, int y)
-	{
+	void DrawText(String Text, int x, int y) {
 		gcBuff.drawRect(x, y, 16, 16);
 		gcBuff.drawString(Text, x, y + 16);
 	}
 
-	void DrawNPCs()
-	{
-		for (SpriteNPC n : map.mapNPCManager.mapNPCs)
-		{
-			if (DataStore.mehSettingShowSprites == 1)
-			{
-
+	void DrawNPCs() {
+		for (SpriteNPC n : map.mapNPCManager.mapNPCs) {
+			if (DataStore.mehSettingShowSprites == 1) {
 				Image imgNPCs = OverworldSpritesManager.GetImage(n.bSpriteSet & 0xFF);
 				int adjX = (OverworldSpritesManager.GetSprite(n.bSpriteSet & 0xFF).mSpriteSize == 2 ? 8 : 0);
 				int dstX = (n.bX * 16) - adjX;
 				int dstY = (n.bY * 16) - (OverworldSpritesManager.GetSprite(n.bSpriteSet & 0xFF).mSpriteSize == 1 ? 16 : 0) - adjX * 2;
 				gcBuff.drawImage(imgNPCs, dstX, dstY, this);
-			}
-			else
-			{
+			} else {
 				gcBuff.drawImage(imgNPC, n.bX * 16, n.bY * 16, this);
 			}
 		}
 	}
 
-	void DrawTriggers()
-	{
+	void DrawTriggers() {
 		for (Trigger n : map.mapTriggerManager.mapTriggers)
 			gcBuff.drawImage(imgTrigger, n.bX * 16, n.bY * 16, n.bX * 16 + 16, n.bY * 16 + 16, 0, 0, 64, 64, this);
 	}
 
-	void DrawSigns()
-	{
+	void DrawSigns() {
 		for (SpriteSign n : map.mapSignManager.mapSigns)
 			gcBuff.drawImage(imgSign, n.bX * 16, n.bY * 16, n.bX * 16 + 16, n.bY * 16 + 16, 0, 0, 64, 64, this);
 	}
 
-	void DrawExits()
-	{
+	void DrawExits() {
 		for (SpriteExit n : map.mapExitManager.mapExits)
 			gcBuff.drawImage(imgWarp, n.bX * 16, n.bY * 16, n.bX * 16 + 16, n.bY * 16 + 16, 0, 0, 64, 64, this);
 	}
 
-	protected void paintComponent(Graphics g)
-	{
+	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		if (globalTiles != null)
-		{
-			if (Redraw)
-			{
+		if (globalTiles != null) {
+			if (Redraw) {
 				DrawMap();
 				Redraw = false;
 			}
 			g.drawImage(imgBuffer, 0, 0, this);
 
 		}
-		try
-		{
-			// g.drawImage(ImageIO.read(MainGUI.class.getResourceAsStream("/resources/smeargle.png")),
-			// 100, 240, null);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
 	}
 
-	public void reset()
-	{
+	public void reset() {
 		globalTiles = null;
 		localTiles = null;
 		map = null;

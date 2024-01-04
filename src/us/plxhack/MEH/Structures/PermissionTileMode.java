@@ -1,7 +1,6 @@
 package us.plxhack.MEH.Structures;
 
-public enum PermissionTileMode
-{
+public enum PermissionTileMode {
 	MEH,
 	LEGACY,
 	LEGACY_HYBRID,

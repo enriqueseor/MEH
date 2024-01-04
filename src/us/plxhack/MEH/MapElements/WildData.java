@@ -3,83 +3,51 @@ package us.plxhack.MEH.MapElements;
 import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.GBARom;
 
-public class WildData implements Cloneable
-{
+public class WildData implements Cloneable {
+
 	public WildPokemonData[] aWildPokemon = new WildPokemonData[4];
 	public WildDataHeader wildDataHeader;
-	private GBARom rom;
+	private final GBARom rom;
 	
-	public WildData(GBARom rom, WildDataHeader h)
-	{
+	public WildData(GBARom rom, WildDataHeader h) {
 		this.rom = rom;
 		wildDataHeader = h;
-		
 		rom.Seek((int)h.pGrass);
 		if(h.pGrass != 0)
 			aWildPokemon[0] = new WildPokemonData(rom, WildDataType.GRASS);
-		
 		rom.Seek((int)h.pWater);
 		if(h.pWater != 0)
 			aWildPokemon[1] = new WildPokemonData(rom, WildDataType.WATER);
-		
 		rom.Seek((int)h.pTrees);
 		if(h.pTrees != 0)
 			aWildPokemon[2] = new WildPokemonData(rom, WildDataType.TREE);
-		
 		rom.Seek((int)h.pFishing);
 		if(h.pFishing != 0)
 			aWildPokemon[3] = new WildPokemonData(rom, WildDataType.FISHING);
 	}
 	
-	public WildData(GBARom rom, int bank, int map)
-	{
+	public WildData(GBARom rom, int bank, int map) {
 		this.rom = rom;
 		wildDataHeader = new WildDataHeader(rom, bank, map);
 	}
 	
-	public WildData(WildData d)
-	{
+	public WildData(WildData d) {
 		this.rom = d.rom;
-		try
-		{
+		try {
 			this.wildDataHeader = (WildDataHeader) d.wildDataHeader.clone();
-		}
-		catch (CloneNotSupportedException e)
-		{
-			e.printStackTrace();
-		}
-		try
-		{
+		} catch (CloneNotSupportedException e) {e.printStackTrace();}
+		try {
 			aWildPokemon[0] = (WildPokemonData) d.aWildPokemon[0].clone();
-		}
-		catch (CloneNotSupportedException e)
-		{
-			e.printStackTrace();
-		}
-		try
-		{
+		} catch (CloneNotSupportedException e) {e.printStackTrace();}
+		try {
 			aWildPokemon[1] = (WildPokemonData) d.aWildPokemon[1].clone();
-		}
-		catch (CloneNotSupportedException e)
-		{
-			e.printStackTrace();
-		}
-		try
-		{
+		} catch (CloneNotSupportedException e) {e.printStackTrace();}
+		try {
 			aWildPokemon[2] = (WildPokemonData) d.aWildPokemon[2].clone();
-		}
-		catch (CloneNotSupportedException e)
-		{
-			e.printStackTrace();
-		}
-		try
-		{
+		} catch (CloneNotSupportedException e) {e.printStackTrace();}
+		try {
 			aWildPokemon[3] = (WildPokemonData) d.aWildPokemon[3].clone();
-		}
-		catch (CloneNotSupportedException e)
-		{
-			e.printStackTrace();
-		}
+		} catch (CloneNotSupportedException e) {e.printStackTrace();}
 		
 	}
 	
@@ -88,15 +56,13 @@ public class WildData implements Cloneable
 		addWildData(t, (byte)0x15);
 	}
 	
-	public void removeWildData(WildDataType t)
-	{
+	public void removeWildData(WildDataType t) {
 		WildPokemonData d = null;
 		if(aWildPokemon[t.ordinal()] == null)
 			return;
 		int size;
 		int pkmnData;
-		switch(t)
-		{
+		switch(t) {
 			case WATER:
 				d = aWildPokemon[1];
 				size = d.getWildDataSize();
@@ -134,11 +100,9 @@ public class WildData implements Cloneable
 		rom.floodBytes(pkmnData, DataStore.FreespaceByte, size);
 	}
 	
-	public void addWildData(WildDataType t, byte ratio)
-	{
+	public void addWildData(WildDataType t, byte ratio) {
 		WildPokemonData d = new WildPokemonData(rom, t, ratio);
-		switch(t)
-		{
+		switch(t) {
 			case GRASS:
 				aWildPokemon[0] = d;
 				break;
@@ -154,34 +118,29 @@ public class WildData implements Cloneable
 		}
 	}
 	
-	public void save(int headerloc)
-	{
-		if(aWildPokemon[0].aWildPokemon != null)
-		{
+	public void save(int headerloc) {
+		if(aWildPokemon[0].aWildPokemon != null) {
 			if(wildDataHeader.pGrass == 0 || wildDataHeader.pGrass > 0x1FFFFFF)
 				wildDataHeader.pGrass = rom.findFreespace(DataStore.FreespaceStart, 8);
 			rom.floodBytes((int)wildDataHeader.pGrass, (byte)0, 8); //Prevent these bytes from being used by wild data
 			rom.Seek((int) wildDataHeader.pGrass);
 			aWildPokemon[0].save();
 		}
-		if(aWildPokemon[1].aWildPokemon != null)
-		{
+		if(aWildPokemon[1].aWildPokemon != null) {
 			if(wildDataHeader.pWater == 0 || wildDataHeader.pWater > 0x1FFFFFF)
 				wildDataHeader.pWater = rom.findFreespace(DataStore.FreespaceStart, 8);
 			rom.floodBytes((int)wildDataHeader.pWater, (byte)0, 8); //Prevent these bytes from being used by wild data
 			rom.Seek((int) wildDataHeader.pWater);
 			aWildPokemon[1].save();
 		}
-		if(aWildPokemon[2].aWildPokemon != null)
-		{
+		if(aWildPokemon[2].aWildPokemon != null) {
 			if(wildDataHeader.pTrees == 0 || wildDataHeader.pTrees > 0x1FFFFFF)
 				wildDataHeader.pTrees = rom.findFreespace(DataStore.FreespaceStart, 8);
 			rom.floodBytes((int)wildDataHeader.pTrees, (byte)0, 8); //Prevent these bytes from being used by wild data
 			rom.Seek((int) wildDataHeader.pTrees);
 			aWildPokemon[2].save();
 		}
-		if(aWildPokemon[3].aWildPokemon != null)
-		{
+		if(aWildPokemon[3].aWildPokemon != null) {
 			if(wildDataHeader.pFishing == 0 || wildDataHeader.pFishing > 0x1FFFFFF)
 				wildDataHeader.pFishing = rom.findFreespace(DataStore.FreespaceStart, 8);
 			rom.floodBytes((int)wildDataHeader.pFishing, (byte)0, 8); //Prevent these bytes from being used by wild data
@@ -191,8 +150,7 @@ public class WildData implements Cloneable
 		wildDataHeader.save(headerloc);
 	}
 
-	public Object clone() throws CloneNotSupportedException
-	{
+	public Object clone() throws CloneNotSupportedException {
 		return new WildData(this);
 	}
 }

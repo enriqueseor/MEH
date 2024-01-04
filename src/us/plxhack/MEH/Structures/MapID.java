@@ -1,11 +1,11 @@
 package us.plxhack.MEH.Structures;
 
-public class MapID
-{
-	private int bank, map;
+public class MapID {
+
+	private final int bank;
+    private final int map;
 	
-	public MapID(int bank, int map)
-	{
+	public MapID(int bank, int map) {
 		this.bank = bank;
 		this.map = map;
 	}
@@ -14,15 +14,13 @@ public class MapID
 	{
 		return bank;
 	}
-	
 	public int getMap()
 	{
 		return map;
 	}
 
 	@Override
-	public boolean equals(Object b)
-	{
+	public boolean equals(Object b) {
 		if(b == null)
 			return false;
 		if(!(b instanceof MapID))
@@ -32,7 +30,6 @@ public class MapID
 		if(bI.bank == this.bank)
 			if(bI.map == this.map)
 				return true;
-		
 		return false;
 	}
 }

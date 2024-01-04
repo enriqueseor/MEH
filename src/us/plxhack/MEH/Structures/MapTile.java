@@ -1,18 +1,18 @@
 package us.plxhack.MEH.Structures;
 
-public class MapTile implements Cloneable
-{
+public class MapTile implements Cloneable {
+
 	private int ID; 
 	private int Meta;
+
 	public void SetID(int i){
 		ID=i;
-		
 	}
-	public MapTile(int id, int meta)
-	{
+	public MapTile(int id, int meta) {
 		ID = id;
 		Meta = meta;
 	}
+
 	public void SetMeta(int meta){
 		Meta=meta;
 	}
@@ -20,7 +20,6 @@ public class MapTile implements Cloneable
 	{
 		return ID;
 	}
-	
 	public int getMeta()
 	{
 		return Meta;

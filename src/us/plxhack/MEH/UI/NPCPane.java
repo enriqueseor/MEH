@@ -1,17 +1,17 @@
-	package us.plxhack.MEH.UI;
+package us.plxhack.MEH.UI;
 
-    import org.zzl.minegaming.GBAUtils.BitConverter;
-    import us.plxhack.MEH.IO.MapIO;
-    import us.plxhack.MEH.MapElements.SpriteNPC;
-    import us.plxhack.MEH.MapElements.SpritesNPCManager;
+import org.zzl.minegaming.GBAUtils.BitConverter;
+import us.plxhack.MEH.IO.MapIO;
+import us.plxhack.MEH.MapElements.SpriteNPC;
+import us.plxhack.MEH.MapElements.SpritesNPCManager;
 
-    import javax.swing.*;
-    import javax.swing.border.TitledBorder;
-    import javax.swing.event.ChangeEvent;
-    import javax.swing.event.ChangeListener;
-    import java.awt.*;
-    import java.awt.event.ActionEvent;
-    import java.awt.event.ActionListener;
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class NPCPane extends JPanel{
 
@@ -56,8 +56,7 @@ public class NPCPane extends JPanel{
 		txtiFlag.setText(BitConverter.toHexString(t.iFlag));
 	}
 	void Save(SpritesNPCManager mgr){
-		try
-		{
+		try {
 		SpriteNPC t = mgr.mapNPCs.get(myIndex);
 		mgr.mapNPCs.get(myIndex).bSpriteSet = (byte)((int)((Integer)txtSpriteSet.getValue()));
 		mgr.mapNPCs.get(myIndex).bBehavior1 = Byte.parseByte(txtBehavior1.getText());
@@ -67,22 +66,17 @@ public class NPCPane extends JPanel{
 		mgr.mapNPCs.get(myIndex).bTrainerLOS= Byte.parseByte(txtTrainerLOS.getText());
 		mgr.mapNPCs.get(myIndex).pScript= Integer.parseInt(txtScript.getText(), 16);
 		mgr.mapNPCs.get(myIndex).iFlag = Integer.parseInt(txtiFlag.getText());
-		}
-		catch(Exception e){}
+		} catch(Exception e){}
 		MainGUI.eventEditorPanel.Redraw = true;
 		MainGUI.eventEditorPanel.repaint();
 	}
 	
-    void CreateNPCPane(){
-    	
-    }
-	@SuppressWarnings("deprecation")
+    void CreateNPCPane(){}
+
 	NPCPane(SpritesNPCManager mgr, int NPCIndex){
 		myIndex=NPCIndex;
 		setBorder(new TitledBorder(null, "NPC", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		
-		
 		
 		lblSpriteSet=new JLabel("Spriteset:");
 		add(lblSpriteSet);
@@ -97,8 +91,6 @@ public class NPCPane extends JPanel{
 		});
 		add(txtSpriteSet);
 		txtSpriteSet.setBounds(90,38,87,16);
-		//txtSpriteSet.disable();
-		
 		
 		lblBehavior1=new JLabel("Behavior1:");
 		add(lblBehavior1);
@@ -109,7 +101,6 @@ public class NPCPane extends JPanel{
 		add(txtBehavior1);
 		txtBehavior1.setBounds(90,54,32,16);
 		
-		
 		lblBehavior2=new JLabel("Behavior2:");
 		add(lblBehavior2);
 		lblBehavior2.setBounds(10,70,lblBehavior2.getText().length()*8,16);
@@ -119,7 +110,6 @@ public class NPCPane extends JPanel{
 		add(txtBehavior2);
 		txtBehavior2.setBounds(90,70,64,16);
 		
-		
 		lblIsTrainer=new JLabel("Is a Trainer:");
 		add(lblIsTrainer);
 		lblIsTrainer.setBounds(10,86,lblIsTrainer.getText().length()*8,16);
@@ -127,7 +117,6 @@ public class NPCPane extends JPanel{
         chkIsTrainer =new JCheckBox();
         add(chkIsTrainer);
         chkIsTrainer.setBounds(114,86,32,16);
-		
 		
         lblTrainerLOS=new JLabel("TrainerLOS:");
         add(lblTrainerLOS);
@@ -138,9 +127,9 @@ public class NPCPane extends JPanel{
 		add(txtTrainerLOS);
 		txtTrainerLOS.setBounds(90,102,32,16);
 		
-		 lbliFlag = new JLabel("NPC Flag:");
-		 add(lbliFlag);
-		 lbliFlag.setBounds(10, 128, 88, 16);
+		lbliFlag = new JLabel("NPC Flag:");
+		add(lbliFlag);
+		lbliFlag.setBounds(10, 128, 88, 16);
 		
 		txtiFlag = new JTextField();
 		txtiFlag.setColumns(4);
@@ -159,12 +148,7 @@ public class NPCPane extends JPanel{
 		txtScript.setBounds(90, 150, 32, 16);
 		
 		JButton btnSave = new JButton("Save");
-		btnSave.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent arg0) {
-				Save(MapIO.loadedMap.mapNPCManager);
-			}
-		});
+		btnSave.addActionListener(arg0 -> Save(MapIO.loadedMap.mapNPCManager));
 		add(btnSave);
 		btnSave.setBounds(55, 163, 89, 23);
 		Load(mgr, NPCIndex);

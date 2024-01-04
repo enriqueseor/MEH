@@ -3,8 +3,8 @@ package us.plxhack.MEH.MapElements;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ISaveable;
 
-public class SpriteSign implements ISaveable
-{
+public class SpriteSign implements ISaveable {
+
 	//TODO I'm pretty sure some of these are word values...
 	public byte bX;
 	public byte b2;
@@ -15,17 +15,15 @@ public class SpriteSign implements ISaveable
 	public byte b7;
 	public byte b8;
 	public long pScript;
-	private GBARom rom;
+	private final GBARom rom;
 
 	public SpriteSign(GBARom rom)
 	{
 		this(rom, rom.internalOffset);
 	}
 
-	public SpriteSign(GBARom rom, int offset)
-	{
+	public SpriteSign(GBARom rom, int offset) {
 		this.rom = rom;
-		
 		rom.Seek(offset);
 		bX = rom.readByte();
 		b2 = rom.readByte();
@@ -38,10 +36,8 @@ public class SpriteSign implements ISaveable
 		pScript = rom.getPointer();
 	}
 
-	public SpriteSign(GBARom rom, byte x, byte y)
-	{
+	public SpriteSign(GBARom rom, byte x, byte y) {
 		this.rom = rom;
-		
 		bX = x;
 		b2 = 0;
 		bY = y;
@@ -58,8 +54,7 @@ public class SpriteSign implements ISaveable
 		return 12;
 	}
 
-	public void save()
-	{
+	public void save() {
 		rom.writeByte(bX);
 		rom.writeByte(b2);
 		rom.writeByte(bY);

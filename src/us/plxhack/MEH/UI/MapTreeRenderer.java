@@ -5,8 +5,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import java.awt.*;
+import java.util.Objects;
 
 public class MapTreeRenderer extends DefaultTreeCellRenderer {
+
 	private static final long serialVersionUID = 4125843897499413188L;
 	ImageIcon mainIcon;
 	ImageIcon mainIcon_expanded;
@@ -14,14 +16,10 @@ public class MapTreeRenderer extends DefaultTreeCellRenderer {
 	ImageIcon mapIcon;
 
 	public MapTreeRenderer() {
-		mainIcon = new ImageIcon(
-				MainGUI.class.getResource("/resources/folder.png"));
-		mainIcon_expanded = new ImageIcon(
-				MainGUI.class.getResource("/resources/folder_open.png"));
-		mainIcon_expanded_maps = new ImageIcon(
-				MainGUI.class.getResource("/resources/folder_open_maps.png"));
-		mapIcon = new ImageIcon(
-				MainGUI.class.getResource("/resources/map.png"));
+		mainIcon = new ImageIcon(Objects.requireNonNull(MainGUI.class.getResource("/resources/folder.png")));
+		mainIcon_expanded = new ImageIcon(Objects.requireNonNull(MainGUI.class.getResource("/resources/folder_open.png")));
+		mainIcon_expanded_maps = new ImageIcon(Objects.requireNonNull(MainGUI.class.getResource("/resources/folder_open_maps.png")));
+		mapIcon = new ImageIcon(Objects.requireNonNull(MainGUI.class.getResource("/resources/map.png")));
 	}
 
 	@Override
@@ -48,10 +46,7 @@ public class MapTreeRenderer extends DefaultTreeCellRenderer {
 			}
 			else
 				label.setIcon(mapIcon);
-		}
-		catch (Exception e) {
-		}
-
+		} catch (Exception ignored) {}
 		return this;
 	}
 }

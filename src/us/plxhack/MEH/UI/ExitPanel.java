@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ExitPanel extends JPanel {
+
 	int myIndex;
 	JSpinner spinner;
 	JSpinner spinner_1;
@@ -42,12 +43,7 @@ public class ExitPanel extends JPanel {
 		add(lblDestMap);
 		
 		JButton btnSave = new JButton("Save");
-		btnSave.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				Save(MapIO.loadedMap.mapExitManager);
-			}
-		});
+		btnSave.addActionListener(e -> Save(MapIO.loadedMap.mapExitManager));
 		
 		Component horizontalStrut = Box.createHorizontalStrut(20);
 		horizontalStrut.setPreferredSize(new Dimension(0, 0));
@@ -59,5 +55,4 @@ public class ExitPanel extends JPanel {
 		add(btnSave);
         Load(mgr, index);
 	}
-
 }

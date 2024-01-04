@@ -16,10 +16,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 
-public class BorderEditorPanel extends JPanel
-{
+public class BorderEditorPanel extends JPanel {
 
-	
 	private Tileset globalTiles;
 	private Tileset localTiles;
 	private BlockRenderer blockRenderer = new BlockRenderer();
@@ -37,31 +35,23 @@ public class BorderEditorPanel extends JPanel
                 mouseY = ((e.getY() - 20) / 16);
 
 				if (e.getModifiersEx() == 1024) {
-					int bufWidth = (MapEditorPanel.bufferWidth > map.getMapData().borderWidth ? map.getMapData().borderWidth : MapEditorPanel.bufferWidth);
-					int bufHeight = (MapEditorPanel.bufferHeight > map.getMapData().borderHeight ? map.getMapData().borderHeight : MapEditorPanel.bufferHeight);
-					for(int DrawX=0; DrawX < bufWidth; DrawX++)
-					{
-						for(int DrawY=0; DrawY < bufHeight; DrawY++)
-						{
+					int bufWidth = (Math.min(MapEditorPanel.bufferWidth, map.getMapData().borderWidth));
+					int bufHeight = (Math.min(MapEditorPanel.bufferHeight, map.getMapData().borderHeight));
+					for(int DrawX=0; DrawX < bufWidth; DrawX++) {
+						for(int DrawY=0; DrawY < bufHeight; DrawY++) {
 							//Tiles multi-select will grab both the tiles and the meta, 
 							//while movement editing will only select metas.
-							if(MapEditorPanel.getMode() == EditMode.TILES)
-							{
-								try
-								{
+							if(MapEditorPanel.getMode() == EditMode.TILES) {
+								try {
 									map.getMapTileData().getTile(x+DrawX, y+DrawY).SetID(MapEditorPanel.selectBuffer[DrawX][DrawY].getID());
 									if(MapEditorPanel.selectBuffer[DrawX][DrawY].getMeta() >= 0)
 										map.getMapTileData().getTile(x+DrawX, y+DrawY).SetMeta(MapEditorPanel.selectBuffer[DrawX][DrawY].getMeta()); //TODO Allow for tile-only selection. Hotkeys?
-								}
-								catch(Exception ex){}
+								} catch(Exception ignored){}
 							}
-							else if(MapEditorPanel.getMode() == EditMode.MOVEMENT)
-							{
-								try
-								{
+							else if(MapEditorPanel.getMode() == EditMode.MOVEMENT) {
+								try {
 									map.getMapTileData().getTile(x+DrawX, y+DrawY).SetMeta(MapEditorPanel.selectBuffer[DrawX][DrawY].getMeta());
-								}
-								catch(Exception ex){}
+								} catch(Exception ignored){}
 							}
 						}
 					}
@@ -69,7 +59,6 @@ public class BorderEditorPanel extends JPanel
 				}
 				else {
 					//MapEditorPanel.calculateSelectBox(e);
-					
 					if(MapEditorPanel.selectBox.width > map.getMapData().borderWidth * 16)
 						MapEditorPanel.selectBox.width = map.getMapData().borderWidth * 16;
 					if(MapEditorPanel.selectBox.height > map.getMapData().borderHeight * 16)
@@ -92,46 +81,32 @@ public class BorderEditorPanel extends JPanel
 					mouseX = 0;
 				if(mouseY < 0)
 					mouseY = 0;
-				
 				repaint();
 			}
-
 		});
 
-		this.addMouseListener(new MouseListener()
-		{
-			public void mouseClicked(MouseEvent e)
-			{
+		this.addMouseListener(new MouseListener() {
+			public void mouseClicked(MouseEvent e) {
 				int x = ((e.getX() - ((getWidth() / 2) - (map.getMapData().borderWidth * 8))) / 16);
 				int y = ((e.getY() - 20) / 16);
-				//System.out.println(x + " " + y);
-				if(e.getButton() == MouseEvent.BUTTON1)
-				{
-					int bufWidth = (MapEditorPanel.bufferWidth > map.getMapData().borderWidth ? map.getMapData().borderWidth : MapEditorPanel.bufferWidth);
-					int bufHeight = (MapEditorPanel.bufferHeight > map.getMapData().borderHeight ? map.getMapData().borderHeight : MapEditorPanel.bufferHeight);
-					for(int DrawX=0; DrawX < bufWidth; DrawX++)
-					{
-						for(int DrawY=0; DrawY < bufHeight; DrawY++)
-						{
-							//Tiles multi-select will grab both the tiles and the meta, 
-							//while movement editing will only select metas.
-							if(MapEditorPanel.getMode() == EditMode.TILES)
-							{
-								try
-								{
+				if(e.getButton() == MouseEvent.BUTTON1) {
+					int bufWidth = (Math.min(MapEditorPanel.bufferWidth, map.getMapData().borderWidth));
+					int bufHeight = (Math.min(MapEditorPanel.bufferHeight, map.getMapData().borderHeight));
+					for(int DrawX=0; DrawX < bufWidth; DrawX++) {
+						for(int DrawY=0; DrawY < bufHeight; DrawY++) {
+							//Tiles multi-select will grab both the tiles and the meta, while movement editing will only select metas.
+							if(MapEditorPanel.getMode() == EditMode.TILES) {
+								try {
 									map.getMapTileData().getTile(x+DrawX, y+DrawY).SetID(MapEditorPanel.selectBuffer[DrawX][DrawY].getID());
 									if(MapEditorPanel.selectBuffer[DrawX][DrawY].getMeta() >= 0)
 										map.getMapTileData().getTile(x+DrawX, y+DrawY).SetMeta(MapEditorPanel.selectBuffer[DrawX][DrawY].getMeta()); //TODO Allow for tile-only selection. Hotkeys?
 								}
-								catch(Exception ex){}
+								catch(Exception ignored){}
 							}
-							else if(MapEditorPanel.getMode() == EditMode.MOVEMENT)
-							{
-								try
-								{
+							else if(MapEditorPanel.getMode() == EditMode.MOVEMENT) {
+								try {
 									map.getMapTileData().getTile(x+DrawX, y+DrawY).SetMeta(MapEditorPanel.selectBuffer[DrawX][DrawY].getMeta());
-								}
-								catch(Exception ex){}
+								} catch(Exception ignored){}
 							}
 						}
 					}
@@ -147,12 +122,8 @@ public class BorderEditorPanel extends JPanel
 				}
 			}
 
-			public void mouseReleased(MouseEvent e)
-			{
-				if(e.getButton() == 3)
-				{
-					//MapEditorPanel.calculateSelectBox(e);
-
+			public void mouseReleased(MouseEvent e) {
+				if(e.getButton() == 3) {
 					//Fill the tile buffer
 					MapEditorPanel.selectBuffer = new MapTile[MapEditorPanel.selectBox.width / 16][MapEditorPanel.selectBox.height / 16];
 					
@@ -170,34 +141,26 @@ public class BorderEditorPanel extends JPanel
 				}
 			}
 
-			public void mousePressed(MouseEvent e)
-			{
+			public void mousePressed(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
 			}
 
-			public void mouseEntered(MouseEvent e)
-			{
+			public void mouseEntered(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
 			}
 
-			public void mouseExited(MouseEvent e)
-			{
+			public void mouseExited(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
 			}
 		});
 	}
 
-	public void setGlobalTileset(Tileset global)
-	{
+	public void setGlobalTileset(Tileset global) {
 		globalTiles = global;
 		blockRenderer.setGlobalTileset(global);
 	}
 
-	public void setLocalTileset(Tileset local)
-	{
+	public void setLocalTileset(Tileset local) {
 		localTiles = local;
 		blockRenderer.setLocalTileset(local);
 	}
@@ -208,33 +171,23 @@ public class BorderEditorPanel extends JPanel
 	}
 
 	@Override
-	protected void paintComponent(Graphics g) 
-	{
+	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		if(globalTiles != null)
-		{
-			for(int y = 0; y < map.getMapData().borderHeight; y++)
-			{
-				for(int x = 0; x < map.getMapData().borderWidth; x++)
-				{
-					
+		if(globalTiles != null) {
+			for(int y = 0; y < map.getMapData().borderHeight; y++) {
+				for(int x = 0; x < map.getMapData().borderWidth; x++) {
 						g.drawImage(blockRenderer.renderBlock(map.getMapTileData().getTile(x, y).getID()), (this.getWidth() / 2) - (map.getMapData().borderWidth * 8) + x*16, 20+y*16, null); 
 				}
 			}
 			
-			if(MapEditorPanel.getMode() == EditMode.MOVEMENT)
-			{
-				for(int y = 0; y < map.getMapData().borderHeight; y++)
-				{
-					for(int x = 0; x < map.getMapData().borderWidth; x++)
-					{
+			if(MapEditorPanel.getMode() == EditMode.MOVEMENT) {
+				for(int y = 0; y < map.getMapData().borderHeight; y++) {
+					for(int x = 0; x < map.getMapData().borderWidth; x++) {
 
 						int TileMeta=(MainGUI.mapEditorPanel.map.getMapTileData().getTile(x, y).getMeta());
 						AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, DataStore.mehPermissionTranslucency);
 						((Graphics2D)g).setComposite(ac);
-						((Graphics2D)g).drawImage(((BufferedImage)(PermissionTilePanel.imgPermissions)).getSubimage(TileMeta*16, 0, 16, 16), (this.getWidth() / 2) - (map.getMapData().borderWidth * 8) + x*16, 20+y*16, this);
-
-
+						g.drawImage(((BufferedImage)(PermissionTilePanel.imgPermissions)).getSubimage(TileMeta*16, 0, 16, 16), (this.getWidth() / 2) - (map.getMapData().borderWidth * 8) + x*16, 20+y*16, this);
 					}
 				}
 			}
@@ -242,23 +195,11 @@ public class BorderEditorPanel extends JPanel
 			g.setColor(MainGUI.uiSettings.cursorColor);
 			try {
 				g.drawRect((this.getWidth() / 2) - (map.getMapData().borderWidth * 8) + (int)(((mouseX) % map.getMapData().mapWidth) * 16), 20+(mouseY * 16),MapEditorPanel.selectBox.width-1,MapEditorPanel.selectBox.height-1);
-			}
-            catch(Exception e) {
-
-            }
-		}
-		try
-		{
-			//g.drawImage(ImageIO.read(MainGUI.class.getResourceAsStream("/resources/smeargle.png")), 100, 240, null);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
+			} catch(Exception ignored) {}
 		}
 	}
 
-	public void reset()
-	{
+	public void reset() {
 		globalTiles = null;
 		localTiles = null;
 		map = null;

@@ -3,8 +3,8 @@ package us.plxhack.MEH.MapElements;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ISaveable;
 
-public class Trigger implements ISaveable
-{
+public class Trigger implements ISaveable {
+
 	public byte bX;
 	public byte b2;
 	public byte bY;
@@ -17,10 +17,8 @@ public class Trigger implements ISaveable
 
 	private GBARom rom;
 
-	void LoadTriggers(GBARom rom)
-	{
+	void LoadTriggers(GBARom rom) {
 		this.rom = rom;
-
 		bX = rom.readByte();
 		b2 = rom.readByte();
 		bY = rom.readByte();
@@ -32,8 +30,7 @@ public class Trigger implements ISaveable
 		pScript = rom.getPointer();
 	}
 
-	public Trigger(GBARom rom, int offset)
-	{
+	public Trigger(GBARom rom, int offset) {
 		rom.Seek(offset);
 		LoadTriggers(rom);
 	}
@@ -43,10 +40,8 @@ public class Trigger implements ISaveable
 		LoadTriggers(rom);
 	}
 
-	public Trigger(GBARom rom, byte x, byte y)
-	{
+	public Trigger(GBARom rom, byte x, byte y) {
 		this.rom = rom;
-
 		bX = 0;
 		b2 = 0;
 		bY = 0;
@@ -63,8 +58,7 @@ public class Trigger implements ISaveable
 		return 16;
 	}
 
-	public void save()
-	{
+	public void save() {
 		rom.writeByte(bX);
 		rom.writeByte(b2);
 		rom.writeByte(bY);

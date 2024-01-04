@@ -8,41 +8,33 @@ import us.plxhack.MEH.IO.Map;
 
 import java.util.ArrayList;
 
-public class SpritesSignManager implements ISaveable
-{
+public class SpritesSignManager implements ISaveable {
+
 	public ArrayList<SpriteSign> mapSigns;
 	private int internalOffset;
 	private int originalSize;
 	private Map loadedMap;
 	private GBARom rom;
 
-	public int getSpriteIndexAt(int x, int y)
-	{
+	public int getSpriteIndexAt(int x, int y) {
 		int i = 0;
-		for (SpriteSign s : mapSigns)
-		{
-			if (s.bX == x && s.bY == y)
-			{
+		for (SpriteSign s : mapSigns) {
+			if (s.bX == x && s.bY == y) {
 				return i;
 			}
 			i++;
 		}
-
 		return -1;
-
 	}
 
-	public SpritesSignManager(GBARom rom, Map m, int offset, int count)
-	{
+	public SpritesSignManager(GBARom rom, Map m, int offset, int count) {
 		internalOffset = offset;
 		this.rom = rom;
 		this.loadedMap = m;
-		
 		rom.Seek(offset);
 		mapSigns = new ArrayList<SpriteSign>();
 		int i = 0;
-		for (i = 0; i < count; i++)
-		{
+		for (i = 0; i < count; i++) {
 			mapSigns.add(new SpriteSign(rom));
 		}
 		originalSize = getSize();
@@ -63,21 +55,16 @@ public class SpritesSignManager implements ISaveable
 		mapSigns.remove(getSpriteIndexAt(x,y));
 	}
 
-	public void save()
-	{
+	public void save() {
 		rom.floodBytes(BitConverter.shortenPointer(internalOffset), rom.freeSpaceByte, originalSize);
-		
 		//TODO make this a setting, ie always repoint vs keep pointers
-		if(originalSize < getSize())
-		{
+		if(originalSize < getSize()) {
 			internalOffset = rom.findFreespace(DataStore.FreespaceStart, getSize());
-			
 			if(internalOffset < 0x08000000)
 				internalOffset += 0x08000000;
 		}
 		loadedMap.mapSprites.pSigns = internalOffset & 0x1FFFFFF;
 		loadedMap.mapSprites.bNumSigns = (byte)mapSigns.size();
-
 		rom.Seek(internalOffset);
 		for (SpriteSign s : mapSigns)
 			s.save();

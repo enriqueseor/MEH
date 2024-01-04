@@ -14,8 +14,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 
-public class ConnectionsEditorPanel extends JPanel
-{
+public class ConnectionsEditorPanel extends JPanel {
+
 	private static final long serialVersionUID = 7594967420892677608L;
 
 	//Map data
@@ -70,15 +70,11 @@ public class ConnectionsEditorPanel extends JPanel
 	private Point startDrag = new Point(-1,-1);
 	private Point mouseTracker = new Point(-1,-1);
 	
-	public ConnectionsEditorPanel() 
-	{
-		addMouseListener(new MouseAdapter() 
-		{
+	public ConnectionsEditorPanel() {
+		addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e)
-			{
-				if(e.getClickCount() > 1)
-				{
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount() > 1) {
 					for(int i = 0; i < upRect.length; i++)
 						if (upRect[i].contains(e.getX(), e.getY()))
 							MapIO.loadMap(upCon[i].bBank & 0xFF, upCon[i].bMap & 0xFF);
@@ -94,34 +90,29 @@ public class ConnectionsEditorPanel extends JPanel
 				}
 			}
 			@Override
-			public void mousePressed(MouseEvent e) 
-			{
+			public void mousePressed(MouseEvent e) {
 				if(e.getModifiersEx() != 1024)
 					return;
 				
 				startDrag = e.getPoint();
 				
 				for(int i = 0; i < upRect.length; i++)
-					if (upRect[i].contains(e.getX(), e.getY()))
-					{
+					if (upRect[i].contains(e.getX(), e.getY())) {
 						connectionDragging = ConnectionType.UP;
 						connectionNumDragging = i;
 					}
 				for(int i = 0; i < downRect.length; i++)
-					if (downRect[i].contains(e.getX(), e.getY()))
-					{
+					if (downRect[i].contains(e.getX(), e.getY())) {
 						connectionDragging = ConnectionType.DOWN;
 						connectionNumDragging = i;
 					}
 				for(int i = 0; i < leftRect.length; i++)
-					if (leftRect[i].contains(e.getX(), e.getY()))
-					{
+					if (leftRect[i].contains(e.getX(), e.getY())) {
 						connectionDragging = ConnectionType.LEFT;
 						connectionNumDragging = i;
 					}
 				for(int i = 0; i < rightRect.length; i++)
-					if (rightRect[i].contains(e.getX(), e.getY()))
-					{
+					if (rightRect[i].contains(e.getX(), e.getY())) {
 						connectionDragging = ConnectionType.RIGHT;
 						connectionNumDragging = i;
 					}
@@ -129,8 +120,7 @@ public class ConnectionsEditorPanel extends JPanel
 				dragging = true;
 			}
 			@Override
-			public void mouseReleased(MouseEvent e) 
-			{
+			public void mouseReleased(MouseEvent e) {
 				dragging = false;
 				startDrag = new Point(-1,-1);
 				ApplyEdits();
@@ -140,12 +130,9 @@ public class ConnectionsEditorPanel extends JPanel
 		});
 		addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
-			public void mouseDragged(MouseEvent e) 
-			{
-				if(e.getModifiersEx() == 1024 && dragging)
-				{
-					switch(connectionDragging)
-					{
+			public void mouseDragged(MouseEvent e) {
+				if(e.getModifiersEx() == 1024 && dragging) {
+					switch(connectionDragging) {
 						case UP:
 							upOfs[connectionNumDragging] = (int)((startDrag.x - e.getX()) / (16 / scale));
 							break;
@@ -161,9 +148,7 @@ public class ConnectionsEditorPanel extends JPanel
 					}
 					RecalculateScaling(false, false);
 					repaint();
-				}
-				else
-					dragging = false;
+				} else dragging = false;
 			}
 			@Override
 			public void mouseMoved(MouseEvent e) 
@@ -173,14 +158,11 @@ public class ConnectionsEditorPanel extends JPanel
 		});
 	}
 	
-	public void loadConnections(Map map)
-	{
+	public void loadConnections(Map map) {
 		resetData();
 		center = map;
 		int dC = 0, uC = 0, lC = 0, rC = 0;
-		
-		for(Connection c : map.mapConnections.aConnections)
-		{
+		for(Connection c : map.mapConnections.aConnections) {
 			if(c == null)
 				continue;
 			if(c.lType == 0x1)
@@ -191,7 +173,6 @@ public class ConnectionsEditorPanel extends JPanel
 				lC++;
 			else if(c.lType == 0x4)
 				rC++;
-
 			//TODO Diving maps!
 		}	
 		
@@ -252,22 +233,18 @@ public class ConnectionsEditorPanel extends JPanel
 		lC = 0;
 		rC = 0;
 		
-		for(Connection c : map.mapConnections.aConnections)
-		{
+		for(Connection c : map.mapConnections.aConnections) {
 			if(c == null)
 				continue;
-			if(c.lType == 0x1)
-			{
+			if(c.lType == 0x1) {
 				down[dC] = new Map(ROMManager.currentROM, c.bBank & 0xFF, c.bMap & 0xFF);
 				downImg[dC] = Map.renderMap(down[dC], false);
 				downCon[dC] = c;
 				dC++;
-				//if(dC > 1)
 				if(MapIO.DEBUG)
 					System.out.println("Down");
 			}
-			else if (c.lType == 0x2)
-			{
+			else if (c.lType == 0x2) {
 				up[uC] = new Map(ROMManager.currentROM, c.bBank & 0xFF, c.bMap & 0xFF);
 				upImg[uC] = Map.renderMap(up[uC], false);
 				upCon[uC] = c;
@@ -276,8 +253,7 @@ public class ConnectionsEditorPanel extends JPanel
 				if(MapIO.DEBUG)
 					System.out.println("Up");
 			}
-			else if(c.lType == 0x3)
-			{
+			else if(c.lType == 0x3) {
 				left[lC] = new Map(ROMManager.currentROM, c.bBank & 0xFF, c.bMap & 0xFF);
 				leftImg[lC] = Map.renderMap(left[lC], false);
 				leftCon[lC] = c;
@@ -286,8 +262,7 @@ public class ConnectionsEditorPanel extends JPanel
 				if(MapIO.DEBUG)
 					System.out.println("Left");
 			}
-			else if(c.lType == 0x4)
-			{
+			else if(c.lType == 0x4) {
 				right[rC] = new Map(ROMManager.currentROM, c.bBank & 0xFF, c.bMap & 0xFF);
 				rightImg[rC] = Map.renderMap(right[rC], false);
 				rightCon[rC] = c;
@@ -296,76 +271,57 @@ public class ConnectionsEditorPanel extends JPanel
 				if(MapIO.DEBUG)
 					System.out.println("Right");
 			}
-
 			//TODO Diving maps!
 		}	
 		upOfs = new double[upCon.length];
 		downOfs = new double[downCon.length];
 		leftOfs = new double[leftCon.length];
 		rightOfs = new double[rightCon.length];
-		
 		centerImg = Map.renderMap(center, false); //Render last to switch the tileset back to normal
-		
 		RescaleImages();
 	}
 	
-	private void ApplyEdits()
-	{
-		try
-		{
+	private void ApplyEdits() {
+		try {
 			int i = 0;
-			for(Connection con : upCon)
-			{
+			for(Connection con : upCon) {
 				con.lOffset -= upOfs[i];
 				for(Connection c : up[i].mapConnections.aConnections)
 					if((int)((long)BankLoader.maps[c.bBank].get(c.bMap)) == center.dataOffset)
 						c.lOffset = -con.lOffset;
 				i++;
 			}
-		}
-		catch(Exception e){}
-		
-		try
-		{
+		} catch(Exception ignored){}
+		try {
 			int i = 0;
-			for(Connection con : downCon)
-			{
+			for(Connection con : downCon) {
 				con.lOffset -= downOfs[i];
 				for(Connection c : down[i].mapConnections.aConnections)
 					if((int)((long)BankLoader.maps[c.bBank].get(c.bMap)) == center.dataOffset)
 						c.lOffset = -con.lOffset;
 				i++;
 			}
-		}
-		catch(Exception e){}
-		
-		try
-		{
+		} catch(Exception ignored){}
+		try {
 			int i = 0;
-			for(Connection con : leftCon)
-			{
+			for(Connection con : leftCon) {
 				con.lOffset -= leftOfs[i];
 				for(Connection c : left[i].mapConnections.aConnections)
 					if((int)((long)BankLoader.maps[c.bBank].get(c.bMap)) == center.dataOffset)
 						c.lOffset = -con.lOffset;
 				i++;
 			}
-		}
-		catch(Exception e){}
-		
-		try
-		{
+		} catch(Exception ignored){}
+		try {
 			int i = 0;
-			for(Connection con : rightCon)
-			{
+			for(Connection con : rightCon) {
 				con.lOffset -= rightOfs[i];
 				for(Connection c : right[i].mapConnections.aConnections)
 					if((int)((long)BankLoader.maps[c.bBank].get(c.bMap)) == center.dataOffset)
 						c.lOffset = -con.lOffset;
 				i++;
 			}
-		}
-		catch(Exception e){}
+		} catch(Exception ignored){}
 		upOfs = new double[upCon.length];
 		downOfs = new double[downCon.length];
 		leftOfs = new double[leftCon.length];
@@ -373,14 +329,11 @@ public class ConnectionsEditorPanel extends JPanel
 	}
 	
 	double lastScale = -1;
-	private void RecalculateScaling(boolean resize, boolean scroll)
-	{
-		try
-		{
+	private void RecalculateScaling(boolean resize, boolean scroll) {
+		try {
 			long largestW = 0;
 			long largestH = 0;
-			for(int i = 0; i < left.length; i++)
-			{
+			for(int i = 0; i < left.length; i++) {
 				lW[i] = left[i].getMapData().mapWidth * 16;
 				lH[i] = left[i].getMapData().mapHeight * 16;
 				if(lW[i] > largestW)
@@ -390,15 +343,11 @@ public class ConnectionsEditorPanel extends JPanel
 			}
 			lWB = largestW;
 			lHB = largestH;
-		}
-		catch(Exception e){}
-		
-		try
-		{
+		} catch(Exception ignored){}
+		try {
 			long largestW = 0;
 			long largestH = 0;
-			for(int i = 0; i < right.length; i++)
-			{
+			for(int i = 0; i < right.length; i++) {
 				rW[i] = right[i].getMapData().mapWidth * 16;
 				rH[i] = right[i].getMapData().mapHeight * 16;
 				if(rW[i] > largestW)
@@ -408,19 +357,15 @@ public class ConnectionsEditorPanel extends JPanel
 			}
 			rWB = largestW;
 			rHB = largestH;
-		}
-		catch(Exception e){}
+		} catch(Exception ignored){}
 		long largestUOffset = 0;
-		try
-		{
+		try {
 			long largestW = 0;
 			long largestH = 0;
-			for(int i = 0; i < up.length; i++)
-			{
+			for(int i = 0; i < up.length; i++) {
 				uW[i] = up[i].getMapData().mapWidth * 16;
 				uH[i] = up[i].getMapData().mapHeight * 16;
-				if(uW[i] > largestW)
-				{
+				if(uW[i] > largestW) {
 					largestW = uW[i];
 					largestUOffset = upCon[i].lOffset;
 				}
@@ -429,19 +374,15 @@ public class ConnectionsEditorPanel extends JPanel
 			}
 			uWB = largestW;
 			uHB = largestH;
-		}
-		catch(Exception e){}
+		} catch(Exception ignored){}
 		long largestDOffset = 0;
-		try
-		{
+		try {
 			long largestW = 0;
 			long largestH = 0;
-			for(int i = 0; i < down.length; i++)
-			{
+			for(int i = 0; i < down.length; i++) {
 				dW[i] = down[i].getMapData().mapWidth * 16;
 				dH[i] = down[i].getMapData().mapHeight * 16;
-				if(dW[i] > largestW)
-				{
+				if(dW[i] > largestW) {
 					largestW = dW[i];
 					largestDOffset = downCon[i].lOffset;
 				}
@@ -450,81 +391,53 @@ public class ConnectionsEditorPanel extends JPanel
 			}
 			dWB = largestW;
 			dHB = largestH;
-		}
-		catch(Exception e){}
+		} catch(Exception ignored){}
 		
-		if(resize)
-		{
+		if(resize) {
 			long xAdj2 = 0;
-			try
-			{
+			try {
 				//TODO Find widest of each side
 				xAdj = (int) (uWB / 16 > center.getMapData().mapWidth ? uWB / 16 - center.getMapData().mapWidth + largestUOffset : 0);
 				xAdj2 = (int) (dWB / 16 > center.getMapData().mapWidth ? dWB / 16 - center.getMapData().mapWidth + largestDOffset : 0);
 				int wAdj = (int) (uWB / 16 > center.getMapData().mapWidth ? uWB / 16 - center.getMapData().mapWidth + largestUOffset : 0);
 				int wAdj2 = (int) (dWB / 16 > center.getMapData().mapWidth ? dWB / 16 - center.getMapData().mapWidth + largestDOffset : 0);
-			}
-			catch(Exception e){}
+			} catch(Exception ignored){}
 			xAdj = Math.max(xAdj,xAdj2) * 16;
-			
-			
+
 			setPreferredSize(new Dimension((int)(((lWB + (center.getMapData().mapWidth * 16) + rWB + xAdj)) / scale), ((int)(((uHB + (center.getMapData().mapHeight * 16) + dHB)) / scale))));
 			setSize(this.getPreferredSize());
-			
-			//TODO scale around a point
-			/*if(lastScale != scale && lastScale != -1)
-			{
-				double scalediff = (lastScale - scale);
-				JViewport jsp = (JViewport)this.getParent();
-				Rectangle toCenterMap = this.getBounds();
-				toCenterMap.setLocation((int)((mouseTracker.x)*(scalediff-1)+toCenterMap.x*scalediff),(int)((toCenterMap.height - mouseTracker.y)*(scalediff-1)-toCenterMap.y*scalediff)); 	 
-				jsp.scrollRectToVisible(toCenterMap);						
-			}*/
 		}
-		if(scroll)
-		{
+		if(scroll) {
 			JViewport jsp = (JViewport)this.getParent();
 			Rectangle toCenterMap = this.getBounds();
 			toCenterMap.setLocation((int)(lWB / scale), (int)(uHB / scale)); 	//TODO center town instead of bringing it to the corner. 
-			jsp.scrollRectToVisible(toCenterMap);						// Corner might be useful for a more seamless transition from the
-																		// map editor though, so we'll have to see.
+			jsp.scrollRectToVisible(toCenterMap);
 		}
-		
-		try
-		{
+		try {
 			for(int i = 0; i < upCon.length; i++)
 				upRect[i] = new Rectangle((int)((lWB + (upCon[i].lOffset * 16) + xAdj) / scale),0,(int)(uW[i] / scale),(int)(uH[i] / scale));
-		}
-		catch(Exception e){}
-		try
-		{
+		} catch(Exception ignored){}
+		try {
 			//TODO Find largest of connections
 			centerRect = new Rectangle((int)((lWB/ scale) + xAdj / scale), (int)(uHB / scale),(int)((center.getMapData().mapWidth * 16) / scale),(int)((center.getMapData().mapHeight * 16) / scale));
-		}
-		catch(Exception e){}
-		try
-		{
+		} catch(Exception ignored){}
+		try {
 			for(int i = 0; i < leftCon.length; i++)
 				leftRect[i] = new Rectangle(0,((int)((uHB + (leftCon[i].lOffset * 16) + xAdj) / scale)),(int)(lW[i] / scale),(int)(lH[i] / scale));
-		}
-		catch(Exception e){}
-		try
-		{
+		} catch(Exception ignored){}
+		try {
 			for(int i = 0; i < rightCon.length; i++)
 				rightRect[i] = new Rectangle((int)((lWB + ((int)center.getMapData().mapWidth * 16) + xAdj) / scale), (int)((uHB + (int)(rightCon[i].lOffset * 16)) / scale),(int)(rW[i] / scale),(int)(rH[i] / scale));
 		}
 		catch(Exception e){e.printStackTrace();}
-		try
-		{
+		try {
 			for(int i = 0; i < downCon.length; i++)
 				downRect[i] = new Rectangle((int)((lWB + (int)(downCon[i].lOffset * 16) + xAdj) / scale), (int)((uHB + ((int)center.getMapData().mapHeight * 16)) / scale),(int)(dW[i] / scale),(int)(dH[i] / scale));
-		}
-		catch(Exception e){}
+		} catch(Exception ignored){}
 		lastScale = scale;
 	}
 	
-	private double average(double a, double b)
-	{
+	private double average(double a, double b) {
 		return (a+b)/2;
 	}
 	
@@ -533,43 +446,31 @@ public class ConnectionsEditorPanel extends JPanel
 		RescaleImages(true);
 	}
 	
-	public void RescaleImages(boolean movescroll)
-	{
+	public void RescaleImages(boolean movescroll) {
 		RecalculateScaling(true, movescroll);
-		
-		try
-		{
+		try {
 			for(int i = 0; i < upImgS.length; i++)
 				upImgS[i] = upImg[i].getScaledInstance((int)(upImg[i].getWidth(null) / scale), (int)(upImg[i].getHeight(null) / scale), filter);
-		}
-		catch(Exception e){}
-		try
-		{
+		} catch(Exception ignored){}
+		try {
 			centerImgS = centerImg.getScaledInstance((int)(centerImg.getWidth(null) / scale), (int)(centerImg.getHeight(null) / scale), filter);
-		}
-		catch(Exception e){}
-		try
-		{
+		} catch(Exception ignored){}
+		try {
 			for(int i = 0; i < leftImgS.length; i++)
 				leftImgS[i] = leftImg[i].getScaledInstance((int)(leftImg[i].getWidth(null) / scale), (int)(leftImg[i].getHeight(null) / scale), filter);
 		}
 		catch(Exception e){e.printStackTrace();}
-		try
-		{
+		try {
 			for(int i = 0; i < rightImgS.length; i++)
-			rightImgS[i] = rightImg[i].getScaledInstance((int)(rightImg[i].getWidth(null) / scale), (int)(rightImg[i].getHeight(null) / scale), filter);
-		}
-		catch(Exception e){}
-		try
-		{
+				rightImgS[i] = rightImg[i].getScaledInstance((int)(rightImg[i].getWidth(null) / scale), (int)(rightImg[i].getHeight(null) / scale), filter);
+		} catch(Exception ignored){}
+		try {
 			for(int i = 0; i < downImgS.length; i++)
-			downImgS[i] = downImg[i].getScaledInstance((int)(downImg[i].getWidth(null) / scale), (int)(downImg[i].getHeight(null) / scale), filter);
-		}
-		catch(Exception e){}
+				downImgS[i] = downImg[i].getScaledInstance((int)(downImg[i].getWidth(null) / scale), (int)(downImg[i].getHeight(null) / scale), filter);
+		} catch(Exception ignored){}
 	}
 	
-	private void resetData()
-	{
+	private void resetData() {
 		up = null;
 		down = null;
 		left = null;
@@ -586,14 +487,6 @@ public class ConnectionsEditorPanel extends JPanel
 		leftImgS = null;
 		rightImgS = null;
 		centerImgS = null;
-		
-		/*upRect = new Rectangle(-1,-1,1,1);
-		downRect = new Rectangle(-1,-1,1,1);
-		leftRect = new Rectangle(-1,-1,1,1);
-		rightRect = new Rectangle(-1,-1,1,1);
-		centerRect = new Rectangle(-1,-1,1,1);*/
-		
-		//lW =0; lH = 0; rW = 0; rH = 0; uW = 0; uH = 0; dW = 0; dH = 0;
 	}
 	
 	protected void paintComponent(Graphics g)
@@ -615,80 +508,51 @@ public class ConnectionsEditorPanel extends JPanel
 		}
 		catch(Exception e)
 		{e.printStackTrace();}
-		try
-		{
+		try {
 			g.drawImage(centerImgS,centerRect.x,centerRect.y,this);
-		}
-		catch(Exception e)
-		{e.printStackTrace();}
-		try
-		{
-			for(int i = 0; i < leftImgS.length;i++)
-			{
+		} catch(Exception e) {e.printStackTrace();}
+		try {
+			for(int i = 0; i < leftImgS.length;i++) {
 				g.drawImage(leftImgS[i],leftRect[i].x,leftRect[i].y - (int)(leftOfs[i] * 16 / scale),this);
 				drawRect(g, leftRect[i]);
 			}
-		}
-		catch(Exception e)
-		{e.printStackTrace();}
-		try
-		{
-			for(int i = 0; i < rightImgS.length;i++)
-			{
+		} catch(Exception e) {e.printStackTrace();}
+		try {
+			for(int i = 0; i < rightImgS.length;i++) {
 				g.drawImage(rightImgS[i],rightRect[i].x,rightRect[i].y - (int)(rightOfs[i] * 16 / scale),this);
 				drawRect(g, rightRect[i]);
 			}
-		}
-		catch(Exception e)
-		{e.printStackTrace();}
-		try
-		{
-			for(int i = 0; i < downImgS.length;i++)
-			{
+		} catch(Exception e) {e.printStackTrace();}
+		try {
+			for(int i = 0; i < downImgS.length;i++) {
 				g.drawImage(downImgS[i], downRect[i].x - (int)(downOfs[i] * 16 / scale), downRect[i].y,this);
 				drawRect(g, downRect[i]);
 			}
 		}
-		catch(Exception e)
-		{e.printStackTrace();}
+		catch(Exception e) {e.printStackTrace();}
 		g.setColor(MainGUI.uiSettings.markerColor);
 		drawRect(g, centerRect);
 	}
 	
-	private void drawRect(Graphics g, Rectangle r)
-	{
+	private void drawRect(Graphics g, Rectangle r) {
 		if(r != null)
 			g.drawRect(r.x, r.y, r.width, r.height);
 	}
 
-	public void save()
-	{
-		try
-		{
-			for(int i = 0; i < up.length; i++)
-				up[i].save();
-		}
-		catch(Exception e){}
-		try
-		{
-			for(int i = 0; i < down.length; i++)
-				down[i].save();
-		}
-		catch(Exception e){}
-		try
-		{
-			for(int i = 0; i < left.length; i++)
-				left[i].save();
-		}
-		catch(Exception e){}
-		try
-		{
-			for(int i = 0; i < right.length; i++)
-				right[i].save();
-		}
-		catch(Exception e){}
+	public void save() {
+		try {
+            for (Map map : up) map.save();
+		} catch(Exception ignored){}
+		try {
+            for (Map map : down) map.save();
+		} catch(Exception ignored){}
+		try {
+            for (Map map : left) map.save();
+		} catch(Exception ignored){}
+		try {
+            for (Map map : right) map.save();
+		} catch(Exception ignored){}
 	}
-
 	public int getLargestWidth()
 	{
 		return 0;
