@@ -1,13 +1,13 @@
 package us.plxhack.MEH.IO;
 
-public class Tile
-{
+public class Tile {
+
 	private int tileNum;
 	private int pal;
 	public boolean xFlip;
 	public boolean yFlip;
-	public Tile(int tileNum, int palette, boolean xFlip, boolean yFlip)
-	{
+
+	public Tile(int tileNum, int palette, boolean xFlip, boolean yFlip) {
 		if(tileNum > 0x3FF)
 			tileNum = 0x3FF;
 		
@@ -30,19 +30,15 @@ public class Tile
 		return pal;
 	}
 	
-	public void setTileNumber(int number)
-	{
+	public void setTileNumber(int number) {
 		if(number > 0x3FF)
 			number = 0x3FF;
-		
 		tileNum = number;
 	}
 	
-	public void setPaletteNum(int palette)
-	{
+	public void setPaletteNum(int palette) {
 		if(palette > 12)
 			palette = 12;
-		
 		pal = palette;
 	}
 

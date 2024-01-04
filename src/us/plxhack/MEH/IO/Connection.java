@@ -3,21 +3,19 @@ package us.plxhack.MEH.IO;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import us.plxhack.MEH.Structures.ConnectionType;
 
-public class Connection
-{
-	private GBARom rom;
+public class Connection {
+
+	private final GBARom rom;
 	public long lType, lOffset;
 	public byte bBank, bMap;
 	public int wFiller;
 	
-	public Connection(GBARom rom)
-	{
+	public Connection(GBARom rom) {
 		this.rom = rom;
 		load();
 	}
 	
-	public Connection(GBARom rom, ConnectionType c, byte bank, byte map)
-	{
+	public Connection(GBARom rom, ConnectionType c, byte bank, byte map) {
 		this.rom = rom;
 		lType = c.ordinal();
 		lOffset = 0;
@@ -26,8 +24,7 @@ public class Connection
 		wFiller = 0;
 	}
 	
-	public void load()
-	{
+	public void load() {
 		lType = rom.getPointer(true);
 		lOffset = rom.getSignedLong(true);
 		bBank = rom.readByte();
@@ -35,8 +32,7 @@ public class Connection
 		wFiller = rom.readWord();
 	}
 	
-	public void save()
-	{
+	public void save() {
 		rom.writePointer(lType);
 		rom.writeSignedPointer(lOffset);
 		rom.writeByte(bBank);

@@ -13,15 +13,12 @@ import us.plxhack.MEH.UI.MainGUI;
 import javax.swing.*;
 
 import java.awt.*;
-import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Date;
 
-public class MapIO
-{
-	public static Map loadedMap;
+public class MapIO {
 
+	public static Map loadedMap;
 	public static BorderMap borderMap;
 	public static int selectedBank = 0;
 	public static int selectedMap = 0;
@@ -32,102 +29,84 @@ public class MapIO
 	public static boolean DEBUG = false;
 	public static BlockRenderer blockRenderer = new BlockRenderer();
 
-	public static void loadMap(int bank, int map)
-	{
+	public static void loadMap(int bank, int map) {
 		selectedMap = map;
 		selectedBank = bank;
 		loadMap();
 	}
 
-	public static void loadMap()
-	{
+	public static void loadMap() {
 		long offset = BankLoader.maps[selectedBank].get(selectedMap);
 		loadMapFromPointer(offset, false);
         MainGUI.updateTree();
 	}
 
-	public static void loadMapFromPointer(long offs, boolean justPointer)
-	{
+	public static void loadMapFromPointer(long offs, boolean justPointer) {
 		MainGUI.setStatus("Loading Map...");
 		final long offset = offs;
-
 		if (!justPointer) {
 			currentBank = -1;
 			currentMap = -1;
 		}
 
-		new Thread()
-		{
+		new Thread(() -> {
+            Date d = new Date();
+            doneLoading = false;
+            if (loadedMap != null)
+                TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).resetCustomTiles();
 
-			public void run()
-			{
-				Date d = new Date();
-				doneLoading = false;
-				if (loadedMap != null)
-					TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).resetCustomTiles();
+            loadedMap = new Map(ROMManager.getActiveROM(), (int) (offset));
+            currentBank = selectedBank;
+            currentMap = selectedMap;
+            TilesetCache.switchTileset(loadedMap);
 
-				loadedMap = new Map(ROMManager.getActiveROM(), (int) (offset));
-				currentBank = selectedBank;
-				currentMap = selectedMap;
-				TilesetCache.switchTileset(loadedMap);
+            borderMap = new BorderMap(ROMManager.getActiveROM(), loadedMap);
+            MainGUI.reloadMimeLabels();
+            MainGUI.mapEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
+            MainGUI.mapEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
+            MainGUI.eventEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
+            MainGUI.eventEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
 
-				borderMap = new BorderMap(ROMManager.getActiveROM(), loadedMap);
-				MainGUI.reloadMimeLabels();
-				MainGUI.mapEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
-				MainGUI.mapEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
-				MainGUI.eventEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
-				MainGUI.eventEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
+            MainGUI.tileEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
+            MainGUI.tileEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
+            MainGUI.tileEditorPanel.DrawTileset();
+            MainGUI.tileEditorPanel.repaint();
 
-				MainGUI.tileEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
-				MainGUI.tileEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
-				MainGUI.tileEditorPanel.DrawTileset();
-				MainGUI.tileEditorPanel.repaint();
+            MainGUI.mapEditorPanel.setMap(loadedMap);
+            MainGUI.mapEditorPanel.DrawMap();
+            MainGUI.mapEditorPanel.DrawMovementPerms();
+            MainGUI.mapEditorPanel.repaint();
 
-				MainGUI.mapEditorPanel.setMap(loadedMap);
-				MainGUI.mapEditorPanel.DrawMap();
-				MainGUI.mapEditorPanel.DrawMovementPerms();
-				MainGUI.mapEditorPanel.repaint();
+            MainGUI.eventEditorPanel.setMap(loadedMap);
+            MainGUI.eventEditorPanel.Redraw = true;
+            MainGUI.eventEditorPanel.DrawMap();
+            MainGUI.eventEditorPanel.repaint();
+            MainGUI.borderTileEditor.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
+            MainGUI.borderTileEditor.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
+            MainGUI.borderTileEditor.setMap(borderMap);
+            MainGUI.borderTileEditor.repaint();
+            MainGUI.connectionsEditorPanel.loadConnections(loadedMap);
+            MainGUI.connectionsEditorPanel.repaint();
+            try {
+                wildData = (WildData) WildDataCache.getWildData(currentBank, currentMap).clone();
+            } catch (Exception ignored) {}
 
-				MainGUI.eventEditorPanel.setMap(loadedMap);
-				MainGUI.eventEditorPanel.Redraw = true;
-				MainGUI.eventEditorPanel.DrawMap();
-				MainGUI.eventEditorPanel.repaint();
-				MainGUI.borderTileEditor.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
-				MainGUI.borderTileEditor.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
-				MainGUI.borderTileEditor.setMap(borderMap);
-				MainGUI.borderTileEditor.repaint();
-				MainGUI.connectionsEditorPanel.loadConnections(loadedMap);
-				MainGUI.connectionsEditorPanel.repaint();
-				try {
-					wildData = (WildData) WildDataCache.getWildData(currentBank, currentMap).clone();
-				}
-				catch (Exception e) {
-
-				}
-
-				MainGUI.loadWildPokemon();
-
-				MainGUI.mapEditorPanel.repaint();
-				Date eD = new Date();
-				long time = eD.getTime() - d.getTime();
-				//MainGUI.setStatus("Done! Finished in " + (double) (time / 1000) + " seconds!");
-				doneLoading = true;
-
-				PluginManager.fireMapLoad(selectedBank, selectedMap);
-
-			}
-		}.start();
+            MainGUI.loadWildPokemon();
+            MainGUI.mapEditorPanel.repaint();
+            Date eD = new Date();
+            long time = eD.getTime() - d.getTime();
+            doneLoading = true;
+            PluginManager.fireMapLoad(selectedBank, selectedMap);
+        }).start();
         MainGUI.setStatus(MainGUI.mapBanks.getLastSelectedPathComponent().toString() + " loaded.");
 	}
 
 	public static String[] pokemonNames;
 
-	public static void loadPokemonNames()
-	{
+	public static void loadPokemonNames() {
 		pokemonNames = new String[DataStore.NumPokemon];
 		ROMManager.currentROM.Seek(ROMManager.currentROM.getPointerAsInt(DataStore.SpeciesNames));
-		for (int i = 0; i < DataStore.NumPokemon; i++)
-		{
+		for (int i = 0; i < DataStore.NumPokemon; i++) {
 			pokemonNames[i] = ROMManager.currentROM.readPokeText();
 			System.out.println(pokemonNames[i]);
 		}
@@ -145,41 +124,25 @@ public class MapIO
 		addStringArray(MainGUI.pkName12, pokemonNames);
 	}
 
-
-	public static void openScript(int scriptOffset)
-	{
-		if (DataStore.mehSettingCallScriptEditor == null || DataStore.mehSettingCallScriptEditor.isEmpty())
-		{
+	public static void openScript(int scriptOffset) {
+		if (DataStore.mehSettingCallScriptEditor == null || DataStore.mehSettingCallScriptEditor.isEmpty()) {
 			int reply = JOptionPane.showConfirmDialog(null, "It appears that you have no script editor registered with MEH. Would you like to search for one?", "You need teh Script Editorz!!!", JOptionPane.YES_NO_OPTION);
-			if (reply == JOptionPane.YES_OPTION)
-			{
+			if (reply == JOptionPane.YES_OPTION) {
 				FileDialog fd = new FileDialog(new Frame(), "Choose your script editor...", FileDialog.LOAD);
-				fd.setFilenameFilter(new FilenameFilter()
-				{
-					public boolean accept(File dir, String name)
-					{
-						return ((System.getProperty("os.name").toLowerCase().contains("win") ? name.toLowerCase().endsWith(".exe") : name.toLowerCase().endsWith(".*")) || name.toLowerCase().endsWith(".jar"));
-					}
-				});
-
+				fd.setFilenameFilter((dir, name) -> ((System.getProperty("os.name").toLowerCase().contains("win") ? name.toLowerCase().endsWith(".exe") : name.toLowerCase().endsWith(".*")) || name.toLowerCase().endsWith(".jar")));
 				fd.setVisible(true);
 				String location = fd.getDirectory() + fd.getFile();
 				if (location.isEmpty())
 					return;
-
-				if (!location.isEmpty())
-					DataStore.mehSettingCallScriptEditor = location;
+                DataStore.mehSettingCallScriptEditor = location;
 			}
 		}
-
 		try {
 			Runtime r = Runtime.getRuntime();
 			String s = (DataStore.mehSettingCallScriptEditor.toLowerCase().endsWith(".jar") ? "java -jar " : "") + DataStore.mehSettingCallScriptEditor + " \"" + ROMManager.currentROM.input_filepath.replace("\"", "") + "\" 0x" + String.format("%x", scriptOffset);
 			r.exec(s);
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "It seems that your script editor has gone missing. Look around for it and try it again. I'm sure it'll work eventually.");
-			e.printStackTrace();
 		}
 	}
 

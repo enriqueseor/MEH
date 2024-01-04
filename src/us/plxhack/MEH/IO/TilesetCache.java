@@ -6,57 +6,46 @@ import org.zzl.minegaming.GBAUtils.ROMManager;
 
 import java.util.HashMap;
 
-public class TilesetCache
-{
-	private static HashMap<Integer, Tileset> cache = new HashMap<Integer, Tileset>();
+public class TilesetCache {
+
+	private static HashMap<Integer, Tileset> cache = new HashMap<>();
 	private GBARom rom;
-	
 	private TilesetCache(){}
 	
-	public static void contains(int offset)
-	{
-		
-	}
+	public static void contains(int offset) {}
 	
 	/**
 	 * Pulls a tileset from the tileset cache. Create a new tileset if one is not cached.
 	 * @param offset Tileset data offset
-	 * @return
 	 */
-	public static Tileset get(int offset)
-	{
-		if(cache.containsKey(offset))
-		{
-			Tileset t = cache.get(offset);
-			if(t.modified)
-			{
+	public static Tileset get(int offset) {
+        Tileset t;
+        if(cache.containsKey(offset)) {
+            t = cache.get(offset);
+			if(t.modified) {
 				t.loadData(offset);
 				t.renderTiles(offset);
 				t.modified = false;
 			}
-			return t;
-		}
-		else
-		{
-			Tileset t =  new Tileset(ROMManager.getActiveROM(), offset);
+        }
+		else {
+            t = new Tileset(ROMManager.getActiveROM(), offset);
 			cache.put(offset, t);
-			return t;
-		}
-	}
+        }
+        return t;
+    }
 
 	public static void clearCache()
 	{
-		cache = new HashMap<Integer, Tileset>();
+		cache = new HashMap<>();
 	}
 
-	public static void saveAllTilesets()
-	{
+	public static void saveAllTilesets() {
 		for(Tileset t : cache.values())
 			t.save();
 	}
 	
-	public static void switchTileset(Map loadedMap)
-	{
+	public static void switchTileset(Map loadedMap) {
 		get(loadedMap.getMapData().globalTileSetPtr).resetPalettes();
 		get(loadedMap.getMapData().localTileSetPtr).resetPalettes();
 		for(int j = 1; j < 5; j++)

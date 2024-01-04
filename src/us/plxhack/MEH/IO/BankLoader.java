@@ -10,10 +10,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
+import java.util.*;
 
 public class BankLoader extends Thread implements Runnable {
 	private static GBARom rom;
@@ -21,17 +18,16 @@ public class BankLoader extends Thread implements Runnable {
 	JLabel lbl;
 	JTree tree;
 	DefaultMutableTreeNode node;
-	private static int mapNamesPtr;
-	public static ArrayList<Long>[] maps;
-	public static ArrayList<Long> bankPointers = new ArrayList<Long>();
+    public static ArrayList<Long>[] maps;
+	public static ArrayList<Long> bankPointers = new ArrayList<>();
 	public static boolean banksLoaded = false;
-	public static HashMap<Integer,String> mapNames = new HashMap<Integer,String>();
+	public static HashMap<Integer,String> mapNames = new HashMap<>();
 	
 	public static void reset() {
 		try {
-			mapNamesPtr = rom.getPointerAsInt((int)DataStore.MapLabels);
+            int mapNamesPtr = rom.getPointerAsInt((int) DataStore.MapLabels);
 			maps = new ArrayList[DataStore.NumBanks];
-			bankPointers = new ArrayList<Long>();
+			bankPointers = new ArrayList<>();
 			banksLoaded = false;
 		} catch(Exception ignored) {}
 	}
@@ -64,7 +60,7 @@ public class BankLoader extends Thread implements Runnable {
 		int mapNum = 0;
 		for(long l : bankPointers) {
 			ArrayList<byte[]> preMapList = rom.loadArrayOfStructuredData((BitConverter.shortenPointer(l)), DataStore.MapBankSize[mapNum], 4);
-			ArrayList<Long> mapList = new ArrayList<Long>();
+			ArrayList<Long> mapList = new ArrayList<>();
 			int miniMapNum = 0;
 			for(byte[] b : preMapList) {
 				setStatus("Loading maps into tree...\tBank " + mapNum + ", map " + miniMapNum);
@@ -73,7 +69,7 @@ public class BankLoader extends Thread implements Runnable {
 					mapList.add(dataPtr);
 					int mapName = BitConverter.GrabBytesAsInts(rom.getData(), (int)((dataPtr - (8 << 24)) + 0x14), 1)[0];
 					//mapName -= 0x58; //TODO: Add Jambo51's map header hack
-					int mapNamePokePtr = 0;
+					int mapNamePokePtr;
 					String convMapName = "";
 					if(DataStore.EngineVersion==1) {
 						if(!mapNames.containsKey(mapName)) {
@@ -88,8 +84,8 @@ public class BankLoader extends Thread implements Runnable {
 							mapNames.put(mapName, convMapName);
 						} else { convMapName = mapNames.get(mapName);}
 					}
-					MapTreeNode node = new MapTreeNode(convMapName + " (" + mapNum + "." + miniMapNum + ")",mapNum,miniMapNum); //TODO: Pull PokeText from header
-					findNode(root,String.valueOf(mapNum)).add(node);
+					MapTreeNode node = new MapTreeNode(convMapName + " (" + mapNum + "." + miniMapNum + ")", mapNum, miniMapNum); //TODO: Pull PokeText from header
+					Objects.requireNonNull(findNode(root, String.valueOf(mapNum))).add(node);
 					miniMapNum++;
 				} catch(Exception ignored) {}
 			}
@@ -141,7 +137,7 @@ public class BankLoader extends Thread implements Runnable {
 		return null;
 	}
 	
-	public class MapTreeNode extends DefaultMutableTreeNode {
+	public static class MapTreeNode extends DefaultMutableTreeNode {
 		public int bank;
 		public int map;
 		
