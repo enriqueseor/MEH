@@ -7,7 +7,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -19,8 +18,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class GBARom implements Cloneable
-{
+public class GBARom implements Cloneable {
 	private String headerCode = "";
 	private String headerName = "";
 	private String headerMaker = "";
@@ -29,63 +27,49 @@ public class GBARom implements Cloneable
 	public String input_filepath;
 	static byte[] current_rom_header;
 
-	HashMap<String, String> rom_header_names = new HashMap<String, String>();
-	HashMap<String, String> hex_tbl = new HashMap<String, String>();
+	HashMap<String, String> rom_header_names = new HashMap<>();
+	HashMap<String, String> hex_tbl = new HashMap<>();
 	
 	public boolean isPrimalDNAdded = false;
 	public boolean isRTCAdded = false;
 	public boolean isDNPkmnPatchAdded = false;
 
-	@SuppressWarnings("deprecation")
 	/**
 	 * Loads a ROM using a file dialog. Sets the loaded ROM as default.
 	 * @return The ROMManager ROM Id.
 	 */
-	public static int loadRom()
-	{
-	    //We use FileDialog here so that we get the System native file chooser instead of something else.
-		//If there's any issues with it on Windows we can implement a file choosing API and use both JFileChooser and FileDialog.
-        
-		//FileDialog implementation
-		/*FileDialog fd = new FileDialog(new Frame(), "Load ROM", FileDialog.LOAD);
-		fd.setFilenameFilter(new FilenameFilter() {
-		    public boolean accept(File dir, String name) {
-		      return (name.toLowerCase().endsWith(".gba") || name.toLowerCase().endsWith(".bin") || name.toLowerCase().endsWith(".rbc") || name.toLowerCase().endsWith(".rbh") || name.toLowerCase().endsWith(".but") || name.toLowerCase().endsWith(".bmp"));
-		    }
-		});
-		fd.setDirectory(System.getProperty("user.home"));
-		fd.setVisible(true);
-        String location = fd.getDirectory() + fd.getFile();
-
-        System.out.println(location);
-		if(location.isEmpty())
-			return -1;
-		if(fd.getFile() == null)
-			return -1;*/
-		
-		//JFileChooser implementation
+	public static int loadRom() {
 		FileFilter filter = new FileNameExtensionFilter("GBA ROM", "gba", "bin");
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileFilter(filter);
 		Action details = fileChooser.getActionMap().get("viewTypeDetails");
-		details.actionPerformed(null);
+		if (details != null) {
+			details.actionPerformed(null);
+		} else {
+			JFileChooser alternativeFileChooser = new JFileChooser();
+			alternativeFileChooser.setFileFilter(new FileNameExtensionFilter("GBA ROM", "gba", "bin"));
+			int result = alternativeFileChooser.showOpenDialog(new Frame());
+			if (result == JFileChooser.APPROVE_OPTION) {
+				String location = alternativeFileChooser.getSelectedFile().getAbsolutePath();
+			} else if (result == JFileChooser.CANCEL_OPTION || result == JFileChooser.ERROR_OPTION) {
+				System.out.println("User canceled the file selection.");
+			}
+		}
 		if (fileChooser.showOpenDialog(new Frame()) != JFileChooser.APPROVE_OPTION)
 			return -1;
 		String location = fileChooser.getSelectedFile().getAbsolutePath();
-
-		//System.out.println(location);
+		if(fileChooser.getSelectedFile() == null)
+			return -1;
 		if(location.isEmpty())
 			return -1;
 		if(fileChooser.getSelectedFile() == null)
 			return -1;
 		
 		int romID = ROMManager.getID();
-		try
-		{
+		try {
 			ROMManager.AddROM(romID, new GBARom(location));
 		}
-		catch (IOException e)
-		{
+		catch (IOException e) {
 			e.printStackTrace();
 			return -2;
 		}
@@ -216,22 +200,13 @@ public class GBARom implements Cloneable
 		internalOffset+=1;
 		return t;
 	}
-	/**
-	 * Reads a byte from an offset
-	 * @param offset Offset to read from
-	 * @return
-	 */
+
 	public int readByteAsInt(int offset)
 	{
 		return BitConverter.ToInts(readBytes(offset,1))[0];
 	}
-	/**
-	 * Reads a byte from an internal offset
-	 * @param offset Offset to read from
-	 * @return
-	 */
-	public int readByteAsInt()
-	{
+
+	public int readByteAsInt() {
 		int tmp=BitConverter.ToInts(readBytes(internalOffset,1))[0];
 		internalOffset++;
 		return tmp;
@@ -272,35 +247,22 @@ public class GBARom implements Cloneable
 		writeWord(internalOffset,toWrite);
 		internalOffset += 2;
 	}
-	
-	/**
-	 * Reads a 16 bit word from an InternalOffset
-	 * @param offset Offset to read from
-	 * @return
-	 */
-	public int readWord()
-	{
+
+	public int readWord() {
 		int[] words = BitConverter.ToInts(readBytes(internalOffset,2));
 		internalOffset+=2;
 		return (words[1] << 8) + (words[0]);
 	}
-	/**
-	 *  Write an array of bytes to the ROM at a given offset
-	 * @param offset Offset to write the bytes at
-	 * @param bytes_to_write Bytes to write to the ROM
-	 */
-	public void writeBytes(int offset, byte[] bytes_to_write)
-	{
-		for (int count = 0; count < bytes_to_write.length; count++)
-		{
-			try {
-				rom_bytes[offset] = bytes_to_write[count];
-				offset++;
-			}
-			catch (Exception e) {
-				System.out.println("Tried to write outside of bounds! (" + (offset) + ")");
-			}
-		}
+
+	public void writeBytes(int offset, byte[] bytes_to_write) {
+        for (byte b : bytes_to_write) {
+            try {
+                rom_bytes[offset] = b;
+                offset++;
+            } catch (Exception e) {
+                System.out.println("Tried to write outside of bounds! (" + (offset) + ")");
+            }
+        }
 	}
 	
 	public void writeByte(byte b, int offset)
@@ -308,59 +270,37 @@ public class GBARom implements Cloneable
 		rom_bytes[offset] = b;
 	}
 	
-	public void writeByte(byte b)
-	{
+	public void writeByte(byte b) {
 		rom_bytes[internalOffset] = b;
 		internalOffset++;
 	}
 	
     public int internalOffset;
-    /**
-	 *  Write an array of bytes to the ROM at a given offset
-	 * @param offset Offset to write the bytes at
-	 * @param bytes_to_write Bytes to write to the ROM
-	 */
-    public void writeBytes(byte[] bytes_to_write)
-	{
-		for (int count = 0; count < bytes_to_write.length; count++)
-		{
-			rom_bytes[internalOffset] = bytes_to_write[count];
-			internalOffset++;
-		}
-	}
-	/**
-	 *  Write any changes made back to the ROM file on disk
-	 * @return
-	 */
-	@SuppressWarnings("resource")
-	public int commitChangesToROMFile()
-	{
-		FileOutputStream fos = null;
 
-		try
-		{
+    public void writeBytes(byte[] bytes_to_write) {
+        for (byte b : bytes_to_write) {
+            rom_bytes[internalOffset] = b;
+            internalOffset++;
+        }
+	}
+
+	public int commitChangesToROMFile() {
+		FileOutputStream fos = null;
+		try {
 			fos = new FileOutputStream(input_filepath);
-		}
-		catch (FileNotFoundException e)
-		{
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return 1;
 		}
-		try
-		{
+		try {
 			fos.write(rom_bytes);
-		}
-		catch (IOException e)
-		{
+		} catch (IOException e) {
 			e.printStackTrace();
 			return 2;
 		}
-		try
-		{
+		try {
 			fos.close();
-		}
-		catch (IOException e)
-		{
+		} catch (IOException e) {
 			e.printStackTrace();
 			return 3;
 		}
@@ -691,12 +631,6 @@ public class GBARom implements Cloneable
 		return headerMaker;
 	}
 
-	/**
-	 * Gets a pointer at an offset
-	 * @param offset Offset to get the pointer from
-	 * @param fullPointer Whether we should fetch the full 32 bit pointer or the 24 bit byte[] friendly version.
-	 * @return Pointer as a Long
-	 */
 	public long getPointer(boolean fullPointer)
 	{
 		byte[] data = BitConverter.GrabBytes(getData(), internalOffset, 4);
@@ -705,59 +639,32 @@ public class GBARom implements Cloneable
 		internalOffset+=4;
 		return BitConverter.ToInt32(data);
 	}
-	
-	/**
-	 * Gets a 24 bit pointer in the ROM as an integer. 
-	 * @param offset Offset to get the pointer from
-	 * @return Pointer as a Long
-	 */
+
 	public long getPointer()
 	{
 		return getPointer(false);
 	}
-	
-	/**
-	 * Gets a pointer in the ROM as an integer. 
-	 * Does not support 32 bit pointers due to Java's integer size not being long enough.
-	 * @param offset Offset to get the pointer from
-	 * @return Pointer as an Integer
-	 */
+
 	public int getPointerAsInt()
 	{
 		return (int)getPointer(internalOffset,false);
 	}
-	
-	/**
-	 * Reverses and writes a pointer to the ROM
-	 * @param pointer Pointer to write
-	 * @param offset Offset to write it at
-	 */
-	public void writePointer(long pointer)
-	{
-		byte[] bytes = BitConverter.ReverseBytes(BitConverter.GetBytes(pointer));
 
+	public void writePointer(long pointer) {
+		byte[] bytes = BitConverter.ReverseBytes(BitConverter.GetBytes(pointer));
 		writeBytes(internalOffset,bytes);
 		internalOffset+=4;
 	}
 	
-	public void writeSignedPointer(long pointer)
-	{
+	public void writeSignedPointer(long pointer) {
 		byte[] bytes = BitConverter.ReverseBytes(BitConverter.GetBytes(pointer));
-
 		writeBytes(internalOffset,bytes);
 		internalOffset+=4;
 	}
-	
-	/**
-	 * Reverses and writes a pointer to the ROM. Assumes pointer is ROM memory and appends 08 to it.
-	 * @param pointer Pointer to write (appends 08 automatically)
-	 * @param offset Offset to write it at
-	 */
-	public void writePointer(int pointer)
-	{
+
+	public void writePointer(int pointer) {
 		byte[] bytes = BitConverter.ReverseBytes(BitConverter.GetBytes(pointer));
 		bytes[3] += 0x8;
-
 		writeBytes(internalOffset,bytes);
 		internalOffset+=4;
 	}
