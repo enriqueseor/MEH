@@ -42,28 +42,17 @@ public class GBARom implements Cloneable {
 		FileFilter filter = new FileNameExtensionFilter("GBA ROM", "gba", "bin");
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileFilter(filter);
-		Action details = fileChooser.getActionMap().get("viewTypeDetails");
-		if (details != null) {
-			details.actionPerformed(null);
-		} else {
-			JFileChooser alternativeFileChooser = new JFileChooser();
-			alternativeFileChooser.setFileFilter(new FileNameExtensionFilter("GBA ROM", "gba", "bin"));
-			int result = alternativeFileChooser.showOpenDialog(new Frame());
-			if (result == JFileChooser.APPROVE_OPTION) {
-				String location = alternativeFileChooser.getSelectedFile().getAbsolutePath();
-			} else if (result == JFileChooser.CANCEL_OPTION || result == JFileChooser.ERROR_OPTION) {
-				System.out.println("User canceled the file selection.");
-			}
+
+		int result = fileChooser.showOpenDialog(new Frame());
+		if (result != JFileChooser.APPROVE_OPTION) {
+			System.out.println("User canceled the file selection.");
+			return -1;
 		}
-		if (fileChooser.showOpenDialog(new Frame()) != JFileChooser.APPROVE_OPTION)
-			return -1;
+
 		String location = fileChooser.getSelectedFile().getAbsolutePath();
-		if(fileChooser.getSelectedFile() == null)
+		if (location.isEmpty()) {
 			return -1;
-		if(location.isEmpty())
-			return -1;
-		if(fileChooser.getSelectedFile() == null)
-			return -1;
+		}
 		
 		int romID = ROMManager.getID();
 		try {
