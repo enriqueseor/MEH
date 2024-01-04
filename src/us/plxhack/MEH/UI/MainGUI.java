@@ -855,20 +855,18 @@ public class MainGUI extends JFrame {
 		pkEditorPanel.add(pkMax1);
 
 		pkName1 = new JComboBox();
-		pkName1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				pkNo1.setValue(pkName1.getSelectedIndex());
-				try {
-					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][0].wNum = pkName1.getSelectedIndex();
-				}
-				catch (Exception ex) {
-					ex.printStackTrace();
-					
-					if(MapIO.DEBUG)
-						System.out.println("Error loading wild Pok�mon data, data not found or nonexistant.");
-				}
-			}
-		});
+		pkName1.addActionListener(e -> {
+            pkNo1.setValue(pkName1.getSelectedIndex());
+            try {
+                MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][0].wNum = pkName1.getSelectedIndex();
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+
+                if(MapIO.DEBUG)
+                    System.out.println("Error loading wild Pok�mon data, data not found or nonexistant.");
+            }
+        });
 		pkName1.setBounds(141, 30, 165, 32);
 		pkEditorPanel.add(pkName1);
 

@@ -13,7 +13,6 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.swing.Action;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;

@@ -1,7 +1,6 @@
 package us.plxhack.MEH.IO.Render;
 
 import org.zzl.minegaming.GBAUtils.DataStore;
-import org.zzl.minegaming.GBAUtils.GBARom;
 
 import us.plxhack.MEH.IO.Block;
 import us.plxhack.MEH.IO.MapIO;
@@ -11,21 +10,19 @@ import us.plxhack.MEH.IO.Tileset;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class BlockRenderer extends Component
-{
-	public enum TripleType
-	{
+public class BlockRenderer extends Component {
+
+	public enum TripleType {
 		NONE,
 		LEGACY,
 		LEGACY2,
-		REFERENCE;
+		REFERENCE
 	}
 	
 	private Tileset global;
 	private Tileset local;
 	public static int currentTime = 0;
-	public BlockRenderer(Tileset global, Tileset local)
-	{
+	public BlockRenderer(Tileset global, Tileset local) {
 		this.global = global;
 		this.local = local;
 	}
@@ -61,12 +58,10 @@ public class BlockRenderer extends Component
     	return renderBlock(blockNum, true);
     }
     
-	public Image renderBlock(int blockNum, boolean transparency)
-	{
+	public Image renderBlock(int blockNum, boolean transparency) {
 		int origBlockNum = blockNum;
 		boolean isSecondaryBlock = false;
-		if (blockNum >= DataStore.MainTSBlocks)
-		{
+		if (blockNum >= DataStore.MainTSBlocks) {
 			isSecondaryBlock = true;
 			blockNum -= DataStore.MainTSBlocks;
 		}
@@ -86,26 +81,20 @@ public class BlockRenderer extends Component
 		if((getBehaviorByte(origBlockNum) >> (DataStore.EngineVersion == 1 ? 24 : 8) & 0x40) == 0x40) {
 			blockPointer +=8;
 			type = TripleType.LEGACY2;
-		}
-		
-		else if((getBehaviorByte(origBlockNum) >> (DataStore.EngineVersion == 1 ? 24 : 8) & 0x60) == 0x60 && DataStore.EngineVersion == 1)
+		} else if((getBehaviorByte(origBlockNum) >> (DataStore.EngineVersion == 1 ? 24 : 8) & 0x60) == 0x60 && DataStore.EngineVersion == 1)
 			type = TripleType.REFERENCE;
 		
-		if(type != TripleType.NONE && MapIO.DEBUG == true)
-			System.out.println("Rendering triple tile! " + type.toString());
+		if(type != TripleType.NONE && MapIO.DEBUG)
+			System.out.println("Rendering triple tile! " + type);
 		
-		for (int i = 0; i < (type != TripleType.NONE ? 24 : 16); i++)
-		{
-			if(type == TripleType.REFERENCE && i == 16)
-			{
+		for (int i = 0; i < (type != TripleType.NONE ? 24 : 16); i++) {
+			if(type == TripleType.REFERENCE && i == 16) {
 				boolean second = false;
 				int tripNum = (int) ((getBehaviorByte(origBlockNum) >> 14) & 0x3FF);
-				if (tripNum >= DataStore.MainTSBlocks)
-				{
+				if (tripNum >= DataStore.MainTSBlocks) {
 					second = true;
 					tripNum -= DataStore.MainTSBlocks;
 				}
-
 				blockPointer = (int) ((second ? local.getTilesetHeader().pBlocks : global.getTilesetHeader().pBlocks) + (tripNum * 16)) + 8;
 				blockPointer -= i;
 			}
@@ -114,37 +103,25 @@ public class BlockRenderer extends Component
 			int palette = (orig & 0xF000) >> 12;
 			boolean xFlip = (orig & 0x400) > 0;
 			boolean yFlip = (orig & 0x800) > 0;
-			if (transparency && layerNumber == 0)
-			{
-				try
-				{
+			if (transparency && layerNumber == 0) {
+				try {
 					g.setColor(global.getPalette(currentTime)[palette].getIndex(0));
-				}
-				catch (Exception e)
-				{
-
-				}
+				} catch (Exception ignored) {}
 				g.fillRect(x * 8, y * 8, 8, 8);
 			}
 
-			if (tileNum < DataStore.MainTSSize)
-			{
+			if (tileNum < DataStore.MainTSSize) {
 				g.drawImage(global.getTile(tileNum, palette, xFlip, yFlip, currentTime), x * 8, y * 8, null);
-			}
-			else
-			{
+			} else {
 				g.drawImage(local.getTile(tileNum - DataStore.MainTSSize, palette, xFlip, yFlip, currentTime), x * 8, y * 8, null);
 			}
 			x++;
-			if (x > 1)
-			{
+			if (x > 1) {
 				x = 0;
 				y++;
 			}
-			if (y > 1)
-			{
-				x = 0;
-				y = 0;
+			if (y > 1) {
+                y = 0;
 				layerNumber++;
 			}
 			i++;
@@ -152,12 +129,10 @@ public class BlockRenderer extends Component
 		return createImage(block.getSource());
 	}
 
-	public Block getBlock(int blockNum)
-	{
+	public Block getBlock(int blockNum) {
 		boolean isSecondaryBlock = false;
 		int realBlockNum = blockNum;
-		if (blockNum >= DataStore.MainTSBlocks)
-		{
+		if (blockNum >= DataStore.MainTSBlocks) {
 			isSecondaryBlock = true;
 			blockNum -= DataStore.MainTSBlocks;
 		}
@@ -170,40 +145,33 @@ public class BlockRenderer extends Component
 		
 		boolean tripleTile = false;
 		
-		if((b.backgroundMetaData >> (DataStore.EngineVersion == 1 ? 24 : 8) & 0x30) == 0x30)
-		{
+		if((b.backgroundMetaData >> (DataStore.EngineVersion == 1 ? 24 : 8) & 0x30) == 0x30) {
 			tripleTile = true;
-			if(MapIO.DEBUG == true)
+			if(MapIO.DEBUG)
 				System.out.println("Rendering triple tile block!");
 		}
-		else if((b.backgroundMetaData >> (DataStore.EngineVersion == 1 ? 24 : 8) & 0x40) == 0x40)
-		{
+		else if((b.backgroundMetaData >> (DataStore.EngineVersion == 1 ? 24 : 8) & 0x40) == 0x40) {
 			tripleTile = true;
 			blockPointer +=8;
-			if(MapIO.DEBUG == true)
+			if(MapIO.DEBUG)
 				System.out.println("Rendering space-saver triple tile block!");
 		}
 		
-		for (int i = 0; i < (tripleTile ? 24 : 16); i++)
-		{
+		for (int i = 0; i < (tripleTile ? 24 : 16); i++) {
 			int orig = global.getROM().readWord(blockPointer + i);
 			int tileNum = orig & 0x3FF;
 			int palette = (orig & 0xF000) >> 12;
 			boolean xFlip = (orig & 0x400) > 0;
 			boolean yFlip = (orig & 0x800) > 0;
 
-//			if(i < 16)
 			b.setTile(x+(layerNumber*2), y, new Tile(tileNum, palette, xFlip, yFlip));
 			x++;
-			if (x > 1)
-			{
+			if (x > 1) {
 				x = 0;
 				y++;
 			}
-			if (y > 1)
-			{
-				x = 0;
-				y = 0;
+			if (y > 1) {
+                y = 0;
 				layerNumber++;
 			}
 			i++;
@@ -211,18 +179,15 @@ public class BlockRenderer extends Component
 		return b;
 	}
 	
-	public long getBehaviorByte(int blockID)
-	{
+	public long getBehaviorByte(int blockID) {
 		int pBehavior = (int)MapIO.blockRenderer.getGlobalTileset().tilesetHeader.pBehavior;
 		int blockNum = blockID;
 		
-		if (blockNum >= DataStore.MainTSBlocks)
-		{
+		if (blockNum >= DataStore.MainTSBlocks) {
 			blockNum -= DataStore.MainTSBlocks;
 			pBehavior = (int)MapIO.blockRenderer.getLocalTileset().tilesetHeader.pBehavior;
 		}
 		global.getROM().Seek(pBehavior + (blockNum * (DataStore.EngineVersion == 1 ? 4 : 2)));
-		long bytes = DataStore.EngineVersion == 1 ? global.getROM().getPointer(true) : global.getROM().getPointer(true) & 0xFFFF;
-		return bytes;
+        return DataStore.EngineVersion == 1 ? global.getROM().getPointer(true) : global.getROM().getPointer(true) & 0xFFFF;
 	}
 }

@@ -5,8 +5,15 @@ public class Version {
     public static int MinorVersion = 1;
     public static int Build = 15;
     public static String Release = "a";
-    public final static String RequestApplicationBuild() {
+    public static String RequestApplicationBuild() {
         return MajorVersion + "." + MinorVersion + "." + Build + Release;
     }
-    public static String[] Contributors = {"Shiny Quagsire", "interdpth", "Bela", "DeltaSalamence", "trevor403", "diegoisawesome"};
+    public static String[] Contributors = {
+            "Shiny Quagsire",
+            "interdpth",
+            "Bela",
+            "DeltaSalamence",
+            "trevor403",
+            "diegoisawesome",
+            "henry.dry4"};
 }

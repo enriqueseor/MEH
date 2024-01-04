@@ -11,10 +11,12 @@ import javax.swing.*;
 
 public class Main {
 
-	public static void main(String args[]) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+	public static void main(String[] args)
+			throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		// Override for window managers such as bspwm and i3 where they may not properly fetch the right L&F
-		if (System.getProperty("os.name").toLowerCase().contains("nix") || System.getProperty("os.name").toLowerCase().contains("nux") || System.getProperty("os.name").toLowerCase().contains("aix"))
+		if (System.getProperty("os.name").toLowerCase().contains("nix") ||
+				System.getProperty("os.name").toLowerCase().contains("nux") ||
+				System.getProperty("os.name").toLowerCase().contains("aix"))
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
 
 		System.setProperty("sun.java2d.opengl", "True");
@@ -33,9 +35,6 @@ public class Main {
 		window.setVisible(true);
 		try {
 			PluginManager.loadAllPlugins();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (Exception ignored) {}
 	}
 }
