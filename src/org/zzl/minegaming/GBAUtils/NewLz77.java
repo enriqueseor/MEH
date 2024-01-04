@@ -34,13 +34,9 @@ public class NewLz77 {
 		outstream.write((byte) (inLength & 0xFF));
 		outstream.write((byte) ((inLength >> 8) & 0xFF));
 		outstream.write((byte) ((inLength >> 16) & 0xFF));
-
 		int compressedLength = 4;
-
-		// we do need to buffer the output, as the first byte indicates which
-		// blocks are compressed.
-		// this version does not use a look-ahead, so we do not need to buffer
-		// more than 8 blocks at a time.
+		// We do need to buffer the output, as the first byte indicates which blocks are compressed.
+		// This version does not use a look-ahead, so we do not need to buffer more than 8 blocks at a time.
 		byte[] outbuffer = new byte[8 * 2 + 1];
 		outbuffer[0] = 0;
 		int bufferlength = 1, bufferedBlocks = 0;
@@ -56,10 +52,8 @@ public class NewLz77 {
 				bufferedBlocks = 0;
 			}
 
-			// determine if we're dealing with a compressed or raw block.
-			// it is a compressed block when the next 3 or more bytes can be
-			// copied from
-			// somewhere in the set of already compressed bytes.
+			// Determine if we're dealing with a compressed or raw block. It is a compressed block when the next 3
+			// or more bytes can be copied from somewhere in the set of already compressed bytes.
 			int[] dispArr = new int[1];
 			int oldLength = Math.min(readBytes, 0x1000);
 			int length = GetOccurrenceLength(indata, readBytes, (int) Math.min(inLength - readBytes, 0x12), readBytes - oldLength, oldLength, dispArr);
@@ -70,13 +64,10 @@ public class NewLz77 {
 				outbuffer[bufferlength++] = indata[readBytes++];
 			}
 			else {
-				// 3 or more bytes can be copied? next (length) bytes will be
-				// compressed into 2 bytes
+				// 3 or more bytes can be copied? next (length) bytes will be compressed into 2 bytes
 				readBytes += length;
-
 				// mark the next block as compressed
 				outbuffer[0] |= (byte) (1 << (7 - bufferedBlocks));
-
 				outbuffer[bufferlength] = (byte) (((length - 3) << 4) & 0xF0);
 				outbuffer[bufferlength] |= (byte) (((disp - 1) >> 8) & 0x0F);
 				bufferlength++;
@@ -96,7 +87,6 @@ public class NewLz77 {
 				compressedLength++;
 			}
 		}
-
 		return outstream.toByteArray();
 	}
 
@@ -108,18 +98,13 @@ public class NewLz77 {
 		int maxLength = 0;
 		// try every possible 'disp' value (disp = oldLength - i)
 		for (int i = 0; i < oldLength - minDisp; i++) {
-			// work from the start of the old data to the end, to mimic the
-			// original implementation's behaviour
-			// (and going from start to end or from end to start does not
-			// influence the compression ratio anyway)
+			// work from the start of the old data to the end, to mimic the original implementation's behaviour
+			// (and going from start to end or from end to start does not influence the compression ratio anyway)
 			int currentOldStart = oldPtr + i;
 			int currentLength = 0;
 			// determine the length we can copy if we go back (oldLength - i)
-			// bytes
-			// always check the next 'newLength' bytes, and not just the
-			// available 'old' bytes,
-			// as the copied data can also originate from what we're currently
-			// trying to compress.
+			// bytes always check the next 'newLength' bytes, and not just the available 'old' bytes,
+			// as the copied data can also originate from what we're currently trying to compress.
 			for (int j = 0; j < newLength; j++) {
 				// stop when the bytes are no longer the same
 				if (indata[currentOldStart + j] != indata[newPtr + j])

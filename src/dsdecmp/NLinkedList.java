@@ -2,7 +2,6 @@ package dsdecmp;
 
 import java.util.Iterator;
 
-
 public class NLinkedList<E> implements Iterable<E> {
 	
 	private NLinkedListNode<E> head, tail;
@@ -15,20 +14,15 @@ public class NLinkedList<E> implements Iterable<E> {
 	}
 	
 	public void addFirst(E value){
-		this.addFirst(new NLinkedListNode<E>(value));
+		this.addFirst(new NLinkedListNode<>(value));
 	}
 	public void addFirst(NLinkedListNode<E> node){
-		assert (head == null ? tail == null : false) : "Both head and tail must be null, or neither";
-		
-		if(head == null){
-			head = tail = node;
-			node.setNext(null);
-			node.setPrevious(null);
-		} else {
-			node.addBefore(head);
-			head = node;
-		}
-	}
+		assert (head == null && tail == null) : "Both head and tail must be null, or neither";
+
+        head = tail = node;
+        node.setNext(null);
+        node.setPrevious(null);
+    }
 	public void removeFirst(){
 		if(head != null){
 			NLinkedListNode<E> nHead = head.getNext();
@@ -38,20 +32,15 @@ public class NLinkedList<E> implements Iterable<E> {
 	}
 	
 	public void addLast(E value){
-		this.addLast(new NLinkedListNode<E>(value));
+		this.addLast(new NLinkedListNode<>(value));
 	}
 	public void addLast(NLinkedListNode<E> node){
-		assert (head == null ? tail == null : false) : "Both head and tail must be null, or neither";
-		
-		if(tail == null){
-			head = tail = node;
-			node.setNext(null);
-			node.setPrevious(null);
-		} else {
-			node.addAfter(tail);
-			tail = node;
-		}
-	}
+		assert (head == null && tail == null) : "Both head and tail must be null, or neither";
+
+        head = tail = node;
+        node.setNext(null);
+        node.setPrevious(null);
+    }
 	public void removeLast(){
 		if(tail != null){
 			NLinkedListNode<E> nTail = tail.getPrevious();
@@ -97,5 +86,4 @@ public class NLinkedList<E> implements Iterable<E> {
 			}
 		};
 	}
-
 }

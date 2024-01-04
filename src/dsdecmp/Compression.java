@@ -3,13 +3,10 @@ package dsdecmp;
 import java.io.EOFException;
 import java.io.IOException;
 
-public class Compression
-{
+public class Compression {
 
-	public static int[] Decompress(HexInputStream his) throws Exception
-	{
-		switch (his.readU8())
-		{
+	public static int[] Decompress(HexInputStream his) throws Exception {
+		switch (his.readU8()) {
 			case 0x10:
 				return Decompress10LZ(his);
 			case 0x11:
@@ -24,8 +21,7 @@ public class Compression
 		}
 	}
 
-	private static int getLength(HexInputStream his) throws IOException
-	{
+	private static int getLength(HexInputStream his) throws IOException {
 		int length = 0;
 		for (int i = 0; i < 3; i++)
 			length = length | (his.readU8() << (i * 8));
@@ -34,8 +30,7 @@ public class Compression
 		return length;
 	}
 
-	private static int[] Decompress10LZ(HexInputStream his) throws Exception
-	{
+	private static int[] Decompress10LZ(HexInputStream his) throws Exception {
 		int[] outData = new int[getLength(his)];
 
 		int curr_size = 0;
@@ -43,38 +38,26 @@ public class Compression
 		boolean flag;
 		int disp, n, b, cdest;
 
-		while (curr_size < outData.length)
-		{
-			try
-			{
+		while (curr_size < outData.length) {
+			try {
 				flags = his.readU8();
-			}
-			catch (EOFException ex)
-			{
+			} catch (EOFException ex) {
 				break;
 			}
-			for (int i = 0; i < 8; i++)
-			{
+			for (int i = 0; i < 8; i++) {
 				flag = (flags & (0x80 >> i)) > 0;
-				if (flag)
-				{
+				if (flag) {
 					disp = 0;
-					try
-					{
+					try {
 						b = his.readU8();
-					}
-					catch (EOFException ex)
-					{
+					} catch (EOFException ex) {
 						throw new Exception("Incomplete data");
 					}
 					n = b >> 4;
 					disp = (b & 0x0F) << 8;
-					try
-					{
+					try {
 						disp |= his.readU8();
-					}
-					catch (EOFException ex)
-					{
+					} catch (EOFException ex) {
 						throw new Exception("Incomplete data");
 					}
 					n += 3;
@@ -88,120 +71,74 @@ public class Compression
 					if (curr_size > outData.length)
 						break;
 				}
-				else
-				{
-					try
-					{
+				else {
+					try {
 						b = his.readU8();
-					}
-					catch (EOFException ex)
-					{
+					} catch (EOFException ex) {
 						break;
 					}// throw new Exception("Incomplete data"); }
-					try
-					{
+					try {
 						outData[curr_size++] = b;
-					}
-					catch (ArrayIndexOutOfBoundsException ex)
-					{
+					} catch (ArrayIndexOutOfBoundsException ex) {
 						if (b == 0)
 							break;
 					}
-
 					if (curr_size > outData.length)
 						break;
 				}
 			}
-
 		}
 		return outData;
 	}
 
-	private static int[] Decompress11LZ(HexInputStream his) throws Exception
-	{
+	private static int[] Decompress11LZ(HexInputStream his) throws Exception {
 		int[] outData = new int[getLength(his)];
-
 		int curr_size = 0;
 		int flags;
 		boolean flag;
 		int b1, bt, b2, b3, len, disp, cdest;
 
-		while (curr_size < outData.length)
-		{
-			try
-			{
+		while (curr_size < outData.length) {
+			try {
 				flags = his.readU8();
-			}
-			catch (EOFException ex)
-			{
+			} catch (EOFException ex) {
 				break;
 			}
-
-			for (int i = 0; i < 8 && curr_size < outData.length; i++)
-			{
+			for (int i = 0; i < 8 && curr_size < outData.length; i++) {
 				flag = (flags & (0x80 >> i)) > 0;
-				if (flag)
-				{
-					try
-					{
+				if (flag) {
+					try {
 						b1 = his.readU8();
-					}
-					catch (EOFException ex)
-					{
+					} catch (EOFException ex) {
 						throw new Exception("Incomplete data");
 					}
 
-					switch (b1 >> 4)
-					{
+					switch (b1 >> 4) {
 						case 0:
-							// ab cd ef
-							// =>
-							// len = abc + 0x11 = bc + 0x11
-							// disp = def
-
 							len = b1 << 4;
-							try
-							{
+							try {
 								bt = his.readU8();
-							}
-							catch (EOFException ex)
-							{
+							} catch (EOFException ex) {
 								throw new Exception("Incomplete data");
 							}
 							len |= bt >> 4;
 							len += 0x11;
-
 							disp = (bt & 0x0F) << 8;
-							try
-							{
+							try {
 								b2 = his.readU8();
-							}
-							catch (EOFException ex)
-							{
+							} catch (EOFException ex) {
 								throw new Exception("Incomplete data");
 							}
 							disp |= b2;
 							break;
-
 						case 1:
-							// ab cd ef gh
-							// =>
-							// len = bcde + 0x111
-							// disp = fgh
-							// 10 04 92 3F => disp = 0x23F, len = 0x149 + 0x11 =
-							// 0x15A
-
-							try
-							{
+							try {
 								bt = his.readU8();
 								b2 = his.readU8();
 								b3 = his.readU8();
-							}
-							catch (EOFException ex)
-							{
+							} catch (EOFException ex) {
 								throw new Exception("Incomplete data");
 							}
-
 							len = (b1 & 0xF) << 12; // len = b000
 							len |= bt << 4; // len = bcd0
 							len |= (b2 >> 4); // len = bcde
@@ -211,20 +148,11 @@ public class Compression
 							break;
 
 						default:
-							// ab cd
-							// =>
-							// len = a + threshold = a + 1
-							// disp = bcd
-
 							len = (b1 >> 4) + 1;
-
 							disp = (b1 & 0x0F) << 8;
-							try
-							{
+							try {
 								b2 = his.readU8();
-							}
-							catch (EOFException ex)
-							{
+							} catch (EOFException ex) {
 								throw new Exception("Incomplete data");
 							}
 							disp |= b2;
@@ -242,45 +170,32 @@ public class Compression
 					if (curr_size > outData.length)
 						break;
 				}
-				else
-				{
-					try
-					{
+				else {
+					try {
 						outData[curr_size++] = his.readU8();
-					}
-					catch (EOFException ex)
-					{
+					} catch (EOFException ex) {
 						break;
 					}// throw new Exception("Incomplete data"); }
-
 					if (curr_size > outData.length)
 						break;
 				}
 			}
-
 		}
 		return outData;
 	}
 
 	// note: untested
-	private static int[] DecompressRLE(HexInputStream his) throws Exception
-	{
-
+	private static int[] DecompressRLE(HexInputStream his) throws Exception {
 		int[] outData = new int[getLength(his)];
 		int curr_size = 0;
 		int i, rl;
 		int flag, b;
 		boolean compressed;
-
-		while (true)
-		{
+		while (true) {
 			// get tag
-			try
-			{
+			try {
 				flag = his.readU8();
-			}
-			catch (EOFException ex)
-			{
+			} catch (EOFException ex) {
 				break;
 			}
 			compressed = (flag & 0x80) > 0;
@@ -290,14 +205,10 @@ public class Compression
 			else
 				rl += 1;
 
-			if (compressed)
-			{
-				try
-				{
+			if (compressed) {
+				try {
 					b = his.readU8();
-				}
-				catch (EOFException ex)
-				{
+				} catch (EOFException ex) {
 					break;
 				}
 				for (i = 0; i < rl; i++)
@@ -305,12 +216,10 @@ public class Compression
 			}
 			else
 				for (i = 0; i < rl; i++)
-					try
-					{
+					try {
 						outData[curr_size++] = his.readU8();
 					}
-					catch (EOFException ex)
-					{
+					catch (EOFException ex) {
 						break;
 					}
 
@@ -323,28 +232,19 @@ public class Compression
 	}
 
 	// note: untested
-	private static int[] DecompressHuff(HexInputStream his) throws Exception
-	{
-
+	private static int[] DecompressHuff(HexInputStream his) throws Exception {
 		his.skip(-1);
-
 		int firstByte = his.readU8();
-
 		int dataSize = firstByte & 0x0F;
-
 		if (dataSize != 8 && dataSize != 4)
 			throw new Exception("Unhandled dataSize " + Integer.toHexString(dataSize));
 
 		int decomp_size = getLength(his);
-
 		int treeSize = his.readU8();
 		HuffTreeNode.maxInpos = 4 + (treeSize + 1) * 2;
-
 		HuffTreeNode rootNode = new HuffTreeNode();
 		rootNode.parseData(his);
-
 		his.setPosition(4 + (treeSize + 1) * 2); // go to start of coded
-													// bitstream.
 		// read all data
 		int[] indata = new int[(int) (his.available() - his.getPosition()) / 4];
 		for (int i = 0; i < indata.length; i++)
@@ -357,29 +257,20 @@ public class Compression
 		int idx = -1;
 		String codestr = "";
 		NLinkedList<Integer> code = new NLinkedList<Integer>();
-		while (curr_size < decomp_size)
-		{
-			try
-			{
+		while (curr_size < decomp_size) {
+			try {
 				codestr += Integer.toBinaryString(indata[++idx]);
-			}
-			catch (ArrayIndexOutOfBoundsException e)
-			{
+			} catch (ArrayIndexOutOfBoundsException e) {
 				throw new Exception("not enough data.", e);
 			}
-			while (codestr.length() > 0)
-			{
+			while (codestr.length() > 0) {
 				code.addFirst(Integer.parseInt(codestr.charAt(0) + ""));
 				codestr = codestr.substring(1);
 				Pair<Boolean, Integer> attempt = rootNode.getValue(code.getLast());
-				if (attempt.getFirst())
-				{
-					try
-					{
+				if (attempt.getFirst()) {
+					try {
 						outdata[curr_size++] = attempt.getSecond();
-					}
-					catch (ArrayIndexOutOfBoundsException ex)
-					{
+					} catch (ArrayIndexOutOfBoundsException ex) {
 						if (code.getFirst().getValue() != 0)
 							throw ex;
 					}
@@ -387,8 +278,7 @@ public class Compression
 				}
 			}
 		}
-		if (codestr.length() > 0 || idx < indata.length - 1)
-		{
+		if (codestr.length() > 0 || idx < indata.length - 1) {
 			while (idx < indata.length - 1)
 				codestr += Integer.toBinaryString(indata[++idx]);
 			codestr = codestr.replace("0", "");
@@ -397,8 +287,7 @@ public class Compression
 		}
 
 		int[] realout;
-		if (dataSize == 4)
-		{
+		if (dataSize == 4) {
 			realout = new int[decomp_size / 2];
 			for (int i = 0; i < decomp_size / 2; i++)
 			{
@@ -407,35 +296,26 @@ public class Compression
 				realout[i] = (byte) ((outdata[i * 2] << 4) | outdata[i * 2 + 1]);
 			}
 		}
-		else
-		{
+		else {
 			realout = outdata;
 		}
 		return realout;
 	}
-
 }
 
-class HuffTreeNode
-{
+class HuffTreeNode {
 	protected static int maxInpos = 0;
 	protected HuffTreeNode node0, node1;
 	protected int data = -1; // [-1,0xFF]
-
-	// / <summary>
 	// / To get a value, provide the last node of a list of bytes &lt; 2.
 	// / the list will be read from back to front.
-	// / </summary>
-	protected Pair<Boolean, Integer> getValue(NLinkedListNode<Integer> code) throws Exception
-	{
+	protected Pair<Boolean, Integer> getValue(NLinkedListNode<Integer> code) throws Exception {
 		Pair<Boolean, Integer> outData = new Pair<Boolean, Integer>();
 		outData.setSecond(data);
-		if (code == null)
-		{
+		if (code == null) {
 			outData.setFirst(node0 == null && node1 == null && data >= 0);
 			return outData;
 		}
-
 		if (code.getValue() > 1)
 			throw new Exception("The list should be a list of bytes < 2. got: " + code.getValue());
 
@@ -443,11 +323,11 @@ class HuffTreeNode
 		HuffTreeNode n = c == 0 ? node0 : node1;
 		if (n == null)
 			outData.setFirst(false);
-		return n.getValue(code.getPrevious());
+        assert n != null;
+        return n.getValue(code.getPrevious());
 	}
 
-	protected int getValue(String code) throws Exception
-	{
+	protected int getValue(String code) throws Exception {
 		NLinkedList<Integer> c = new NLinkedList<Integer>();
 		for (char ch : code.toCharArray())
 			c.addFirst((int) ch);
@@ -459,8 +339,7 @@ class HuffTreeNode
 			return -1;
 	}
 
-	protected void parseData(HexInputStream his) throws IOException
-	{
+	protected void parseData(HexInputStream his) throws IOException {
 		/*
 		 * Tree Table (list of 8bit nodes, starting with the root node) Root
 		 * Node and Non-Data-Child Nodes are: Bit0-5 Offset to next child node,
@@ -478,8 +357,7 @@ class HuffTreeNode
 		boolean end0 = (b & 0x80) > 0, end1 = (b & 0x40) > 0;
 		// parse data for node0
 		his.setPosition((currPos - (currPos & 1)) + offset * 2 + 2);
-		if (his.getPosition() < maxInpos)
-		{
+		if (his.getPosition() < maxInpos) {
 			if (end0)
 				node0.data = his.readU8();
 			else
@@ -487,8 +365,7 @@ class HuffTreeNode
 		}
 		// parse data for node1
 		his.setPosition((currPos - (currPos & 1)) + offset * 2 + 2 + 1);
-		if (his.getPosition() < maxInpos)
-		{
+		if (his.getPosition() < maxInpos) {
 			if (end1)
 				node1.data = his.readU8();
 			else
@@ -499,16 +376,14 @@ class HuffTreeNode
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		if (data < 0)
 			return "<" + node0.toString() + ", " + node1.toString() + ">";
 		else
 			return "[" + Integer.toHexString(data) + "]";
 	}
 
-	protected int getDepth()
-	{
+	protected int getDepth() {
 		if (data < 0)
 			return 0;
 		else

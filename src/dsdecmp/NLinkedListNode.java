@@ -4,18 +4,15 @@ public class NLinkedListNode<E> {
 	
 	private E value;
 	private NLinkedListNode<E> previous = null, next = null;
-	
 	public NLinkedListNode(E value){
 		this.setValue(value);
 	}
-	
 	public E getValue(){
 		return this.value;
 	}
 	public void setValue(E value){
 		this.value = value;
 	}
-	
 	public NLinkedListNode<E> getNext(){
 		return this.next;
 	}
@@ -64,5 +61,4 @@ public class NLinkedListNode<E> {
 		if(this.next != null)
 			this.next.setPrevious(this.previous);
 	}
-
 }

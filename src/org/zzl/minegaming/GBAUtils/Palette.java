@@ -3,7 +3,7 @@ package org.zzl.minegaming.GBAUtils;
 import java.awt.Color;
 
 public class Palette {
-	private Color[] colors;
+	private final Color[] colors;
 	private byte[] reds;
 	private byte[] greens;
 	private byte[] blues;
@@ -60,8 +60,7 @@ public class Palette {
 		return colors[i].getRed() + (colors[i].getGreen() << 8) + (colors[i].getBlue() << 16);
 	}
 	
-	public byte getRedValue(int i)
-	{
+	public byte getRedValue(int i) {
 		return reds[i];
 	}
 	
@@ -123,8 +122,7 @@ public class Palette {
 	}
 
 	public Palette xorColor(Color c) {
-		for (int i = 0; i < 16; i++)
-		{
+		for (int i = 0; i < 16; i++) {
 			Color end = blend(c, colors[i]);
 
 			byte red = (byte) end.getRed();
@@ -168,8 +166,7 @@ public class Palette {
 	
  	public void save(GBARom rom) {
 		byte[] data = new byte[0x20];
-		for(int i = 0; i < 16; i++)
-		{
+		for(int i = 0; i < 16; i++) {
 			int color = 0;
 			color |= ((reds[i] >> 3) & 0x1F);
 			color |= (((greens[i] >> 3) & 0x1F) << 5);
