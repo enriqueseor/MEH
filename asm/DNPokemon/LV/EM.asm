@@ -57,4 +57,3 @@ timetable2: .byte 0xC /*Amount to add to pointer per timezone*/
 .byte 0x8
 .byte 0xC
 .byte 0xC
-
