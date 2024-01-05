@@ -1,14 +1,7 @@
 package org.zzl.minegaming.GBAUtils;
 
-import java.awt.Frame;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.awt.*;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,10 +29,39 @@ public class GBARom implements Cloneable {
 	public boolean isDNPkmnPatchAdded = false;
 
 	/**
-	 * Loads a ROM using a file dialog. Sets the loaded ROM as default.
-	 * @return The ROMManager ROM ID.
+	 * Loads a ROM using a file dialog.
 	 */
-	public static int loadRom() {
+	public static String getLocationFromFileDialog() {
+		boolean errorOccurred = false;
+		String location = "";
+		try {
+			FileDialog fd = new FileDialog(new Frame(), "Load ROM", FileDialog.LOAD);
+			fd.setFilenameFilter((dir, name) -> (
+							name.toLowerCase().endsWith(".gba") ||
+							name.toLowerCase().endsWith(".bin") ||
+							name.toLowerCase().endsWith(".rbc") ||
+							name.toLowerCase().endsWith(".rbh") ||
+							name.toLowerCase().endsWith(".but") ||
+							name.toLowerCase().endsWith(".bmp")));
+			fd.setDirectory(System.getProperty("user.home"));
+			fd.setVisible(true);
+			String dialogLocation = fd.getDirectory() + fd.getFile();
+			if (dialogLocation == null || dialogLocation.isEmpty()) { // The user canceled the selection
+				location = ""; // Set to empty string to signify canceled selection
+			} else {// Valid location obtained from FileDialog
+				location = dialogLocation;
+			}
+		} catch (NullPointerException | SecurityException e) { // Catch specific exceptions that might indicate an error
+			e.printStackTrace();
+			errorOccurred = true; // Set error flag
+		}
+		return errorOccurred ? null : location;
+	}
+
+	/**
+	 * Loads a ROM using a file chooser.
+	 */
+	public static String getLocationFromFileChooser() {
 		FileFilter filter = new FileNameExtensionFilter("GBA ROM", "gba", "bin");
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileFilter(filter);
@@ -47,27 +69,46 @@ public class GBARom implements Cloneable {
 		int result = fileChooser.showOpenDialog(new Frame());
 		if (result != JFileChooser.APPROVE_OPTION) {
 			System.out.println("User canceled the file selection.");
-			return -1;
+			return null; // Indicate failure to obtain a location
 		}
-
 		String location = fileChooser.getSelectedFile().getAbsolutePath();
 		if (location.isEmpty()) {
-			return -1;
+			return null; // Indicate failure to obtain a location
 		}
-		
+		return location;
+	}
+
+	/**
+	 * Attempts to load a ROM using a FileDialog, adds it to ROMManager, and sets it as the active ROM.
+	 * If the ROM file is successfully loaded, attempts to load a hex table file if the active ROM's table is empty.
+	 *
+	 * @return The ROMManager ROM ID if successful.
+	 *         -1 if no file is selected.
+	 *         -2 for a general IO error during ROM loading or hex table loading.
+	 *         -3 if the hex table file is not found.
+	 */
+	public static int loadRom() {
+		String location = getLocationFromFileDialog();
+		if (location == null){
+			location = getLocationFromFileChooser();
+		}
+		if (location.isEmpty()) {
+			System.out.println("No file selected.");
+			return -1; // Indicate no file selected
+		}
 		int romID = ROMManager.getID();
 		try {
-			ROMManager.AddROM(romID, new GBARom(location));
-		} catch (IOException e) {
+			ROMManager.AddROM(romID, new GBARom(location));}
+		catch (IOException e) {
 			e.printStackTrace();
 			return -2;
 		}
 		ROMManager.ChangeROM(romID);
-		
 		if(ROMManager.getActiveROM().hex_tbl.isEmpty()) {
 			try {
 				ROMManager.getActiveROM().loadHexTBL("/resources/poketable.tbl");
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				e.printStackTrace();
 				return -3;
 			}
