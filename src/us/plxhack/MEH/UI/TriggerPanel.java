@@ -7,27 +7,22 @@ import us.plxhack.MEH.MapElements.TriggerManager;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class TriggerPanel extends JPanel
-{
+public class TriggerPanel extends JPanel {
 
-	private JTextField txtFlagValue;
-	private JTextField txtScriptAddr;
-	private JTextField txtFlagCheck;
+	private final JTextField txtFlagValue;
+	private final JTextField txtScriptAddr;
+	private final JTextField txtFlagCheck;
 	int myIndex;
 
-	void Load(TriggerManager mgr, int index)
-	{
+	void Load(TriggerManager mgr, int index) {
 		Trigger t = mgr.mapTriggers.get(index);
 		txtScriptAddr.setText(BitConverter.toHexString((int) t.pScript));
 		txtFlagValue.setText(BitConverter.toHexString(t.hFlagValue));
 		txtFlagCheck.setText(BitConverter.toHexString(t.hFlagCheck));
 	}
 
-	public void Save(TriggerManager mgr)
-	{
+	public void Save(TriggerManager mgr) {
 		mgr.mapTriggers.get(myIndex).pScript = Integer.parseInt(txtScriptAddr.getText(), 16);
 		mgr.mapTriggers.get(myIndex).hFlagValue = Integer.parseInt(txtFlagValue.getText(), 16);
 		mgr.mapTriggers.get(myIndex).hFlagCheck = Integer.parseInt(txtFlagCheck.getText(), 16);
@@ -36,8 +31,7 @@ public class TriggerPanel extends JPanel
 	/**
 	 * Create the panel.
 	 */
-	public TriggerPanel(TriggerManager mgr, int index)
-	{
+	public TriggerPanel(TriggerManager mgr, int index) {
 		myIndex = index;
 		setBorder(new TitledBorder(null, "Triggers", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 
@@ -63,14 +57,7 @@ public class TriggerPanel extends JPanel
 		txtFlagValue.setColumns(10);
 
 		JButton btnSave = new JButton("Save");
-		btnSave.addActionListener(new ActionListener()
-		{
-
-			public void actionPerformed(ActionEvent e)
-			{
-				Save(MapIO.loadedMap.mapTriggerManager);
-			}
-		});
+		btnSave.addActionListener(e -> Save(MapIO.loadedMap.mapTriggerManager));
 		add(btnSave);
 
 		JPanel panel = new JPanel();
@@ -83,5 +70,4 @@ public class TriggerPanel extends JPanel
 
 		Load(mgr, index);
 	}
-
 }

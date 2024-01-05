@@ -1,21 +1,17 @@
 package us.plxhack.MEH.UI;
 
-import org.zzl.minegaming.GBAUtils.BitConverter;
-import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.ROMManager;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class TripleTilePatcher extends JFrame
-{
+public class TripleTilePatcher extends JFrame {
+
 	final JLabel lblError;
 	final JButton btnPatch;
 	final JButton btnCancel;
 	
-	byte frPatch[] = {
+	byte[] frPatch = {
 			 (byte)0x10, (byte)0xB5, (byte)0x0C, (byte)0x1C, (byte)0x12, (byte)0x04, (byte)0x12, (byte)0x0C,
 			 (byte)0x01, (byte)0x28, (byte)0x32, (byte)0xD0, (byte)0x01, (byte)0x28, (byte)0x02, (byte)0xDC,
 			 (byte)0x00, (byte)0x28, (byte)0x38, (byte)0xD0, (byte)0x64, (byte)0xE0, (byte)0x3D, (byte)0x48,
@@ -54,11 +50,10 @@ public class TripleTilePatcher extends JFrame
 			 (byte)0xFC, (byte)0x6D, (byte)0x03, (byte)0x02, (byte)0x7F, (byte)0x02, (byte)0x00, (byte)0x00,
 			 (byte)0x42
 		};
-	private int frLoc = 0x05A9B4;
 
-	private boolean successfulPatch = false;
-	public TripleTilePatcher()
-	{		
+    private boolean successfulPatch = false;
+
+	public TripleTilePatcher() {
 		setResizable(false);
 		setTitle("Day/Night Pokemon Patcher");
 		this.setSize(371, 150);
@@ -69,14 +64,10 @@ public class TripleTilePatcher extends JFrame
 		getContentPane().add(btnPatch);
 		
 		btnCancel = new JButton("Cancel");
-		btnCancel.addActionListener(new ActionListener() 
-		{
-			public void actionPerformed(ActionEvent e) 
-			{
-				setVisible(false);
-				dispose();
-			}
-		});
+		btnCancel.addActionListener(e -> {
+            setVisible(false);
+            dispose();
+        });
 		btnCancel.setBounds(178, 113, 81, 25);
 		getContentPane().add(btnCancel);
 		
@@ -88,57 +79,45 @@ public class TripleTilePatcher extends JFrame
 		lblError.setBounds(22, 142, 119, 69);
 		getContentPane().add(lblError);
 		
-		btnPatch.addActionListener(new ActionListener() 
-		{
-			public void actionPerformed(ActionEvent e) 
-			{
-				if(successfulPatch)
-				{
-					setVisible(false);
-					dispose();
-				}
-				
-				if(patchROM())
-				{
-					lblError.setForeground(MainGUI.uiSettings.cursorColor);
-					lblError.setText("<html><center>Success!</center></html>");
-					btnCancel.setVisible(false);
-					btnPatch.setText("Close");
-					successfulPatch = true;
-				}
-			}
-		});
+		btnPatch.addActionListener(e -> {
+            if(successfulPatch) {
+                setVisible(false);
+                dispose();
+            }
+            if(patchROM()) {
+                lblError.setForeground(MainGUI.uiSettings.cursorColor);
+                lblError.setText("<html><center>Success!</center></html>");
+                btnCancel.setVisible(false);
+                btnPatch.setText("Close");
+                successfulPatch = true;
+            }
+        });
 		
-		if(ROMManager.getActiveROM() == null)
-		{
+		if(ROMManager.getActiveROM() == null) {
 			this.setVisible(false);
 			this.dispose();
 		}
 	}
 	
-	public boolean successful()
-	{
+	public boolean successful() {
 		return successfulPatch;
 	}
 	
-	private boolean patchROM()
-	{
-		if(!ROMManager.getActiveROM().getGameCode().equalsIgnoreCase("BPRE"))
-		{
+	private boolean patchROM() {
+		if(!ROMManager.getActiveROM().getGameCode().equalsIgnoreCase("BPRE")) {
 			lblError.setForeground(Color.RED);
 			lblError.setText("<html><center>Invalid ROM!<br/>Only Fire Red is currently supported!</center></html>");
 			
 			btnCancel.setVisible(false);
 			btnPatch.setText("Close");
 			successfulPatch = true;
-			return false;
-		}
-		if (ROMManager.getActiveROM().getGameCode().equalsIgnoreCase("BPRE"))
-		{
+
+			int frLoc = 0x05A9B4;
 			ROMManager.getActiveROM().writeBytes(frLoc, frPatch);
 			ROMManager.getActiveROM().updateFlags();
+
+			return false;
 		}
-		
 		return true;
 	}
 }

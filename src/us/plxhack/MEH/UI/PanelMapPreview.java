@@ -10,7 +10,6 @@ import java.awt.*;
 public class PanelMapPreview extends JPanel {
 
 	private static final long serialVersionUID = 3799250208011044425L;
-	
 	Image mapBuf;
 
     public PanelMapPreview()

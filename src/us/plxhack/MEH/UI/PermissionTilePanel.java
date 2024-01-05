@@ -14,9 +14,10 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Objects;
 
-public class PermissionTilePanel extends JPanel
-{
+public class PermissionTilePanel extends JPanel {
+
 	private static final long serialVersionUID = -877213633894324075L;
 	public static int baseSelectedTile;	// Called it base in case of multiple tile
 	// selection in the future.
@@ -24,18 +25,17 @@ public class PermissionTilePanel extends JPanel
 	private Tileset globalTiles;
 	private Tileset localTiles;
 	private boolean isMouseDown = true;
-	private PermissionTileMode permMode = PermissionTileMode.MEH;
     private static boolean Redraw = true;
 	static Rectangle mouseTracker;
 	public static Image imgPermissions;
 	
 	public void SetRect(int width, int height){
-
 		if(height>16) height=16;
 		if(width>16) width=16;
 		mouseTracker.height=height;
 		mouseTracker.width=width;
 	}
+
 	public void SetRect(){
 		mouseTracker.height=16;
 		mouseTracker.width=16;
@@ -43,56 +43,36 @@ public class PermissionTilePanel extends JPanel
 	int srcX;
 	int srcY;
 
-	public PermissionTilePanel()
-	{
-		setPermissionMode(permMode);
+	public PermissionTilePanel() {
+        PermissionTileMode permMode = PermissionTileMode.MEH;
+        setPermissionMode(permMode);
 		mouseTracker=new Rectangle(0,0,16,16);
-
-		this.addMouseMotionListener(new MouseMotionListener()
-		{
-
-			
-			public void mouseDragged(MouseEvent e)
-			{
+		this.addMouseMotionListener(new MouseMotionListener() {
+			public void mouseDragged(MouseEvent e) {
 				int b1 = InputEvent.BUTTON1_DOWN_MASK;
 				int b2 = InputEvent.BUTTON2_DOWN_MASK;
-				if ((e.getModifiersEx() & (b1 | b2)) != b1) 
-				{
-					//MapEditorPanel.calculateSelectBox(e);
+				if ((e.getModifiersEx() & (b1 | b2)) != b1) {
 					repaint();
 				}
 			}
-
-			
-			public void mouseMoved(MouseEvent e)
-			{
+			public void mouseMoved(MouseEvent e) {
 				mouseTracker.x=e.getX();
 				mouseTracker.y=e.getY();
 				if(mouseTracker.x > editorWidth * 16)
-					mouseTracker.x = (int)((editorWidth - 1) * 16);
+					mouseTracker.x = (editorWidth - 1) * 16;
 				if(mouseTracker.y > 16 * 16)
-					mouseTracker.y = (int)(16 * 15);
+					mouseTracker.y = 16 * 15;
 				repaint();
-
 			}
-
 		});
 
-		this.addMouseListener(new MouseListener()
-		{
-
-			
-			public void mouseClicked(MouseEvent e)
-			{
-				int x = 0;
-				int y = 0;
-
-				x = (e.getX() / 16);
-				y = (e.getY() / 16);
+		this.addMouseListener(new MouseListener() {
+			public void mouseClicked(MouseEvent e) {
+				int x = (e.getX() / 16);
+				int y = (e.getY() / 16);
 				if (e.getClickCount() == 2 && e.getButton()==3){
 					SetRect();//Reset tile rectangle
-				}
-				else{
+				} else{
 					srcX=x;
 					srcY=y;
 					baseSelectedTile = x + (y * editorWidth);
@@ -103,13 +83,10 @@ public class PermissionTilePanel extends JPanel
 					MapEditorPanel.selectBox.width = 16;
 					MapEditorPanel.selectBox.height = 16;
 					String k = "Current Tile: ";
-					k += String.format("0x%8s",
-							Integer.toHexString(baseSelectedTile))
-							.replace(' ', '0');
+					k += String.format("0x%8s", Integer.toHexString(baseSelectedTile)).replace(' ', '0');
 					MainGUI.lblTileVal.setText("Current Perm: 0x" + BitConverter.toHexString(PermissionTilePanel.baseSelectedTile));
 					repaint();
 				}
-
 			}
 
 			
@@ -121,25 +98,14 @@ public class PermissionTilePanel extends JPanel
 				}
 			}
 
-			
-			public void mouseExited(MouseEvent e)
-			{
-
-			}
-
-			
+			public void mouseExited(MouseEvent e) {}
 			public void mouseEntered(MouseEvent e)
 			{
 				isMouseDown = true;
 			}
 
-			
-			public void mouseReleased(MouseEvent e)
-			{
-				if(e.getButton() == 3)
-				{
-					//MapEditorPanel.calculateSelectBox(e);
-
+			public void mouseReleased(MouseEvent e) {
+				if(e.getButton() == 3) {
 					//Fill the tile buffer
 					MapEditorPanel.selectBuffer = new MapTile[MapEditorPanel.selectBox.width / 16][MapEditorPanel.selectBox.height / 16];
 					MapEditorPanel.bufferWidth = MapEditorPanel.selectBox.width / 16;
@@ -149,44 +115,26 @@ public class PermissionTilePanel extends JPanel
 							MapEditorPanel.selectBuffer[x][y] = new MapTile(baseSelectedTile = x + (y * editorWidth), 0xC); //TODO implement movement perms
 				}
 			}
-
 		});
-
-
 	}
-
 
 	public static Graphics gcBuff;
 	static Image imgBuffer = null;
-	public void DrawTileset()
-	{
-		Dimension d = new Dimension(editorWidth * 16,(64 / editorWidth) * 16);//4 tiles per level, 16 levels total 
-
+	public void DrawTileset() {
+		Dimension d = new Dimension(editorWidth * 16,(64 / editorWidth) * 16);//4 tiles per level, 16 levels total
 		imgBuffer = new BufferedImage(d.width,d.height,BufferedImage.TYPE_INT_ARGB);
 		setSize(d);
 		gcBuff=imgBuffer.getGraphics();
-		int x=0;
-		int y=0;
-		int i=0;
-					
-		for(y=0;y<64 / editorWidth;y++){
-			for(x=0;x<editorWidth;x++){
-				
+		for(int y = 0; y < 64 / editorWidth; y++){
+			for(int x = 0; x < editorWidth; x++){
 				gcBuff.drawImage(((BufferedImage)(PermissionTilePanel.imgPermissions)).getSubimage((x+(y*editorWidth)) * 16, 0, 16, 16), x * 16, y * 16, this);
-			      
-				
 			}
 		}
-		
-
-		
 	}
 	
-	public void setPermissionMode(PermissionTileMode permMode)
-	{
+	public void setPermissionMode(PermissionTileMode permMode) {
 		String imagePath = "/resources/permissions.png";
-		switch(permMode)
-		{
+		switch(permMode) {
 			case LEGACY:
 				editorWidth = 1;
 				imagePath = "/resources/permissionslinear.png";
@@ -201,54 +149,32 @@ public class PermissionTilePanel extends JPanel
 			default:
 				editorWidth = 4;
 		}
-		try 
-		{
-			imgPermissions=ImageIO.read(MainGUI.class.getResourceAsStream(imagePath));
-		} 
-		catch (IOException e1) 
-		{
+		try {
+			imgPermissions=ImageIO.read(Objects.requireNonNull(MainGUI.class.getResourceAsStream(imagePath)));
+		} catch (IOException e1) {
 			System.out.println("Failed to load permissions image!\nPath: imagePath");
 		}
-		
 		setPreferredSize(new Dimension(editorWidth * 16,(64 / editorWidth) * 16));
 		setSize(new Dimension(editorWidth * 16,(64 / editorWidth) * 16));	
 	}
 	
 	
-	protected void paintComponent(Graphics g)
-	{
+	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		
 		if(MainGUI.uiSettings == null)
 			return;
-
-		if (PermissionTilePanel.Redraw == true)
-		{
+		if (PermissionTilePanel.Redraw) {
 			DrawTileset();
 			PermissionTilePanel.Redraw = false;
 		}
 		g.drawImage(imgBuffer, 0, 0, this);
-
 		g.setColor(MainGUI.uiSettings.markerColor);
 		g.drawRect((baseSelectedTile % editorWidth) * 16, (baseSelectedTile / editorWidth) * 16, 15, 15);
-
 		g.setColor(MainGUI.uiSettings.cursorColor);
 		if (mouseTracker.width < 0)
 			mouseTracker.x -= Math.abs(mouseTracker.width);
 		if (mouseTracker.height < 0)
 			mouseTracker.y -= Math.abs(mouseTracker.height);
 		g.drawRect(((mouseTracker.x / 16) % editorWidth) * 16, (mouseTracker.y / 16) * 16, MapEditorPanel.selectBox.width - 1, MapEditorPanel.selectBox.height - 1);
-		try
-		{
-			// best error image.
-			// I'll always remember you Smeargle <3
-			// g.drawImage(ImageIO.read(MainGUI.class.getResourceAsStream("/resources/smeargle.png")),
-			// 100, 240,null);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
 	}
-
 }
