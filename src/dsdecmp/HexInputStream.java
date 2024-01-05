@@ -2,7 +2,6 @@ package dsdecmp;
 
 import java.io.DataInputStream;
 import java.io.EOFException;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -16,7 +15,7 @@ import java.util.Stack;
 public class HexInputStream {
 
     /** The InputStream this stream is based on. */
-    private volatile InputStream dis;
+    private final InputStream dis;
     /** The current position of this stream. */
     private volatile long currPos;
     /** Get the current position of this stream. */
@@ -31,7 +30,7 @@ public class HexInputStream {
     public void goTo(long pos) throws IOException{ this.setPosition(pos); }
 
     /** The stack of saved positions for this stream. */
-    private Stack<Long> positionStack;
+    private final Stack<Long> positionStack;
 
     /**
      * Creates a new HexInputStream, based off another InputStream.
@@ -51,7 +50,7 @@ public class HexInputStream {
     public HexInputStream(String filename) throws FileNotFoundException {
             this.dis = new DataInputStream(new FileInputStream(filename));
             this.currPos = 0;
-            this.positionStack = new Stack<Long>();
+            this.positionStack = new Stack<>();
     }
 
     /**
@@ -136,7 +135,7 @@ public class HexInputStream {
     public long readU32() throws IOException {
             long dword = 0;
             for(int i = 0; i < 4; i++)
-                    dword = dword | (readU8() << (8 * i));
+                    dword = dword | ((long) readU8() << (8 * i));
 
             return dword;
     }
@@ -152,7 +151,7 @@ public class HexInputStream {
     public long readS64() throws IOException {
             long qword = 0;
             for(int i = 0; i < 8; i++)
-                    qword = qword | (readU8() << (8 * i));
+                    qword = qword | ((long) readU8() << (8 * i));
             return qword;
     }
     /** Read a LittleEndian s64 from this stream (a signed int) */

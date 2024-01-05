@@ -1,6 +1,7 @@
 package org.zzl.minegaming.GBAUtils;
 
 public class BitConverter {
+
 	protected BitConverter(){}
 	
 	public static long ToInt32(byte[] bytez) {

@@ -12,15 +12,17 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class GBARom implements Cloneable {
-	private String headerCode = "";
-	private String headerName = "";
-	private String headerMaker = "";
+
+	private final String headerCode;
+	private final String headerName;
+	private final String headerMaker;
 
 	static byte[] rom_bytes;
 	public String input_filepath;
@@ -56,8 +58,7 @@ public class GBARom implements Cloneable {
 		int romID = ROMManager.getID();
 		try {
 			ROMManager.AddROM(romID, new GBARom(location));
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 			return -2;
 		}
@@ -98,9 +99,9 @@ public class GBARom implements Cloneable {
 	
 	public void updateFlags() {
 		if(headerCode.equalsIgnoreCase("BPRE")) {
-			if(readByte(0x082903) == 0x8) //Is there a function pointer here?
+			if(readByte(0x082903) == 0x8)
 				isDNPkmnPatchAdded = true;
-			if(readByte(0x427) == 0x8) //Is interdpth's RTC in there?
+			if(readByte(0x427) == 0x8)
 				isRTCAdded = true;
 		} else if(headerCode.equalsIgnoreCase("BPEE")) {
 			isRTCAdded = true;
@@ -276,8 +277,7 @@ public class GBARom implements Cloneable {
 	 *  Identical to readBytesFromROM just with a different name
 	 */
 	@Deprecated
-	public byte[] getROMHeader(String header_offset, int header_size)
-	{
+	public byte[] getROMHeader(String header_offset, int header_size) {
 		current_rom_header = readBytes(header_offset, header_size);
 		return current_rom_header;
 	}
@@ -311,7 +311,6 @@ public class GBARom implements Cloneable {
 				key = separated[0];
 				value = " ";
 			}
-
 			hex_tbl.put(key, value);
 		}
 		br.close();
@@ -322,7 +321,7 @@ public class GBARom implements Cloneable {
 	 * @param tbl_path File path to the character table
 	 */
 	public void loadHexTBL(String tbl_path) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(GBARom.class.getResourceAsStream(tbl_path)));
+		BufferedReader br = new BufferedReader(new InputStreamReader(Objects.requireNonNull(GBARom.class.getResourceAsStream(tbl_path))));
 		String line;
 		while ((line = br.readLine()) != null) {
 			String[] seperated = line.split("=");
@@ -378,7 +377,7 @@ public class GBARom implements Cloneable {
 	 * @param max_struct_size Maximum structure size
 	 */
 	public ArrayList<byte[]> loadArrayOfStructuredData(int offset, int amount, int max_struct_size) {
-		ArrayList<byte[]> data = new ArrayList<byte[]>();
+		ArrayList<byte[]> data = new ArrayList<>();
 		int offs = offset & 0x1FFFFFF;
 		for (int count = 0; count < amount; count++) {
 			byte[] temp_byte = new byte[max_struct_size];

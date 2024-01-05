@@ -47,7 +47,6 @@ public class Compression {
 			for (int i = 0; i < 8; i++) {
 				flag = (flags & (0x80 >> i)) > 0;
 				if (flag) {
-					disp = 0;
 					try {
 						b = his.readU8();
 					} catch (EOFException ex) {
@@ -62,31 +61,27 @@ public class Compression {
 					}
 					n += 3;
 					cdest = curr_size;
-					// Console.WriteLine("disp: 0x{0:x}", disp);
 					if (disp > curr_size)
 						throw new Exception("Cannot go back more than already written");
 					for (int j = 0; j < n; j++)
 						outData[curr_size++] = outData[cdest - disp - 1 + j];
-
-					if (curr_size > outData.length)
-						break;
-				}
+                }
 				else {
 					try {
 						b = his.readU8();
 					} catch (EOFException ex) {
 						break;
-					}// throw new Exception("Incomplete data"); }
+					}
 					try {
 						outData[curr_size++] = b;
 					} catch (ArrayIndexOutOfBoundsException ex) {
 						if (b == 0)
 							break;
 					}
-					if (curr_size > outData.length)
-						break;
-				}
-			}
+                }
+                if (curr_size > outData.length)
+                    break;
+            }
 		}
 		return outData;
 	}
@@ -167,19 +162,17 @@ public class Compression {
 					for (int j = 0; j < len && curr_size < outData.length; j++)
 						outData[curr_size++] = outData[cdest - disp - 1 + j];
 
-					if (curr_size > outData.length)
-						break;
-				}
+                }
 				else {
 					try {
 						outData[curr_size++] = his.readU8();
 					} catch (EOFException ex) {
 						break;
 					}// throw new Exception("Incomplete data"); }
-					if (curr_size > outData.length)
-						break;
-				}
-			}
+                }
+                if (curr_size > outData.length)
+                    break;
+            }
 		}
 		return outData;
 	}
@@ -244,7 +237,7 @@ public class Compression {
 		HuffTreeNode.maxInpos = 4 + (treeSize + 1) * 2;
 		HuffTreeNode rootNode = new HuffTreeNode();
 		rootNode.parseData(his);
-		his.setPosition(4 + (treeSize + 1) * 2); // go to start of coded
+		his.setPosition(4 + (treeSize + 1) * 2L);
 		// read all data
 		int[] indata = new int[(int) (his.available() - his.getPosition()) / 4];
 		for (int i = 0; i < indata.length; i++)
@@ -255,17 +248,17 @@ public class Compression {
 		int[] outdata = new int[decomp_size];
 
 		int idx = -1;
-		String codestr = "";
-		NLinkedList<Integer> code = new NLinkedList<Integer>();
+		StringBuilder codestr = new StringBuilder();
+		NLinkedList<Integer> code = new NLinkedList<>();
 		while (curr_size < decomp_size) {
 			try {
-				codestr += Integer.toBinaryString(indata[++idx]);
+				codestr.append(Integer.toBinaryString(indata[++idx]));
 			} catch (ArrayIndexOutOfBoundsException e) {
 				throw new Exception("not enough data.", e);
 			}
 			while (codestr.length() > 0) {
 				code.addFirst(Integer.parseInt(codestr.charAt(0) + ""));
-				codestr = codestr.substring(1);
+				codestr = new StringBuilder(codestr.substring(1));
 				Pair<Boolean, Integer> attempt = rootNode.getValue(code.getLast());
 				if (attempt.getFirst()) {
 					try {
@@ -280,8 +273,8 @@ public class Compression {
 		}
 		if (codestr.length() > 0 || idx < indata.length - 1) {
 			while (idx < indata.length - 1)
-				codestr += Integer.toBinaryString(indata[++idx]);
-			codestr = codestr.replace("0", "");
+				codestr.append(Integer.toBinaryString(indata[++idx]));
+			codestr = new StringBuilder(codestr.toString().replace("0", ""));
 			if (codestr.length() > 0)
 				System.out.println("too much data; str=" + codestr + ", idx=" + idx + "/" + indata.length);
 		}
@@ -300,93 +293,5 @@ public class Compression {
 			realout = outdata;
 		}
 		return realout;
-	}
-}
-
-class HuffTreeNode {
-	protected static int maxInpos = 0;
-	protected HuffTreeNode node0, node1;
-	protected int data = -1; // [-1,0xFF]
-	// / To get a value, provide the last node of a list of bytes &lt; 2.
-	// / the list will be read from back to front.
-	protected Pair<Boolean, Integer> getValue(NLinkedListNode<Integer> code) throws Exception {
-		Pair<Boolean, Integer> outData = new Pair<Boolean, Integer>();
-		outData.setSecond(data);
-		if (code == null) {
-			outData.setFirst(node0 == null && node1 == null && data >= 0);
-			return outData;
-		}
-		if (code.getValue() > 1)
-			throw new Exception("The list should be a list of bytes < 2. got: " + code.getValue());
-
-		int c = code.getValue();
-		HuffTreeNode n = c == 0 ? node0 : node1;
-		if (n == null)
-			outData.setFirst(false);
-        assert n != null;
-        return n.getValue(code.getPrevious());
-	}
-
-	protected int getValue(String code) throws Exception {
-		NLinkedList<Integer> c = new NLinkedList<Integer>();
-		for (char ch : code.toCharArray())
-			c.addFirst((int) ch);
-
-		Pair<Boolean, Integer> attempt = this.getValue(c.getLast());
-		if (attempt.getFirst())
-			return attempt.getSecond();
-		else
-			return -1;
-	}
-
-	protected void parseData(HexInputStream his) throws IOException {
-		/*
-		 * Tree Table (list of 8bit nodes, starting with the root node) Root
-		 * Node and Non-Data-Child Nodes are: Bit0-5 Offset to next child node,
-		 * Next child node0 is at (CurrentAddr AND NOT 1)+Offset*2+2 Next child
-		 * node1 is at (CurrentAddr AND NOT 1)+Offset*2+2+1 Bit6 Node1 End Flag
-		 * (1=Next child node is data) Bit7 Node0 End Flag (1=Next child node is
-		 * data) Data nodes are (when End Flag was set in parent node): Bit0-7
-		 * Data (upper bits should be zero if Data Size is less than 8)
-		 */
-		this.node0 = new HuffTreeNode();
-		this.node1 = new HuffTreeNode();
-		long currPos = his.getPosition();
-		int b = his.readU8();
-		long offset = b & 0x3F;
-		boolean end0 = (b & 0x80) > 0, end1 = (b & 0x40) > 0;
-		// parse data for node0
-		his.setPosition((currPos - (currPos & 1)) + offset * 2 + 2);
-		if (his.getPosition() < maxInpos) {
-			if (end0)
-				node0.data = his.readU8();
-			else
-				node0.parseData(his);
-		}
-		// parse data for node1
-		his.setPosition((currPos - (currPos & 1)) + offset * 2 + 2 + 1);
-		if (his.getPosition() < maxInpos) {
-			if (end1)
-				node1.data = his.readU8();
-			else
-				node1.parseData(his);
-		}
-		// reset position
-		his.setPosition(currPos);
-	}
-
-	@Override
-	public String toString() {
-		if (data < 0)
-			return "<" + node0.toString() + ", " + node1.toString() + ">";
-		else
-			return "[" + Integer.toHexString(data) + "]";
-	}
-
-	protected int getDepth() {
-		if (data < 0)
-			return 0;
-		else
-			return 1 + Math.max(node0.getDepth(), node1.getDepth());
 	}
 }
