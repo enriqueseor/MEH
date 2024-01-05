@@ -188,16 +188,6 @@ public class MainGUI extends JFrame {
     private JMenuItem mntmDaynightPokemon;
     private JCheckBoxMenuItem mnEnableDebugging;
 
-	void CreateToolbar() {
-		JToolBar toolBar = new JToolBar();
-        toolBar.setFloatable(false);
-		lblTileVal = new JLabel("Current Tile: 0x0");
-		lblTileVal.setFont(new Font("Dialog", Font.BOLD, 10));
-		toolBar.add(lblTileVal);
-		editorPanel.add(toolBar, BorderLayout.NORTH);
-		toolBar.setPreferredSize(new Dimension(128, 32));
-	}
-
 	void CreateBorderArea() {
 		JPanel panelBorderTilesContainer = new JPanel();
 		panelBorderTilesContainer.setPreferredSize(new Dimension(10, 70));
@@ -747,18 +737,29 @@ public class MainGUI extends JFrame {
 		pkMax1.setBounds(75, 30, 60, 32);
 		pkEditorPanel.add(pkMax1);
 
-		pkName1 = new JComboBox();
+		JComboBox<String> pkName1 = new JComboBox<>();
 		pkName1.addActionListener(e -> {
-            pkNo1.setValue(pkName1.getSelectedIndex());
-            try {
-                MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][0].wNum = pkName1.getSelectedIndex();
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-                if(MapIO.DEBUG)
-                    System.out.println("Error loading wild Pok�mon data, data not found or nonexistant.");
-            }
-        });
+			pkNo1.setValue(pkName1.getSelectedIndex());
+
+			if (MapIO.wildData != null
+					&& MapIO.wildData.aWildPokemon != null
+					&& currentType >= 0 && currentType < MapIO.wildData.aWildPokemon.length
+					&& MapIO.wildData.aWildPokemon[currentType] != null
+					&& selectedTime >= 0 && selectedTime < MapIO.wildData.aWildPokemon[currentType].aWildPokemon.length
+					&& MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime] != null
+					&& MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][0] != null) {
+				try {
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][0].wNum = pkName1.getSelectedIndex();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					if (MapIO.DEBUG)
+						System.out.println("Error loading wild Pokémon data, data not found or nonexistent.");
+				}
+			} else {
+				// Handle the case where some required objects are null
+				System.out.println("Error: Some required objects are null.");
+			}
+		});
 		pkName1.setBounds(141, 30, 165, 32);
 		pkEditorPanel.add(pkName1);
 
@@ -1416,7 +1417,6 @@ public class MainGUI extends JFrame {
 		movementScrollPane.getVerticalScrollBar().setUnitIncrement(16);
 		tabbedPane.addTab("Movement", null, movementScrollPane, null);
 
-		CreateToolbar();
 		CreateEventsPanel();
 		CreateWildPokemonPanel();
 		CreateMimeTab();
@@ -1655,9 +1655,7 @@ int x = (Integer) spnWidth.getValue();
                     MapIO.selectedBank = ((BankLoader.MapTreeNode)node).bank;
                     MapIO.selectedMap = ((BankLoader.MapTreeNode)node).map;
                 }
-            } catch (Exception ex) {
-ex.printStackTrace();
-            }
+            } catch (Exception ex) {ex.printStackTrace();}
         });
 		mapBanks.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		mapBanks.addMouseListener(new MouseAdapter() {
@@ -1731,24 +1729,20 @@ ex.printStackTrace();
 	}
 
 	public static void loadWildPokemon() {
-
 		if (MapIO.wildData == null || MapIO.wildData.aWildPokemon == null) {
 			pkEditorPanel.setVisible(false);
 			panelpk6_10.setVisible(false);
 			panelpk11_12.setVisible(false);
 			return;
 		}
-		
 		if(MapIO.wildData.aWildPokemon[currentType].bDNEnabled == 1) {
 			pkTime.setEnabled(true);
 			btnEnableTimebasedPokemon.setVisible(false);
-		}
-		else {
+		} else {
 			pkTime.setEnabled(false);
 			selectedTime = 0;
 			btnEnableTimebasedPokemon.setVisible(true);
 		}
-		
 		if(MapIO.DEBUG)
 			System.out.println(selectedTime);
 
@@ -1881,7 +1875,8 @@ ex.printStackTrace();
 	public void openROM() {
 		int i = GBARom.loadRom();
 		if (i == -2) {
-			JOptionPane.showMessageDialog(null, "The ROM could not be opened.\nIt may be open in another program.", "Error opening ROM", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "The ROM could not be opened.\n" +
+					"It may be open in another program.", "Error opening ROM", JOptionPane.WARNING_MESSAGE);
 		}		
 		if (i < 0)
 			return;

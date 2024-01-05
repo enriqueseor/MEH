@@ -147,10 +147,15 @@ public class MapIO {
 	}
 
 	public static void addStringArray(JComboBox b, String[] strs) {
-		b.removeAllItems();
-		for (String s : strs)
-			b.addItem(s);
-		b.repaint();
+		if (b != null) {
+			b.removeAllItems();
+			for (String s : strs) {
+				b.addItem(s);
+			}
+			b.repaint();
+		} else {
+			System.out.println("Error: The JComboBox instance is null. MAPIO.class Line157");
+		}
 	}
 	
 	public static void repaintTileEditorPanel() {

@@ -193,9 +193,6 @@ public class DataStore {
 	}
 
 	public static void WriteNumberEntry(String Section, String key, int val) {
-		String nkey = iP.get(Section, key);
-		int CommentIndex = -1;
-		long ReturnValue = 0;
 		String FinalString;
 		try {
 			FinalString = Integer.toString(val);
@@ -210,9 +207,7 @@ public class DataStore {
 			passedTraits = false;
 			Inherit = "";
 			ReadData(ROMHeader);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		} catch (IOException ignored) {}
 	}
 
 	public static long EngineVersion;

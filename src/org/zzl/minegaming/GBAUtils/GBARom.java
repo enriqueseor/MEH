@@ -23,7 +23,7 @@ public class GBARom implements Cloneable {
 
 	HashMap<String, String> rom_header_names = new HashMap<>();
 	HashMap<String, String> hex_tbl = new HashMap<>();
-	
+
 	public boolean isPrimalDNAdded = false;
 	public boolean isRTCAdded = false;
 	public boolean isDNPkmnPatchAdded = false;
@@ -46,7 +46,7 @@ public class GBARom implements Cloneable {
 			fd.setDirectory(System.getProperty("user.home"));
 			fd.setVisible(true);
 			String dialogLocation = fd.getDirectory() + fd.getFile();
-			if (dialogLocation == null || dialogLocation.isEmpty()) { // The user canceled the selection
+			if (dialogLocation.isEmpty()) { // The user canceled the selection
 				location = ""; // Set to empty string to signify canceled selection
 			} else {// Valid location obtained from FileDialog
 				location = dialogLocation;
@@ -65,7 +65,6 @@ public class GBARom implements Cloneable {
 		FileFilter filter = new FileNameExtensionFilter("GBA ROM", "gba", "bin");
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileFilter(filter);
-
 		int result = fileChooser.showOpenDialog(new Frame());
 		if (result != JFileChooser.APPROVE_OPTION) {
 			System.out.println("User canceled the file selection.");
@@ -92,7 +91,8 @@ public class GBARom implements Cloneable {
 		if (location == null){
 			location = getLocationFromFileChooser();
 		}
-		if (location.isEmpty()) {
+        assert location != null;
+        if (location.isEmpty()) {
 			System.out.println("No file selected.");
 			return -1; // Indicate no file selected
 		}
@@ -116,10 +116,14 @@ public class GBARom implements Cloneable {
 		System.out.println(romID);
 		return romID;
 	}
-	
+
 	/**
-	 *  Wraps that ROM up like a nice warm burrito
+	 * Initializes the GBARom instance with the provided ROM file path.
+	 * Loads the ROM file into bytes and extracts essential header information.
+	 * Throws an IOException if there are issues during the ROM loading process.
+	 *
 	 * @param rom_path Path to the ROM file
+	 * @throws IOException if there's an issue loading the ROM into bytes
 	 */
 	public GBARom(String rom_path) throws IOException {
 		input_filepath = rom_path;
@@ -137,7 +141,14 @@ public class GBARom implements Cloneable {
 		updateROMHeaderNames();
 		updateFlags();
 	}
-	
+
+	/**
+	 * Updates flags based on header codes.
+	 * For "BPRE" header code:
+	 * - Checks specific addresses for DNPkmnPatch and RTC presence, sets corresponding flags.
+	 * For "BPEE" header code:
+	 * - Always sets RTC flag and checks for DNPkmnPatch presence.
+	 */
 	public void updateFlags() {
 		if(headerCode.equalsIgnoreCase("BPRE")) {
 			if(readByte(0x082903) == 0x8)
@@ -152,24 +163,31 @@ public class GBARom implements Cloneable {
 	}
 
 	/**
-	 *  Loads the files from the ROM into the byte array
+	 * Loads the content of the ROM file into the byte array 'rom_bytes'.
+	 * Throws an IOException if there's an issue reading the file.
 	 */
 	public void loadRomToBytes() throws IOException {
+		// Create a File object using the provided input file path
 		File file = new File(input_filepath);
-		InputStream is = Files.newInputStream(file.toPath());
-		long length = file.length();
-		rom_bytes = new byte[(int) length];
-		int offset = 0, n;
-		while (offset < rom_bytes.length && (n = is.read(rom_bytes, offset, rom_bytes.length - offset)) >= 0) {
-			offset += n;
-		}
-		is.close();
+		// Create an InputStream to read the file content
+		try (InputStream is = Files.newInputStream(file.toPath())) {
+			// Determine the length of the file
+			long length = file.length();
+			// Initialize the byte array to hold the ROM file content
+			rom_bytes = new byte[(int) length];
+			int offset = 0, bytesRead;
+			// Read content from the file into the byte array
+			while (offset < rom_bytes.length && (bytesRead = is.read(rom_bytes, offset, rom_bytes.length - offset)) >= 0) {
+				offset += bytesRead; // Update the offset after each read
+			}
+		} // The try-with-resources block will automatically close the InputStream
 	}
 
 	/**
-	 *  Read bytes from the ROM from given offset into an array of a given size
-	 * @param offset Offset in ROM as hex string
-	 * @param size Amount of bytes to grab
+	 * Reads bytes from the ROM from the given offset as a hexadecimal string into an array of a given size.
+	 * @param offset Offset in ROM as a hexadecimal string
+	 * @param size   Amount of bytes to retrieve
+	 * @return       Byte array containing the read bytes
 	 */
 	public byte[] readBytes(String offset, int size) {
 		int offs = convertOffsetToInt(offset);
@@ -177,18 +195,27 @@ public class GBARom implements Cloneable {
 	}
 
 	/**
-	 *  Read bytes from the ROM from given offset into an array of a given size
+	 * Reads bytes from the ROM from the given offset into an array of a given size.
 	 * @param offset Offset in ROM
-	 * @param size Amount of bytes to grab
+	 * @param size   Amount of bytes to retrieve
+	 * @return       Byte array containing the read bytes
 	 */
 	public byte[] readBytes(int offset, int size) {
 		return BitConverter.GrabBytes(rom_bytes, offset, size);
 	}
+
+	/**
+	 * Reads a specified number of bytes from the ROM from an internal offset into an array.
+	 * Advances the internal offset after reading.
+	 * @param size Amount of bytes to retrieve
+	 * @return     Byte array containing the read bytes
+	 */
 	public byte[] readBytes(int size) {
 		byte[] t=BitConverter.GrabBytes(rom_bytes, internalOffset, size);
 		internalOffset+=size;	
 		return t;
 	}
+
 	/**
 	 * Reads a byte from an offset
 	 * @param offset Offset to read from
@@ -196,6 +223,7 @@ public class GBARom implements Cloneable {
 	public byte readByte(int offset) {
 		return readBytes(offset,1)[0];
 	}
+
 	public byte readByte() {
 		byte t = rom_bytes[internalOffset];
 		internalOffset+=1;
@@ -303,8 +331,8 @@ public class GBARom implements Cloneable {
 	}
 
 	/**
-	 *  Convert a string offset i.e. 0x943BBD into a decimal
-	 *  Used for directly accessing the ROM byte array
+	 * Convert a string offset i.e. 0x943BBD into a decimal
+	 * Used for directly accessing the ROM byte array
 	 * @param offset Offset to convert to an integer
 	 * @return The offset as an int
 	 */
@@ -314,8 +342,8 @@ public class GBARom implements Cloneable {
 	}
 
 	/**
-	 *  Retrieve the header of the ROM, based on offset and size
-	 *  Identical to readBytesFromROM just with a different name
+	 * Retrieve the header of the ROM, based on offset and size
+	 * Identical to readBytesFromROM just with a different name
 	 */
 	@Deprecated
 	public byte[] getROMHeader(String header_offset, int header_size) {
@@ -324,7 +352,7 @@ public class GBARom implements Cloneable {
 	}
 
 	/**
-	 *  Validate the file loaded based on a given byte and offset
+	 * Validate the file loaded based on a given byte and offset
 	 * @param validation_offset Offset to check in the ROM
 	 * @param validation_byte Byte to check it with
 	 */
@@ -333,7 +361,7 @@ public class GBARom implements Cloneable {
 	}
 
 	/**
-	 *  Load a HEX table file for character mapping i.e. Pokétext
+	 * Load a HEX table file for character mapping i.e. Poketext
 	 * @param tbl_path File path to the character table
 	 */
 	public void loadHexTBLFromFile(String tbl_path) throws IOException {
@@ -358,7 +386,7 @@ public class GBARom implements Cloneable {
 	}
 	
 	/**
-	 *  Load a HEX table file for character mapping i.e. Pokétext
+	 *  Load a HEX table file for character mapping i.e. Poketext
 	 * @param tbl_path File path to the character table
 	 */
 	public void loadHexTBL(String tbl_path) throws IOException {
@@ -397,7 +425,7 @@ public class GBARom implements Cloneable {
 	}
 
 	/**
-	 *  Return a string of the friendly ROM header based on the current ROM
+	 * Return a string of the friendly ROM header based on the current ROM
 	 */
 	public String getFriendlyROMHeader() {
 		return rom_header_names.get(new String(current_rom_header));
@@ -411,8 +439,8 @@ public class GBARom implements Cloneable {
 	}
 
 	/**
-	 *  Read a structure of data from the ROM at a given offset, a set numner of times, with a set structure size
-	 *  For example returning the names of Pokémon into an ArrayList of bytes
+	 * Read a structure of data from the ROM at a given offset, a set numner of times, with a set structure size
+	 * For example returning the names of Pokémon into an ArrayList of bytes
 	 * @param offset Offset to read the structure from
 	 * @param amount Amount to read
 	 * @param max_struct_size Maximum structure size
@@ -511,8 +539,7 @@ public class GBARom implements Cloneable {
 		if(!fullPointer)
 			data[3] = 0;
 		internalOffset+=4;
-		long ptr = BitConverter.ToInt32(data);
-		return (data[3] > 0x7F ? ~ptr : ptr);
+        return (BitConverter.ToInt32(data));
 	}
 	
 	/**
