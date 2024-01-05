@@ -21,20 +21,13 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.EtchedBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.*;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 
 public class MainGUI extends JFrame {
@@ -276,70 +269,60 @@ public class MainGUI extends JFrame {
 		popupMenu.add(mntmEditScript);
 
 		JMenuItem mntmRemoveEvent = new JMenuItem("Remove Event");
-		mntmRemoveEvent.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(MapIO.loadedMap.mapExitManager.getSpriteIndexAt(popupX, popupY) != -1) {
-					int result = JOptionPane.showConfirmDialog(new JFrame(),"Removing warps is currently slightly buggy and may cause existing warps in the map to break.\nWe currently advise to just temporarily relocate warps while this is sorted out.\nAre you sure you want to remove this warp?","ZOMG R U CRAZY???", JOptionPane.YES_NO_OPTION);
-					if(result == JOptionPane.YES_OPTION)
-						MapIO.loadedMap.mapExitManager.remove(popupX, popupY);
-				}
-				else if(MapIO.loadedMap.mapSignManager.getSpriteIndexAt(popupX, popupY) != -1) {
-					MapIO.loadedMap.mapSignManager.remove(popupX, popupY);
-				}
-				else if(MapIO.loadedMap.mapNPCManager.getSpriteIndexAt(popupX, popupY) != -1) {
-					MapIO.loadedMap.mapNPCManager.remove(popupX, popupY);
-				}
-				else if(MapIO.loadedMap.mapTriggerManager.getSpriteIndexAt(popupX, popupY) != -1) {
-					MapIO.loadedMap.mapTriggerManager.remove(popupX, popupY);
-				}
-				
-				eventEditorPanel.Redraw = true;
-				eventEditorPanel.repaint();
-			}
-		});
+		mntmRemoveEvent.addActionListener(e -> {
+            if(MapIO.loadedMap.mapExitManager.getSpriteIndexAt(popupX, popupY) != -1) {
+                int result = JOptionPane.showConfirmDialog(new JFrame(),"Removing warps is currently slightly buggy and may cause existing warps in the map to break.\nWe currently advise to just temporarily relocate warps while this is sorted out.\nAre you sure you want to remove this warp?","ZOMG R U CRAZY???", JOptionPane.YES_NO_OPTION);
+                if(result == JOptionPane.YES_OPTION)
+                    MapIO.loadedMap.mapExitManager.remove(popupX, popupY);
+            }
+            else if(MapIO.loadedMap.mapSignManager.getSpriteIndexAt(popupX, popupY) != -1) {
+                MapIO.loadedMap.mapSignManager.remove(popupX, popupY);
+            }
+            else if(MapIO.loadedMap.mapNPCManager.getSpriteIndexAt(popupX, popupY) != -1) {
+                MapIO.loadedMap.mapNPCManager.remove(popupX, popupY);
+            }
+            else if(MapIO.loadedMap.mapTriggerManager.getSpriteIndexAt(popupX, popupY) != -1) {
+                MapIO.loadedMap.mapTriggerManager.remove(popupX, popupY);
+            }
+
+            eventEditorPanel.Redraw = true;
+            eventEditorPanel.repaint();
+        });
 		popupMenu.add(mntmRemoveEvent);
 
 		JMenu mnAdd = new JMenu("Add...");
 		popupMenu.add(mnAdd);
 
 		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Warp");
-		mntmNewMenuItem_2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				MapIO.loadedMap.mapExitManager.add(popupX, popupY);
-				eventEditorPanel.Redraw = true;
-				eventEditorPanel.repaint();
-			}
-		});
+		mntmNewMenuItem_2.addActionListener(e -> {
+            MapIO.loadedMap.mapExitManager.add(popupX, popupY);
+            eventEditorPanel.Redraw = true;
+            eventEditorPanel.repaint();
+        });
 		mnAdd.add(mntmNewMenuItem_2);
 
 		JMenuItem mntmNewMenuItem_3 = new JMenuItem("NPC");
-		mntmNewMenuItem_3.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				MapIO.loadedMap.mapNPCManager.add(popupX, popupY);
-				eventEditorPanel.Redraw = true;
-				eventEditorPanel.repaint();
-			}
-		});
+		mntmNewMenuItem_3.addActionListener(e -> {
+            MapIO.loadedMap.mapNPCManager.add(popupX, popupY);
+            eventEditorPanel.Redraw = true;
+            eventEditorPanel.repaint();
+        });
 		mnAdd.add(mntmNewMenuItem_3);
 
 		JMenuItem mntmNewMenuItem_4 = new JMenuItem("Sign");
-		mntmNewMenuItem_4.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				MapIO.loadedMap.mapSignManager.add(popupX, popupY);
-				eventEditorPanel.Redraw = true;
-				eventEditorPanel.repaint();
-			}
-		});
+		mntmNewMenuItem_4.addActionListener(e -> {
+            MapIO.loadedMap.mapSignManager.add(popupX, popupY);
+            eventEditorPanel.Redraw = true;
+            eventEditorPanel.repaint();
+        });
 		mnAdd.add(mntmNewMenuItem_4);
 
 		JMenuItem mntmNewMenuItem_5 = new JMenuItem("Trigger Script");
-		mntmNewMenuItem_5.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				MapIO.loadedMap.mapTriggerManager.add(popupX, popupY);
-				eventEditorPanel.Redraw = true;
-				eventEditorPanel.repaint();
-			}
-		});
+		mntmNewMenuItem_5.addActionListener(e -> {
+            MapIO.loadedMap.mapTriggerManager.add(popupX, popupY);
+            eventEditorPanel.Redraw = true;
+            eventEditorPanel.repaint();
+        });
 		mnAdd.add(mntmNewMenuItem_5);
 		eventEditorPanel.setLayout(null);
 
@@ -355,12 +338,10 @@ public class MainGUI extends JFrame {
 		editorTabs.addTab("Map", null, editorPanel, null);
 		editorPanel.setLayout(new BorderLayout(0, 0));
 		splitterMapTiles = new JPanel();
-//		splitterMapTiles.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		splitterMapTiles.setPreferredSize(new Dimension(4, 10));
 		splitterMapTiles.setMaximumSize(new Dimension(4, 32767));
 
 		panelMapTilesContainer = new JPanel();
-
 		panelMapTilesContainer.setLayout(new BorderLayout(0, 0));
 
 		mapEditorPanel = new MapEditorPanel();
@@ -380,88 +361,51 @@ public class MainGUI extends JFrame {
 
 	void CreateMenus() {
 		JMenuBar menuBar = new JMenuBar();
-//		menuBar.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		setJMenuBar(menuBar);
-
 		JMenu mnFile = new JMenu("File");
-
 		mnOpen = new JMenuItem("Open ROM");
-		mnOpen.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				openROM();
-			}
-		});
+		mnOpen.addActionListener(e -> openROM());
 
 		mnSave = new JMenuItem("Save");
 		mnSave.setEnabled(false);
-		mnSave.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				MapIO.saveAll();
-			}
-		});
-
+		mnSave.addActionListener(e -> MapIO.saveAll());
 		mnSaveMap = new JMenuItem("Save Map");
 		mnSaveMap.setEnabled(false);
-		mnSaveMap.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				MapIO.saveMap();
-			}
-		});
-
+		mnSaveMap.addActionListener(e -> MapIO.saveMap());
 		mnSaveMapToPNG = new JMenuItem("Save Map to PNG");
 		mnSaveMapToPNG.setEnabled(false);
-		mnSaveMapToPNG.addActionListener(new ActionListener() 
-		{
-			public void actionPerformed(ActionEvent e) 
-			{
-				FileDialog fd = new FileDialog(new Frame(), "Locate Tileset", FileDialog.SAVE);
-				fd.setFilenameFilter(new FilenameFilter() {
-				    public boolean accept(File dir, String name) {
-				      return (name.toLowerCase().endsWith(".png"));
-				    }
-				});
-				fd.setFile(MapIO.currentBank + "-" + MapIO.selectedMap + "-" + BankLoader.mapNames.get((int)MapIO.loadedMap.mapHeader.bLabelID) + ".png");
-				fd.setDirectory(System.getProperty("user.home"));
-				fd.setVisible(true);
-				String location = fd.getDirectory() + fd.getFile();
-				if(fd.getDirectory().equals("null"))
-					return;
-				
-				try
-				{
-					ImageIO.write((RenderedImage) Map.renderMap(MapIO.loadedMap, true), "png", new File(location));
-				}
-				catch (IOException e1)
-				{
-					e1.printStackTrace();
-				}
-			}
-		});
-
+		mnSaveMapToPNG.addActionListener(e -> {
+            FileDialog fd = new FileDialog(new Frame(), "Locate Tileset", FileDialog.SAVE);
+            fd.setFilenameFilter((dir, name) -> (name.toLowerCase().endsWith(".png")));
+            fd.setFile(MapIO.currentBank + "-" + MapIO.selectedMap + "-" + BankLoader.mapNames.get((int)MapIO.loadedMap.mapHeader.bLabelID) + ".png");
+            fd.setDirectory(System.getProperty("user.home"));
+            fd.setVisible(true);
+            String location = fd.getDirectory() + fd.getFile();
+            if(fd.getDirectory().equals("null"))
+                return;
+            try {
+                ImageIO.write((RenderedImage) Map.renderMap(MapIO.loadedMap, true), "png", new File(location));
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        });
 		mnExit = new JMenuItem("Exit");
 		mnExit.addActionListener(e -> {
             PluginManager.unloadAllPlugins();
             System.exit(0);
         });
-		
 		JMenu mnSettings = new JMenu("Settings");
-
 		JMenuItem mntmPreferences = new JMenuItem("Preferences...");
 		mntmPreferences.addActionListener(e -> {
         });
-
 		JMenu mnTools = new JMenu("Tools");
-
 		mnPatches = new JMenu("Patches");
-		
 		mntmDaynightPokemon = new JMenuItem("Day/Night Pokemon");
 		mntmDaynightPokemon.addActionListener(e -> {
             if(!ROMManager.getActiveROM().isDNPkmnPatchAdded)
                 MapIO.patchDNPokemon();
         });
-
         mnHelp = new JMenu("Help");
-
         mnAbout = new JMenuItem("About");
         mnAbout.addActionListener(e -> {
             StringBuilder developerLines = new StringBuilder();
@@ -493,22 +437,20 @@ public class MainGUI extends JFrame {
         mnPatches.add(mntmNewMenuItem);
         
         mnEnableDebugging = new JCheckBoxMenuItem("Enable Debugging");
-        mnEnableDebugging.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		MapIO.DEBUG = mnEnableDebugging.getState();
-        		if(MapIO.DEBUG) {
-        			panelButtons.add(btnImportMap);
-        			panelButtons.add(btnNewMap);
-        			validate();
-        		} else {
-        			try {
-        				panelButtons.remove(btnImportMap);
-        				panelButtons.remove(btnNewMap);
-        			} catch(Exception ex) {
-        				ex.printStackTrace();
-        			}
-        		}
-        	}
+        mnEnableDebugging.addActionListener(e -> {
+            MapIO.DEBUG = mnEnableDebugging.getState();
+            if(MapIO.DEBUG) {
+                panelButtons.add(btnImportMap);
+                panelButtons.add(btnNewMap);
+                validate();
+            } else {
+                try {
+                    panelButtons.remove(btnImportMap);
+                    panelButtons.remove(btnNewMap);
+                } catch(Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
         });
         mnTools.add(mnEnableDebugging);
         menuBar.add(mnHelp);
@@ -533,7 +475,6 @@ public class MainGUI extends JFrame {
         panelButtons.setFloatable(false);
         panelButtons.setRollover(true);
 		panelButtons.setPreferredSize(new Dimension(10, 38));
-//		panelButtons.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panelButtons.setMinimumSize(new Dimension(10, 38));
 		getContentPane().add(panelButtons, BorderLayout.NORTH);
 
@@ -544,36 +485,27 @@ public class MainGUI extends JFrame {
 		panelButtons.add(btnOpenROM);
 
 		btnSaveROM = new TopRowButton("/resources/ROMsave.png","Write changes to ROM file",false);
-		btnSaveROM.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					MapIO.saveMap();
-				} catch(Exception ex) {
-					ex.printStackTrace();
-				}
-				MapIO.saveROM();
-			}
-		});
+		btnSaveROM.addActionListener(e -> {
+            try {
+                MapIO.saveMap();
+            } catch(Exception ex) {
+                ex.printStackTrace();
+            }
+            MapIO.saveROM();
+        });
 		panelButtons.add(btnSaveROM);
-		
 		panelButtons.add(Box.createHorizontalStrut(2));
 		panelButtons.add(new ButtonSeparator(32));
 		panelButtons.add(Box.createHorizontalStrut(1));
 		
 		btnNewMap = new TopRowButton("/resources/newmap.png","New Map (Not implemented)",false);
-		btnNewMap.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				MapEditorPanel.renderPalette = !MapEditorPanel.renderPalette;
-				mapEditorPanel.repaint();
-			}
-		});
+		btnNewMap.addActionListener(arg0 -> {
+            MapEditorPanel.renderPalette = !MapEditorPanel.renderPalette;
+            mapEditorPanel.repaint();
+        });
 		
 		btnSaveMap = new TopRowButton("/resources/mapsave.png","Save Map to VROM",false);
-		btnSaveMap.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				MapIO.saveMap();
-			}
-		});
+		btnSaveMap.addActionListener(e -> MapIO.saveMap());
 		panelButtons.add(btnSaveMap);
 		
 		panelButtons.add(Box.createHorizontalStrut(2));
@@ -581,57 +513,41 @@ public class MainGUI extends JFrame {
 		panelButtons.add(Box.createHorizontalStrut(1));
 
 		btnImportMap = new TopRowButton("","Import Map (Not implemented)",false);
-		btnImportMap.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				MapEditorPanel.renderTileset = !MapEditorPanel.renderTileset;
-				mapEditorPanel.repaint();
-			}
-		});
-		if(MapIO.DEBUG)
-		{
+		btnImportMap.addActionListener(e -> {
+            MapEditorPanel.renderTileset = !MapEditorPanel.renderTileset;
+            mapEditorPanel.repaint();
+        });
+		if(MapIO.DEBUG) {
 			panelButtons.add(btnImportMap);
 			panelButtons.add(btnNewMap);
 		}
 		
 		btnBlockEdit = new TopRowButton("/resources/blockedit.png","Edit Blocks",false);
-		btnBlockEdit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JFrame ownerframe = new JFrame();
-				new BlockEditor(ownerframe, "Block Editor", Dialog.ModalityType.APPLICATION_MODAL).setVisible(true);
-			}
-		});
+		btnBlockEdit.addActionListener(e -> {
+            JFrame ownerframe = new JFrame();
+            new BlockEditor(ownerframe, "Block Editor", Dialog.ModalityType.APPLICATION_MODAL).setVisible(true);
+        });
 		panelButtons.add(btnBlockEdit);
 		
 		btnDNPokePatcher = new TopRowButton("","D/N PKMN",false);
-		btnDNPokePatcher.addActionListener(new ActionListener() 
-		{
-			public void actionPerformed(ActionEvent e) 
-			{
-				//testXorColors();
-				new WizardPatcher().setVisible(true);
-			}
-		});
+		btnDNPokePatcher.addActionListener(e -> {
+            //testXorColors();
+            new WizardPatcher().setVisible(true);
+        });
 		panelButtons.add(btnDNPokePatcher);
 		
 		mapBlendComboBox = new JComboBox();
-		mapBlendComboBox.addItemListener(new ItemListener() 
-		{
-			public void itemStateChanged(ItemEvent e) 
-			{
-				BlockRenderer.currentTime = mapBlendComboBox.getSelectedIndex();
-				
-				MapIO.blockRenderer.getGlobalTileset().renderGraphics();
-				MapIO.blockRenderer.getLocalTileset().renderGraphics();
-				
-				//Refresh block picker
-				tileEditorPanel.RerenderTiles(TileEditorPanel.imgBuffer, 0);
-				tileEditorPanel.repaint();
-				
-				//Refresh Map Editor
-				MapEditorPanel.Redraw = true;
-				MainGUI.mapEditorPanel.repaint();
-			}
-		});
+		mapBlendComboBox.addItemListener(e -> {
+            BlockRenderer.currentTime = mapBlendComboBox.getSelectedIndex();
+            MapIO.blockRenderer.getGlobalTileset().renderGraphics();
+            MapIO.blockRenderer.getLocalTileset().renderGraphics();
+            //Refresh block picker
+            tileEditorPanel.RerenderTiles(TileEditorPanel.imgBuffer, 0);
+            tileEditorPanel.repaint();
+            //Refresh Map Editor
+            MapEditorPanel.Redraw = true;
+            MainGUI.mapEditorPanel.repaint();
+        });
 		mapBlendComboBox.setModel(new DefaultComboBoxModel(new String[] {"Day", "Morning", "Evening", "Night"}));
 		mapBlendComboBox.setPreferredSize(new Dimension(80, 20));
 		mapBlendComboBox.setEnabled(false);
@@ -672,7 +588,7 @@ public class MainGUI extends JFrame {
 
 	void CreateWildPokemonPanel() {
 		wildPokemonPanel = new JPanel();
-		editorTabs.addTab("Wild Pok�mon", null, wildPokemonPanel, null);
+		editorTabs.addTab("Wild Pokemon", null, wildPokemonPanel, null);
 		wildPokemonPanel.setLayout(new BorderLayout(0, 0));
 
 		panelWildEditor = new JPanel();
@@ -701,22 +617,18 @@ public class MainGUI extends JFrame {
 		pkTime.setModel(new DefaultComboBoxModel(new String[] { "Morning", "Day", "Evening", "Night" }));
 		pkTime.setSelectedIndex(0);
 		pkTime.setBounds(409, 0, 112, 24);
-		pkTime.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-					selectedTime = pkTime.getSelectedIndex();
-					loadWildPokemon();
-					System.out.println(selectedTime);
-			}
-		});
+		pkTime.addActionListener(e -> {
+                selectedTime = pkTime.getSelectedIndex();
+                loadWildPokemon();
+                System.out.println(selectedTime);
+        });
 		panelWildHeader.add(pkTime);
 
 		pkEnvironment = new JComboBox();
-		pkEnvironment.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				currentType = pkEnvironment.getSelectedIndex();
-				loadWildPokemon();
-			}
-		});
+		pkEnvironment.addActionListener(e -> {
+            currentType = pkEnvironment.getSelectedIndex();
+            loadWildPokemon();
+        });
 		pkEnvironment.setModel(new DefaultComboBoxModel(new String[] { "Grass", "Water", "Rock Smash", "Fishing" }));
 		pkEnvironment.setBounds(98, 0, 144, 24);
 		panelWildHeader.add(pkEnvironment);
@@ -726,20 +638,17 @@ public class MainGUI extends JFrame {
 		panelWildHeader.add(lblNewLabel_3);
 
 		pkEncounter = new JSlider();
-		pkEncounter.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				try {
-					int percent = Math.round((pkEncounter.getValue() / 255.0f) * 100);
-					lblEncounterPercent.setText(percent + "%");
-
-					MapIO.wildData.aWildPokemon[currentType].bRatio = (byte) pkEncounter.getValue();
-				}
-				catch (Exception ex) {
-					if(MapIO.DEBUG)
-						ex.printStackTrace();
-				}
-			}
-		});
+		pkEncounter.addChangeListener(e -> {
+            try {
+                int percent = Math.round((pkEncounter.getValue() / 255.0f) * 100);
+                lblEncounterPercent.setText(percent + "%");
+                MapIO.wildData.aWildPokemon[currentType].bRatio = (byte) pkEncounter.getValue();
+            }
+            catch (Exception ex) {
+                if(MapIO.DEBUG)
+                    ex.printStackTrace();
+            }
+        });
 		pkEncounter.setPaintTicks(true);
 		pkEncounter.setMajorTickSpacing(64);
 		pkEncounter.setValue(128);
@@ -759,45 +668,37 @@ public class MainGUI extends JFrame {
 		panelWildHeader.add(splitPane_1);
 
 		JButton btnAddPokeData = new JButton("Add");
-		btnAddPokeData.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				WildDataCache.createWildDataIfNotExists(MapIO.currentBank, MapIO.currentMap).addWildData(WildDataType.values()[currentType]);
-				loadWildPokemon();
-			}
-		});
+		btnAddPokeData.addActionListener(e -> {
+            WildDataCache.createWildDataIfNotExists(MapIO.currentBank, MapIO.currentMap).addWildData(WildDataType.values()[currentType]);
+            loadWildPokemon();
+        });
 		splitPane_1.setLeftComponent(btnAddPokeData);
 
 		JButton btnRemovePokeData = new JButton("Remove");
-		btnRemovePokeData.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				if (MapIO.wildData == null)
-					return;
-				MapIO.wildData.removeWildData(WildDataType.values()[currentType]);
-				loadWildPokemon();
-			}
-		});
+		btnRemovePokeData.addActionListener(e -> {
+            if (MapIO.wildData == null)
+                return;
+            MapIO.wildData.removeWildData(WildDataType.values()[currentType]);
+            loadWildPokemon();
+        });
 		splitPane_1.setRightComponent(btnRemovePokeData);
 		splitPane_1.setDividerLocation(25);
 		
 		btnEnableTimebasedPokemon = new JButton("Enable Time-Based Edits");
-		btnEnableTimebasedPokemon.addActionListener(new ActionListener()  {
-			public void actionPerformed(ActionEvent e)  {
-				if(!ROMManager.getActiveROM().isDNPkmnPatchAdded) {
-					int result = JOptionPane.showConfirmDialog(new JFrame(),"It appears that you haven't patched your ROM for time-based Pok�mon changes.\nWould you like to do that now?","Peer Pressure", JOptionPane.YES_NO_OPTION);
-					if(result == JOptionPane.YES_OPTION) {
-						MapIO.patchDNPokemon();
-						return;
-					}
-				}
-				int result = JOptionPane.showConfirmDialog(new JFrame(),"This option will permanantely convert your wild Pok�mon data to a new format unsupported by other map editors.\nAre you sure you want to continue?","No More A-Map 4 u", JOptionPane.YES_NO_OPTION);
-				if(result == JOptionPane.YES_OPTION) {
-					MapIO.wildData.aWildPokemon[currentType].convertToDN();
-					loadWildPokemon();
-				}
-			}
-		});
+		btnEnableTimebasedPokemon.addActionListener(e -> {
+            if(!ROMManager.getActiveROM().isDNPkmnPatchAdded) {
+                int result = JOptionPane.showConfirmDialog(new JFrame(),"It appears that you haven't patched your ROM for time-based Pok�mon changes.\nWould you like to do that now?","Peer Pressure", JOptionPane.YES_NO_OPTION);
+                if(result == JOptionPane.YES_OPTION) {
+                    MapIO.patchDNPokemon();
+                    return;
+                }
+            }
+            int result = JOptionPane.showConfirmDialog(new JFrame(),"This option will permanantely convert your wild Pok�mon data to a new format unsupported by other map editors.\nAre you sure you want to continue?","No More A-Map 4 u", JOptionPane.YES_NO_OPTION);
+            if(result == JOptionPane.YES_OPTION) {
+                MapIO.wildData.aWildPokemon[currentType].convertToDN();
+                loadWildPokemon();
+            }
+        });
 		btnEnableTimebasedPokemon.setBounds(533, 0, 212, 25);
 		panelWildHeader.add(btnEnableTimebasedPokemon);
 
@@ -829,19 +730,16 @@ public class MainGUI extends JFrame {
 		pkEditorPanel.add(lblpkchance);
 
 		pkMin1 = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
-		pkMin1.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				try {
-
-					int i = (Integer) pkMin1.getValue();
-					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][0].bMinLV = (byte) i;
-				}
-				catch (Exception ex) {
-					if(MapIO.DEBUG)
-						ex.printStackTrace();
-				}
-			}
-		});
+		pkMin1.addChangeListener(e -> {
+            try {
+                int i = (Integer) pkMin1.getValue();
+                MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][0].bMinLV = (byte) i;
+            }
+            catch (Exception ex) {
+                if(MapIO.DEBUG)
+                    ex.printStackTrace();
+            }
+        });
 		pkMin1.setBounds(12, 30, 60, 32);
 		pkEditorPanel.add(pkMin1);
 
@@ -857,7 +755,6 @@ public class MainGUI extends JFrame {
             }
             catch (Exception ex) {
                 ex.printStackTrace();
-
                 if(MapIO.DEBUG)
                     System.out.println("Error loading wild Pok�mon data, data not found or nonexistant.");
             }
@@ -866,12 +763,10 @@ public class MainGUI extends JFrame {
 		pkEditorPanel.add(pkName1);
 
 		pkNo1 = new JSpinner(new SpinnerNumberModel(1, 1, DataStore.NumPokemon, 1));
-		pkNo1.addChangeListener(new ChangeListener(){
-			public void stateChanged(ChangeEvent e){
-				int i = (Integer) pkNo1.getValue();
-				pkName1.setSelectedIndex(i);
-			}
-		});
+		pkNo1.addChangeListener(e -> {
+            int i = (Integer) pkNo1.getValue();
+            pkName1.setSelectedIndex(i);
+        });
 		pkNo1.setBounds(306, 30, 72, 32);
 		pkEditorPanel.add(pkNo1);
 
@@ -882,18 +777,16 @@ public class MainGUI extends JFrame {
 
 		pkMin2 = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
 		pkMin2.setBounds(12, 65, 60, 32);
-		pkMin2.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				try {
-					int i = (Integer) pkMin2.getValue();
-					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][1].bMinLV = (byte) i;
-				}
-				catch (Exception ex) {
-					if(MapIO.DEBUG)
-						ex.printStackTrace();
-				}
-			}
-		});
+		pkMin2.addChangeListener(e -> {
+            try {
+                int i = (Integer) pkMin2.getValue();
+                MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][1].bMinLV = (byte) i;
+            }
+            catch (Exception ex) {
+                if(MapIO.DEBUG)
+                    ex.printStackTrace();
+            }
+        });
 		pkEditorPanel.add(pkMin2);
 
 		pkMax2 = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
@@ -901,30 +794,25 @@ public class MainGUI extends JFrame {
 		pkEditorPanel.add(pkMax2);
 
 		pkName2 = new JComboBox();
-		pkName2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				pkNo2.setValue(pkName2.getSelectedIndex());
-				try {
-					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][1].wNum = pkName2.getSelectedIndex();
-				}
-				catch (Exception ex) {
-					if(MapIO.DEBUG)
-						ex.printStackTrace();
-				}
-			}
-		});
+		pkName2.addActionListener(e -> {
+            pkNo2.setValue(pkName2.getSelectedIndex());
+            try {
+                MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][1].wNum = pkName2.getSelectedIndex();
+            }
+            catch (Exception ex) {
+                if(MapIO.DEBUG)
+                    ex.printStackTrace();
+            }
+        });
 
 		pkName2.setBounds(141, 65, 165, 32);
 		pkEditorPanel.add(pkName2);
-
 		pkNo2 = new JSpinner(new SpinnerNumberModel(1, 1, DataStore.NumPokemon, 1));
 		pkNo2.setBounds(306, 65, 72, 32);
-		pkNo2.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				int i = (Integer) pkNo2.getValue();
-				pkName2.setSelectedIndex(i);
-			}
-		});
+		pkNo2.addChangeListener(e -> {
+            int i = (Integer) pkNo2.getValue();
+            pkName2.setSelectedIndex(i);
+        });
 		pkEditorPanel.add(pkNo2);
 
 		pkchance2 = new JLabel("20%");
@@ -934,18 +822,16 @@ public class MainGUI extends JFrame {
 
 		pkMin3 = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
 		pkMin3.setBounds(12, 98, 60, 32);
-		pkMin3.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				try {
-					int i = (Integer) pkMin3.getValue();
-					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][2].bMinLV = (byte) i;
-				}
-				catch (Exception ex){
-					if(MapIO.DEBUG)
-						ex.printStackTrace();
-				}
-			}
-		});
+		pkMin3.addChangeListener(e -> {
+            try {
+                int i = (Integer) pkMin3.getValue();
+                MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][2].bMinLV = (byte) i;
+            }
+            catch (Exception ex){
+                if(MapIO.DEBUG)
+                    ex.printStackTrace();
+            }
+        });
 		pkEditorPanel.add(pkMin3);
 
 		pkMax3 = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
@@ -953,29 +839,25 @@ public class MainGUI extends JFrame {
 		pkEditorPanel.add(pkMax3);
 
 		pkName3 = new JComboBox();
-		pkName3.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				pkNo3.setValue(pkName3.getSelectedIndex());
-				try {
-					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][2].wNum = pkName3.getSelectedIndex();
-				}
-				catch (Exception ex) {
-					if(MapIO.DEBUG)
-						ex.printStackTrace();
-				}
-			}
-		});
+		pkName3.addActionListener(e -> {
+            pkNo3.setValue(pkName3.getSelectedIndex());
+            try {
+                MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][2].wNum = pkName3.getSelectedIndex();
+            }
+            catch (Exception ex) {
+                if(MapIO.DEBUG)
+                    ex.printStackTrace();
+            }
+        });
 		pkName3.setBounds(141, 98, 165, 32);
 		pkEditorPanel.add(pkName3);
 
 		pkNo3 = new JSpinner(new SpinnerNumberModel(1, 1, DataStore.NumPokemon, 1));
 		pkNo3.setBounds(306, 98, 72, 32);
-		pkNo3.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				int i = (Integer) pkNo3.getValue();
-				pkName3.setSelectedIndex(i);
-			}
-		});
+		pkNo3.addChangeListener(e -> {
+            int i = (Integer) pkNo3.getValue();
+            pkName3.setSelectedIndex(i);
+        });
 		pkEditorPanel.add(pkNo3);
 
 		pkchance3 = new JLabel("10%");
@@ -985,18 +867,16 @@ public class MainGUI extends JFrame {
 
 		pkMin4 = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
 		pkMin4.setBounds(12, 133, 60, 32);
-		pkMin4.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				try {
-					int i = (Integer) pkMin4.getValue();
-					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][3].bMinLV = (byte) i;
-				}
-				catch (Exception ex) {
-					if(MapIO.DEBUG)
-						ex.printStackTrace();
-				}
-			}
-		});
+		pkMin4.addChangeListener(e -> {
+            try {
+                int i = (Integer) pkMin4.getValue();
+                MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][3].bMinLV = (byte) i;
+            }
+            catch (Exception ex) {
+                if(MapIO.DEBUG)
+                    ex.printStackTrace();
+            }
+        });
 		pkEditorPanel.add(pkMin4);
 
 		pkMax4 = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
@@ -1004,29 +884,25 @@ public class MainGUI extends JFrame {
 		pkEditorPanel.add(pkMax4);
 
 		pkName4 = new JComboBox();
-		pkName4.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				pkNo4.setValue(pkName4.getSelectedIndex());
-				try {
-					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][3].wNum = pkName4.getSelectedIndex();
-				}
-				catch (Exception ex) {
-					if(MapIO.DEBUG)
-						ex.printStackTrace();
-				}
-			}
-		});
+		pkName4.addActionListener(e -> {
+            pkNo4.setValue(pkName4.getSelectedIndex());
+            try {
+                MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][3].wNum = pkName4.getSelectedIndex();
+            }
+            catch (Exception ex) {
+                if(MapIO.DEBUG)
+                    ex.printStackTrace();
+            }
+        });
 		pkName4.setBounds(141, 133, 165, 32);
 		pkEditorPanel.add(pkName4);
 
 		pkNo4 = new JSpinner(new SpinnerNumberModel(1, 1, DataStore.NumPokemon, 1));
 		pkNo4.setBounds(306, 133, 72, 32);
-		pkNo4.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				int i = (Integer) pkNo4.getValue();
-				pkName4.setSelectedIndex(i);
-			}
-		});
+		pkNo4.addChangeListener(e -> {
+            int i = (Integer) pkNo4.getValue();
+            pkName4.setSelectedIndex(i);
+        });
 		pkEditorPanel.add(pkNo4);
 
 		pkchance4 = new JLabel("10%");
@@ -1036,18 +912,16 @@ public class MainGUI extends JFrame {
 
 		pkMin5 = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
 		pkMin5.setBounds(12, 168, 60, 32);
-		pkMin5.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				try {
-					int i = (Integer) pkMin5.getValue();
-					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][4].bMinLV = (byte) i;
-				}
-				catch (Exception ex) {
-					if(MapIO.DEBUG)
-						ex.printStackTrace();
-				}
-			}
-		});
+		pkMin5.addChangeListener(e -> {
+            try {
+                int i = (Integer) pkMin5.getValue();
+                MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][4].bMinLV = (byte) i;
+            }
+            catch (Exception ex) {
+                if(MapIO.DEBUG)
+                    ex.printStackTrace();
+            }
+        });
 		pkEditorPanel.add(pkMin5);
 
 		pkMax5 = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
@@ -1055,29 +929,25 @@ public class MainGUI extends JFrame {
 		pkEditorPanel.add(pkMax5);
 
 		pkName5 = new JComboBox();
-		pkName5.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				pkNo5.setValue(pkName5.getSelectedIndex());
-				try {
-					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][4].wNum = pkName5.getSelectedIndex();
-				}
-				catch (Exception ex) {
-					if(MapIO.DEBUG)
-						ex.printStackTrace();
-				}
-			}
-		});
+		pkName5.addActionListener(e -> {
+            pkNo5.setValue(pkName5.getSelectedIndex());
+            try {
+                MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][4].wNum = pkName5.getSelectedIndex();
+            }
+            catch (Exception ex) {
+                if(MapIO.DEBUG)
+                    ex.printStackTrace();
+            }
+        });
 		pkName5.setBounds(141, 168, 165, 32);
 		pkEditorPanel.add(pkName5);
 
 		pkNo5 = new JSpinner(new SpinnerNumberModel(1, 1, DataStore.NumPokemon, 1));
 		pkNo5.setBounds(306, 168, 72, 32);
-		pkNo5.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				int i = (Integer) pkNo5.getValue();
-				pkName5.setSelectedIndex(i);
-			}
-		});
+		pkNo5.addChangeListener(e -> {
+            int i = (Integer) pkNo5.getValue();
+            pkName5.setSelectedIndex(i);
+        });
 		pkEditorPanel.add(pkNo5);
 
 		pkchance5 = new JLabel("10%");
@@ -1092,16 +962,14 @@ public class MainGUI extends JFrame {
 
 		pkMin6 = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
 		pkMin6.setBounds(12, 30, 60, 32);
-		pkMin6.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				try {
-					int i = (Integer) pkMin6.getValue();
-					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][5].bMinLV = (byte) i;
-				}
-				catch (Exception ex) {
-				}
-			}
-		});
+		pkMin6.addChangeListener(e -> {
+            try {
+                int i = (Integer) pkMin6.getValue();
+                MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][5].bMinLV = (byte) i;
+            }
+            catch (Exception ex) {
+            }
+        });
 		panelpk6_10.add(pkMin6);
 
 		pkMax6 = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
@@ -1109,27 +977,21 @@ public class MainGUI extends JFrame {
 		panelpk6_10.add(pkMax6);
 
 		pkName6 = new JComboBox();
-		pkName6.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				pkNo6.setValue(pkName6.getSelectedIndex());
-				try {
-					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][5].wNum = pkName6.getSelectedIndex();
-				}
-				catch (Exception ex) {
-				}
-			}
-		});
+		pkName6.addActionListener(e -> {
+            pkNo6.setValue(pkName6.getSelectedIndex());
+            try {
+                MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][5].wNum = pkName6.getSelectedIndex();
+            } catch (Exception ex) {}
+        });
 		pkName6.setBounds(141, 30, 165, 32);
 		panelpk6_10.add(pkName6);
 
 		pkNo6 = new JSpinner(new SpinnerNumberModel(1, 1, DataStore.NumPokemon, 1));
 		pkNo6.setBounds(306, 30, 72, 32);
-		pkNo6.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				int i = (Integer) pkNo6.getValue();
-				pkName6.setSelectedIndex(i);
-			}
-		});
+		pkNo6.addChangeListener(e -> {
+            int i = (Integer) pkNo6.getValue();
+            pkName6.setSelectedIndex(i);
+        });
 		panelpk6_10.add(pkNo6);
 
 		pkchance6 = new JLabel("10%");
@@ -1139,16 +1001,14 @@ public class MainGUI extends JFrame {
 
 		pkMin7 = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
 		pkMin7.setBounds(12, 65, 60, 32);
-		pkMin7.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				try {
-					int i = (Integer) pkMin7.getValue();
-					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][6].bMinLV = (byte) i;
-				}
-				catch (Exception ex) {
-				}
-			}
-		});
+		pkMin7.addChangeListener(e -> {
+            try {
+                int i = (Integer) pkMin7.getValue();
+                MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][6].bMinLV = (byte) i;
+            }
+            catch (Exception ex) {
+            }
+        });
 		panelpk6_10.add(pkMin7);
 
 		pkMax7 = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
@@ -1156,27 +1016,23 @@ public class MainGUI extends JFrame {
 		panelpk6_10.add(pkMax7);
 
 		pkName7 = new JComboBox();
-		pkName7.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				pkNo7.setValue(pkName7.getSelectedIndex());
-				try {
-					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][6].wNum = pkName7.getSelectedIndex();
-				}
-				catch (Exception ex) {
-				}
-			}
-		});
+		pkName7.addActionListener(e -> {
+            pkNo7.setValue(pkName7.getSelectedIndex());
+            try {
+                MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][6].wNum = pkName7.getSelectedIndex();
+            }
+            catch (Exception ex) {
+            }
+        });
 		pkName7.setBounds(141, 65, 165, 32);
 		panelpk6_10.add(pkName7);
 
 		pkNo7 = new JSpinner(new SpinnerNumberModel(1, 1, DataStore.NumPokemon, 1));
 		pkNo7.setBounds(306, 65, 72, 32);
-		pkNo7.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				int i = (Integer) pkNo7.getValue();
-				pkName7.setSelectedIndex(i);
-			}
-		});
+		pkNo7.addChangeListener(e -> {
+            int i = (Integer) pkNo7.getValue();
+            pkName7.setSelectedIndex(i);
+        });
 		panelpk6_10.add(pkNo7);
 
 		pkchance7 = new JLabel("5%");
@@ -1186,16 +1042,14 @@ public class MainGUI extends JFrame {
 
 		pkMin8 = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
 		pkMin8.setBounds(12, 98, 60, 32);
-		pkMin8.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				try {
-					int i = (Integer) pkMin8.getValue();
-					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][7].bMinLV = (byte) i;
-				}
-				catch (Exception ex) {
-				}
-			}
-		});
+		pkMin8.addChangeListener(e -> {
+            try {
+                int i = (Integer) pkMin8.getValue();
+                MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][7].bMinLV = (byte) i;
+            }
+            catch (Exception ex) {
+            }
+        });
 		panelpk6_10.add(pkMin8);
 
 		pkMax8 = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
@@ -1203,27 +1057,21 @@ public class MainGUI extends JFrame {
 		panelpk6_10.add(pkMax8);
 
 		pkName8 = new JComboBox();
-		pkName8.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				pkNo8.setValue(pkName8.getSelectedIndex());
-				try {
-					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][7].wNum = pkName8.getSelectedIndex();
-				}
-				catch (Exception ex) {
-				}
-			}
-		});
+		pkName8.addActionListener(e -> {
+            pkNo8.setValue(pkName8.getSelectedIndex());
+            try {
+                MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][7].wNum = pkName8.getSelectedIndex();
+            } catch (Exception ex) {}
+        });
 		pkName8.setBounds(141, 98, 165, 32);
 		panelpk6_10.add(pkName8);
 
 		pkNo8 = new JSpinner(new SpinnerNumberModel(1, 1, DataStore.NumPokemon, 1));
 		pkNo8.setBounds(306, 98, 72, 32);
-		pkNo8.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				int i = (Integer) pkNo8.getValue();
-				pkName8.setSelectedIndex(i);
-			}
-		});
+		pkNo8.addChangeListener(e -> {
+            int i = (Integer) pkNo8.getValue();
+            pkName8.setSelectedIndex(i);
+        });
 		panelpk6_10.add(pkNo8);
 
 		pkchance8 = new JLabel("5%");
@@ -1233,16 +1081,14 @@ public class MainGUI extends JFrame {
 
 		pkMin9 = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
 		pkMin9.setBounds(12, 133, 60, 32);
-		pkMin9.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				try {
-					int i = (Integer) pkMin9.getValue();
-					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][8].bMinLV = (byte) i;
-				}
-				catch (Exception ex) {
-				}
-			}
-		});
+		pkMin9.addChangeListener(e -> {
+            try {
+                int i = (Integer) pkMin9.getValue();
+                MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][8].bMinLV = (byte) i;
+            }
+            catch (Exception ex) {
+            }
+        });
 		panelpk6_10.add(pkMin9);
 
 		pkMax9 = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
@@ -1250,27 +1096,23 @@ public class MainGUI extends JFrame {
 		panelpk6_10.add(pkMax9);
 
 		pkName9 = new JComboBox();
-		pkName9.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				pkNo9.setValue(pkName9.getSelectedIndex());
-				try {
-					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][8].wNum = pkName9.getSelectedIndex();
-				}
-				catch (Exception ex) {
-				}
-			}
-		});
+		pkName9.addActionListener(e -> {
+            pkNo9.setValue(pkName9.getSelectedIndex());
+            try {
+                MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][8].wNum = pkName9.getSelectedIndex();
+            }
+            catch (Exception ex) {
+            }
+        });
 		pkName9.setBounds(141, 133, 165, 32);
 		panelpk6_10.add(pkName9);
 
 		pkNo9 = new JSpinner(new SpinnerNumberModel(1, 1, DataStore.NumPokemon, 1));
 		pkNo9.setBounds(306, 133, 72, 32);
-		pkNo9.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				int i = (Integer) pkNo9.getValue();
-				pkName9.setSelectedIndex(i);
-			}
-		});
+		pkNo9.addChangeListener(e -> {
+            int i = (Integer) pkNo9.getValue();
+            pkName9.setSelectedIndex(i);
+        });
 		panelpk6_10.add(pkNo9);
 
 		pkchance9 = new JLabel("4%");
@@ -1280,16 +1122,14 @@ public class MainGUI extends JFrame {
 
 		pkMin10 = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
 		pkMin10.setBounds(12, 168, 60, 32);
-		pkMin10.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				try {
-					int i = (Integer) pkMin10.getValue();
-					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][9].bMinLV = (byte) i;
-				}
-				catch (Exception ex) {
-				}
-			}
-		});
+		pkMin10.addChangeListener(e -> {
+            try {
+                int i = (Integer) pkMin10.getValue();
+                MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][9].bMinLV = (byte) i;
+            }
+            catch (Exception ex) {
+            }
+        });
 		panelpk6_10.add(pkMin10);
 
 		pkMax10 = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
@@ -1297,27 +1137,23 @@ public class MainGUI extends JFrame {
 		panelpk6_10.add(pkMax10);
 
 		pkName10 = new JComboBox();
-		pkName10.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				pkNo10.setValue(pkName10.getSelectedIndex());
-				try {
-					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][9].wNum = pkName10.getSelectedIndex();
-				}
-				catch (Exception ex) {
-				}
-			}
-		});
+		pkName10.addActionListener(e -> {
+            pkNo10.setValue(pkName10.getSelectedIndex());
+            try {
+                MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][9].wNum = pkName10.getSelectedIndex();
+            }
+            catch (Exception ex) {
+            }
+        });
 		pkName10.setBounds(141, 168, 165, 32);
 		panelpk6_10.add(pkName10);
 
 		pkNo10 = new JSpinner(new SpinnerNumberModel(1, 1, DataStore.NumPokemon, 1));
 		pkNo10.setBounds(306, 168, 72, 32);
-		pkNo10.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				int i = (Integer) pkNo10.getValue();
-				pkName10.setSelectedIndex(i);
-			}
-		});
+		pkNo10.addChangeListener(e -> {
+            int i = (Integer) pkNo10.getValue();
+            pkName10.setSelectedIndex(i);
+        });
 		panelpk6_10.add(pkNo10);
 
 		pkchance10 = new JLabel("4%");
@@ -1332,28 +1168,24 @@ public class MainGUI extends JFrame {
 
 		pkMin11 = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
 		pkMin11.setBounds(12, 0, 60, 32);
-		pkMin11.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				try {
-					int i = (Integer) pkMin11.getValue();
-					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][10].bMinLV = (byte) i;
-				}
-				catch (Exception ex) {
-				}
-			}
-		});
+		pkMin11.addChangeListener(e -> {
+            try {
+                int i = (Integer) pkMin11.getValue();
+                MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][10].bMinLV = (byte) i;
+            }
+            catch (Exception ex) {
+            }
+        });
 		panelpk11_12.add(pkMin11);
 
 		pkMin12 = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
 		pkMin12.setBounds(12, 35, 60, 32);
-		pkMin12.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				try {
-					int i = (Integer) pkMin12.getValue();
-					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][11].bMinLV = (byte) i;
-				} catch (Exception ex) {}
-			}
-		});
+		pkMin12.addChangeListener(e -> {
+            try {
+                int i = (Integer) pkMin12.getValue();
+                MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][11].bMinLV = (byte) i;
+            } catch (Exception ex) {}
+        });
 		panelpk11_12.add(pkMin12);
 
 		pkMax11 = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
@@ -1376,36 +1208,30 @@ public class MainGUI extends JFrame {
 
 		pkName12 = new JComboBox();
 		pkName12.setBounds(141, 35, 165, 32);
-		pkName12.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				pkNo12.setValue(pkName12.getSelectedIndex());
-				try {
-					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][11].wNum = pkName12.getSelectedIndex();
-				}
-				catch (Exception ex) {
-				}
-			}
-		});
+		pkName12.addActionListener(e -> {
+            pkNo12.setValue(pkName12.getSelectedIndex());
+            try {
+                MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][11].wNum = pkName12.getSelectedIndex();
+            }
+            catch (Exception ex) {
+            }
+        });
 		panelpk11_12.add(pkName12);
 
 		pkNo11 = new JSpinner(new SpinnerNumberModel(1, 1, DataStore.NumPokemon, 1));
 		pkNo11.setBounds(306, 0, 72, 32);
-		pkNo11.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				int i = (Integer) pkNo11.getValue();
-				pkName11.setSelectedIndex(i);
-			}
-		});
+		pkNo11.addChangeListener(e -> {
+            int i = (Integer) pkNo11.getValue();
+            pkName11.setSelectedIndex(i);
+        });
 		panelpk11_12.add(pkNo11);
 
 		pkNo12 = new JSpinner(new SpinnerNumberModel(1, 1, DataStore.NumPokemon, 1));
 		pkNo12.setBounds(306, 35, 72, 32);
-		pkNo12.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				int i = (Integer) pkNo12.getValue();
-				pkName12.setSelectedIndex(i);
-			}
-		});
+		pkNo12.addChangeListener(e -> {
+            int i = (Integer) pkNo12.getValue();
+            pkName12.setSelectedIndex(i);
+        });
 		panelpk11_12.add(pkNo12);
 
 		pkMax1.addChangeListener(e -> {
@@ -1559,19 +1385,17 @@ public class MainGUI extends JFrame {
 		panelTilesContainer.add(splitterMapTiles, BorderLayout.WEST);
 
 		final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				System.out.println("" + tabbedPane.getSelectedIndex());
-				if (tabbedPane.getSelectedIndex() == 0)
-					MapEditorPanel.setMode(EditMode.TILES);
-				else
-					MapEditorPanel.setMode(EditMode.MOVEMENT);
+		tabbedPane.addChangeListener(e -> {
+            System.out.println("" + tabbedPane.getSelectedIndex());
+            if (tabbedPane.getSelectedIndex() == 0)
+                MapEditorPanel.setMode(EditMode.TILES);
+            else
+                MapEditorPanel.setMode(EditMode.MOVEMENT);
 
-				MapEditorPanel.Redraw = true;
-				mapEditorPanel.repaint();
-				borderTileEditor.repaint();
-			}
-		});
+            MapEditorPanel.Redraw = true;
+            mapEditorPanel.repaint();
+            borderTileEditor.repaint();
+        });
 		tabbedPane.setBorder(null);
 		panelTilesContainer.add(tabbedPane, BorderLayout.CENTER);
 		tileEditorPanel = new TileEditorPanel(true);
@@ -1601,21 +1425,19 @@ public class MainGUI extends JFrame {
 	void CreateSplitPane() {
 		splitPane = new JSplitPane();
 		splitPane.setDividerSize(1);
-		splitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent e) {
-				if (((JSplitPane) e.getSource()).getDividerLocation() > 300)
-					((JSplitPane) e.getSource()).setDividerLocation(350);
-				else if (((JSplitPane) e.getSource()).getDividerLocation() < 25)
-					((JSplitPane) e.getSource()).setDividerLocation(25);
-				if (paneSize == 0) {
-					paneSize = 250;
-					((JSplitPane) e.getSource()).setDividerLocation(paneSize);
-				}
-				else {
-					paneSize = ((JSplitPane) e.getSource()).getDividerLocation();
-                }
-			}
-		});
+		splitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, e -> {
+            if (((JSplitPane) e.getSource()).getDividerLocation() > 300)
+                ((JSplitPane) e.getSource()).setDividerLocation(350);
+            else if (((JSplitPane) e.getSource()).getDividerLocation() < 25)
+                ((JSplitPane) e.getSource()).setDividerLocation(25);
+            if (paneSize == 0) {
+                paneSize = 250;
+                ((JSplitPane) e.getSource()).setDividerLocation(paneSize);
+            }
+            else {
+                paneSize = ((JSplitPane) e.getSource()).getDividerLocation();
+}
+        });
 		splitPane.addComponentListener(new ComponentAdapter() {
 			public void componentResized(ComponentEvent e) {
 				if (((JSplitPane) e.getSource()).getDividerLocation() > 300)
@@ -1694,23 +1516,21 @@ public class MainGUI extends JFrame {
 		mimeEditorPanel.add(mimePic);
 
 		spnWidth = new JSpinner(new SpinnerNumberModel(1, 1, 9001, 1));
-		spnWidth.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				if (!MapIO.doneLoading)
-					return;
-				try {
-					int x = (Integer) spnWidth.getValue();
-					int y = (Integer) spnHeight.getValue();
-					MapIO.loadedMap.getMapTileData().resize(x, y);
-					MapEditorPanel.Redraw = true;
-					eventEditorPanel.Redraw = true;
-					connectionsEditorPanel.loadConnections(MapIO.loadedMap);
-					mapEditorPanel.repaint();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			}
-		});
+		spnWidth.addChangeListener(e -> {
+            if (!MapIO.doneLoading)
+                return;
+            try {
+                int x = (Integer) spnWidth.getValue();
+                int y = (Integer) spnHeight.getValue();
+                MapIO.loadedMap.getMapTileData().resize(x, y);
+                MapEditorPanel.Redraw = true;
+                eventEditorPanel.Redraw = true;
+                connectionsEditorPanel.loadConnections(MapIO.loadedMap);
+                mapEditorPanel.repaint();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
 		spnWidth.setPreferredSize(new Dimension(40, 24));
 		spnWidth.setBounds(130, 105, 50, 24);
 		mimeEditorPanel.add(spnWidth);
@@ -1718,23 +1538,21 @@ public class MainGUI extends JFrame {
 		spnHeight = new JSpinner(new SpinnerNumberModel(1, 1, 9001, 1));
 		spnHeight.setPreferredSize(new Dimension(40, 24));
 		spnHeight.setBounds(130, 132, 50, 24);
-		spnHeight.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				if (!MapIO.doneLoading)
-					return;
-				try {
-                    int x = (Integer) spnWidth.getValue();
-					int y = (Integer) spnHeight.getValue();
-					MapIO.loadedMap.getMapTileData().resize(x, y);
-					MapEditorPanel.Redraw = true;
-					eventEditorPanel.Redraw = true;
-					connectionsEditorPanel.loadConnections(MapIO.loadedMap);
-					mapEditorPanel.repaint();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			}
-		});
+		spnHeight.addChangeListener(e -> {
+            if (!MapIO.doneLoading)
+                return;
+            try {
+int x = (Integer) spnWidth.getValue();
+                int y = (Integer) spnHeight.getValue();
+                MapIO.loadedMap.getMapTileData().resize(x, y);
+                MapEditorPanel.Redraw = true;
+                eventEditorPanel.Redraw = true;
+                connectionsEditorPanel.loadConnections(MapIO.loadedMap);
+                mapEditorPanel.repaint();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
 
 		mimeEditorPanel.add(spnHeight);
 		
@@ -1765,39 +1583,31 @@ public class MainGUI extends JFrame {
 		mbMain.add(mnAddCon);
 
 		mntmLeftCon = new JMenuItem("Left Connection");
-		mntmLeftCon.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ConnectionAddGUI g = new ConnectionAddGUI(ConnectionType.LEFT);
-				g.setVisible(true);
-			}
-		});
+		mntmLeftCon.addActionListener(e -> {
+            ConnectionAddGUI g = new ConnectionAddGUI(ConnectionType.LEFT);
+            g.setVisible(true);
+        });
 		mnAddCon.add(mntmLeftCon);
 
 		mntmRightCon = new JMenuItem("Right Connection");
-		mntmRightCon.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ConnectionAddGUI g = new ConnectionAddGUI(ConnectionType.RIGHT);
-				g.setVisible(true);
-			}
-		});
+		mntmRightCon.addActionListener(e -> {
+            ConnectionAddGUI g = new ConnectionAddGUI(ConnectionType.RIGHT);
+            g.setVisible(true);
+        });
 		mnAddCon.add(mntmRightCon);
 
 		mntmUpCon = new JMenuItem("Up Connection");
-		mntmUpCon.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ConnectionAddGUI g = new ConnectionAddGUI(ConnectionType.UP);
-				g.setVisible(true);
-			}
-		});
+		mntmUpCon.addActionListener(e -> {
+            ConnectionAddGUI g = new ConnectionAddGUI(ConnectionType.UP);
+            g.setVisible(true);
+        });
 		mnAddCon.add(mntmUpCon);
 
 		mntmDownCon = new JMenuItem("Down Connection");
-		mntmDownCon.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ConnectionAddGUI g = new ConnectionAddGUI(ConnectionType.DOWN);
-				g.setVisible(true);
-			}
-		});
+		mntmDownCon.addActionListener(e -> {
+            ConnectionAddGUI g = new ConnectionAddGUI(ConnectionType.DOWN);
+            g.setVisible(true);
+        });
 		mnAddCon.add(mntmDownCon);
 
 		connectionsEditorPanel = new ConnectionsEditorPanel();
@@ -1805,25 +1615,23 @@ public class MainGUI extends JFrame {
 		connectionsEditorScroll.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
 		connectionsEditorScroll.getVerticalScrollBar().setUnitIncrement(16);
 		connectionsEditorScroll.getHorizontalScrollBar().setUnitIncrement(16);
-		connectionsEditorScroll.addMouseWheelListener(new MouseWheelListener() {
-			public void mouseWheelMoved(MouseWheelEvent e) {
-				if (e.isControlDown() || e.isAltDown()) {
-					connectionsEditorPanel.scale += e.getWheelRotation() / 5d;
-					if (connectionsEditorPanel.scale < 0.3)
-						connectionsEditorPanel.scale = 0.3;
-					else if (connectionsEditorPanel.scale > 10)
-						connectionsEditorPanel.scale = 10;
-					connectionsEditorPanel.RescaleImages(false);
-					connectionsEditorPanel.repaint();
-				}
-				else {
-					// Vertical scrolling
-					Adjustable adj = connectionsEditorScroll.getVerticalScrollBar();
-					int scroll = e.getUnitsToScroll() * adj.getBlockIncrement();
-					adj.setValue(adj.getValue() + scroll);
-				}
-			}
-		});
+		connectionsEditorScroll.addMouseWheelListener(e -> {
+            if (e.isControlDown() || e.isAltDown()) {
+                connectionsEditorPanel.scale += e.getWheelRotation() / 5d;
+                if (connectionsEditorPanel.scale < 0.3)
+                    connectionsEditorPanel.scale = 0.3;
+                else if (connectionsEditorPanel.scale > 10)
+                    connectionsEditorPanel.scale = 10;
+                connectionsEditorPanel.RescaleImages(false);
+                connectionsEditorPanel.repaint();
+            }
+            else {
+                // Vertical scrolling
+                Adjustable adj = connectionsEditorScroll.getVerticalScrollBar();
+                int scroll = e.getUnitsToScroll() * adj.getBlockIncrement();
+                adj.setValue(adj.getValue() + scroll);
+            }
+        });
 		connectionsTabPanel.add(connectionsEditorScroll, BorderLayout.CENTER);
 
 		CreatePermissions();
@@ -1840,19 +1648,17 @@ public class MainGUI extends JFrame {
 		        enableMapOperationButtons();
 			}
 		});
-		mapBanks.addTreeSelectionListener(new TreeSelectionListener() {
-			public void valueChanged(TreeSelectionEvent e) {
-				try {
-					Object node = e.getPath().getPath()[e.getPath().getPath().length - 1];
-					if (node instanceof BankLoader.MapTreeNode){
-						MapIO.selectedBank = ((BankLoader.MapTreeNode)node).bank;
-						MapIO.selectedMap = ((BankLoader.MapTreeNode)node).map;
-					}
-				} catch (Exception ex) {
-                    ex.printStackTrace();
-				}
-			}
-		});
+		mapBanks.addTreeSelectionListener(e -> {
+            try {
+                Object node = e.getPath().getPath()[e.getPath().getPath().length - 1];
+                if (node instanceof BankLoader.MapTreeNode){
+                    MapIO.selectedBank = ((BankLoader.MapTreeNode)node).bank;
+                    MapIO.selectedMap = ((BankLoader.MapTreeNode)node).map;
+                }
+            } catch (Exception ex) {
+ex.printStackTrace();
+            }
+        });
 		mapBanks.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		mapBanks.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
