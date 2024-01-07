@@ -175,6 +175,7 @@ public class MainGUI extends JFrame {
 	public static TileEditorPanel tileEditorPanel;
 	public static ConnectionsEditorPanel connectionsEditorPanel;
 	public static JLabel lblTileVal;
+	static {lblTileVal = new JLabel();}
 	public static JPopupMenu popupMenu;
 	public DataStore dataStore;
 	private JPanel editorPanel;
