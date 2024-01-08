@@ -1543,7 +1543,7 @@ public class MainGUI extends JFrame {
             if (!MapIO.doneLoading)
                 return;
             try {
-int x = (Integer) spnWidth.getValue();
+				int x = (Integer) spnWidth.getValue();
                 int y = (Integer) spnHeight.getValue();
                 MapIO.loadedMap.getMapTileData().resize(x, y);
                 MapEditorPanel.Redraw = true;
@@ -1661,18 +1661,19 @@ int x = (Integer) spnWidth.getValue();
 		mapBanks.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		mapBanks.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				if (e.getButton() == MouseEvent.BUTTON1) {
-                    // Find a more streamlined way to detect that a node was not expanded
-					if (e.getClickCount() == 2) {
-						try {
-	                        if (mapBanks.getModel().getIndexOfChild(mapBanks.getModel().getRoot(), mapBanks.getSelectionPath().getLastPathComponent()) == -1) {
-	            		        mapEditorPanel.reset();
-	                            MapIO.loadMap();
-	            		        enableMapOperationButtons();
-	                        }
-						} catch (Exception ex) {
-							ex.printStackTrace();
+				if (e.getClickCount() == 2) {
+					try {
+						TreePath selectionPath = mapBanks.getSelectionPath();
+						if (selectionPath != null) {
+							Object lastPathComponent = selectionPath.getLastPathComponent();
+							if (mapBanks.getModel().getIndexOfChild(mapBanks.getModel().getRoot(), lastPathComponent) == -1) {
+								mapEditorPanel.reset();
+								MapIO.loadMap();
+								enableMapOperationButtons();
+							}
 						}
+					} catch (Exception ex) {
+						ex.printStackTrace();
 					}
 				}
 			}

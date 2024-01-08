@@ -20,12 +20,12 @@ public class WildDataCache extends Thread implements Runnable {
 		long pData = DataStore.WildPokemon;
 		int count = 0;
 		while(true) {
-			WildDataHeader h = new WildDataHeader(rom, (int)pData);
-			if(h.bBank == (byte)0xFF && h.bMap == (byte)0xFF)
+			WildDataHeader header = new WildDataHeader(rom, (int)pData);
+			if(header.bBank == (byte)0xFF && header.bMap == (byte)0xFF)
 				break;
-			WildData d = new WildData(rom,h);
-			int num = (h.bBank & 0xFF) + ((h.bMap & 0xFF)<<8);
-			dataCache.put(num,d);
+			WildData wildData = new WildData(rom,header);
+			int num = (header.bBank & 0xFF) + ((header.bMap & 0xFF)<<8);
+			dataCache.put(num,wildData);
 			pData += (4 * 5);
 			count++;
 		}
@@ -34,14 +34,18 @@ public class WildDataCache extends Thread implements Runnable {
 	
 	public static void save() {
 		long pData = DataStore.WildPokemon;
-		if(initialNum < dataCache.size()) {
+		if (initialNum < dataCache.size()) {
 			pData = rom.findFreespace(DataStore.FreespaceStart, WildDataHeader.getSize() * dataCache.size());
-			rom.repoint((int)DataStore.WildPokemon, (int)pData, 14); //TODO: Maybe make this configurable?
-			rom.floodBytes((int)DataStore.WildPokemon, (byte)0xFF, initialNum * WildDataHeader.getSize()); //TODO Make configurable
+			rom.repoint((int) DataStore.WildPokemon, (int) pData, 14); //TODO: Maybe make this configurable?
+			rom.floodBytes((int) DataStore.WildPokemon, (byte) 0xFF, initialNum * WildDataHeader.getSize()); //TODO Make configurable
 		}
-		for(WildData d : dataCache.values()) {
-			d.save((int) pData);
-			pData += (4 * 5);
+		for (WildData wildData : dataCache.values()) {
+			if (wildData != null) { // Add a null check before calling save()
+				wildData.save((int) pData);
+				pData += (4 * 5);
+			} else {
+				System.err.println("Error: WildData is null while saving"); // Handle the null case
+			}
 		}
 	}
 	
@@ -50,26 +54,28 @@ public class WildDataCache extends Thread implements Runnable {
 		return dataCache.get(num);
 	}
 	
-	public static void setWildData(int bank, int map, WildData d) {
-		int num = (bank & 0xFF) + ((map & 0xFF)<<8);
+	public static void setWildData(int bank, int map, WildData wildData) {
 		WildData data = getWildData(bank, map);
-		data.aWildPokemon = d.aWildPokemon.clone();
-		data.wildDataHeader = d.wildDataHeader;
+		if (wildData!= null) {
+			data.aWildPokemon = wildData.aWildPokemon.clone();
+			data.wildDataHeader = wildData.wildDataHeader;
+		} else {
+			System.err.println("Error: WildDataCache: WildData not found for bank: " + bank + ", map: " + map);
+		}
 	}
 	
 	public static WildData createWildDataIfNotExists(int bank, int map) {
 		if(dataCache.containsKey((bank & 0xFF) + ((map & 0xFF)<<8)))
 			return getWildData(bank,map);
 		else {
-			WildData d = new WildData(rom, bank, map);
-			dataCache.put((bank & 0xFF) + ((map & 0xFF)<<8), d);
-			return d;
+			WildData wildData = new WildData(rom, bank, map);
+			dataCache.put((bank & 0xFF) + ((map & 0xFF)<<8), wildData);
+			return wildData;
 		}
 	}
 	
 	@Override
-	public void run()
-	{
+	public void run() {
 		gatherData();
 	}
 }
