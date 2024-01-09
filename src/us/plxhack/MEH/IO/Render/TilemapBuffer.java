@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class TilemapBuffer {
+
 	public GBAImageType myType;
     public  Graphics gcBuff;
 	public  Image imgBuffer;
@@ -60,23 +61,18 @@ public class TilemapBuffer {
 	}
 	
 	private void Draw4BPP() {
-		int i=0;
 		int len=(dcmpTilemap.length);//We're 8bpp now just trying to get the regular tiles to display
-        int tile_x=0;
-        int tile_y=0;
-        //This is gonna be dumb...
-        i=0;
         int[] tiles=new int[dcmpTilemap.length/2];
         byte[] special=new byte[dcmpTilemap.length/2];
         int counter=0;
-        for(i=0;i<len/2;i++){
+        for(int i = 0; i < len/2; i++){
 			tiles[i]=(dcmpTilemap[counter] & 0xFF) + ((dcmpTilemap[counter+1] & 0xFF) << 8);
         	special[i]=dcmpTilemap[counter+1];
         	counter+=2;
         }
-        for(i=0;i<tiles.length;i++){
-             tile_x=(i%30);
-             tile_y=(i/30);
+        for(int i = 0; i < tiles.length; i++){
+             int tile_x=(i%30);
+             int tile_y=(i/30);
         	 gcBuff.setColor(Color.red);
 	            gcBuff.drawRect(tile_x*8,tile_y*8, 8, 8);
         	try{
@@ -92,7 +88,7 @@ public class TilemapBuffer {
 						String.format("%04x",val   ) + " " +
 						String.format("%04x",(pal)) + " " +
 						String.format("%04x",(curtile)) + " " +
-						Boolean.toString(hf) +" " +Boolean.toString(hv) );
+                        hf +" " + hv);
         	  gcBuff.drawImage(get4BPPTile( curtile, pal , hf, hv), tile_x*8,tile_y*8,null);
         	} catch(Exception ignored){}
         }
@@ -100,10 +96,8 @@ public class TilemapBuffer {
 	}
 	
 	public void Draw8BPP(){
-		        int tile_x=0;
-                int tile_y=0;
-                for(tile_y =0; tile_y < 32; tile_y++) {
-	                for(tile_x = 0; tile_x <32; tile_x++) {
+                for(int tile_y =0; tile_y < 32; tile_y++) {
+	                for(int tile_x = 0; tile_x <32; tile_x++) {
 		                	int srcx=(tile_x)*8;
 			                int srcy=(tile_y)*8;
 			                int kX=tile_x;
@@ -131,8 +125,7 @@ public class TilemapBuffer {
     public void RenderBufferGFX() {
     	 switch(myType){
 			 case c16:
-				 int i=0;
-				 for(i=0;i<myPal.length;i++){
+				 for(int i = 0; i < myPal.length; i++){
 					 mybi[i] = (new GBAImage(dcmpGFX,myPal[i],new Point(256,512))).getBufferedImageFromPal(myPal[i],false);
 				 }
 				 break;

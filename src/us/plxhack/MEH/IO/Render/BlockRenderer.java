@@ -27,34 +27,28 @@ public class BlockRenderer extends Component {
 		this.local = local;
 	}
 	
-	public BlockRenderer()
-	{
+	public BlockRenderer() {
 		this(null,null);
 	}
 	
-	public void setGlobalTileset(Tileset global)
-    {
+	public void setGlobalTileset(Tileset global) {
     	this.global = global;
     }
     
-    public void setLocalTileset(Tileset local)
-    {
+    public void setLocalTileset(Tileset local) {
     	this.local = local;
     }
 	
     
-    public Tileset getGlobalTileset()
-    {
+    public Tileset getGlobalTileset() {
     	return global;
     }
     
-    public Tileset getLocalTileset()
-    {
+    public Tileset getLocalTileset() {
     	return local;
     }
     
-    public Image renderBlock(int blockNum)
-    {
+    public Image renderBlock(int blockNum) {
     	return renderBlock(blockNum, true);
     }
     

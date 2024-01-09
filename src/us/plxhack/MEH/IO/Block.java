@@ -4,6 +4,7 @@ import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.GBARom;
 
 public class Block {
+
 	public Tile[][] tilesThirdLayer;
 	public Tile[][] tilesForeground;
 	public Tile[][] tilesBackground;
@@ -11,8 +12,7 @@ public class Block {
 	public long backgroundMetaData;
 	private final GBARom rom;
 
-	public Block(int blockID, GBARom rom)
-	{
+	public Block(int blockID, GBARom rom) {
 		this(blockID,MapIO.blockRenderer.getBehaviorByte(blockID),rom);
 	}
 	

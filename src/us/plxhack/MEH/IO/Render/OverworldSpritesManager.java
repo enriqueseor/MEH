@@ -24,8 +24,7 @@ public class OverworldSpritesManager extends Thread implements Runnable {
 			return loadSprite(index);
 	}
 	
-	public OverworldSpritesManager(GBARom rom)
-	{
+	public OverworldSpritesManager(GBARom rom) {
 		OverworldSpritesManager.rom = rom;
 	}
 	

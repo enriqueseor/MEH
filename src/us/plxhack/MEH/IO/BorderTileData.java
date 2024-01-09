@@ -6,11 +6,11 @@ import us.plxhack.MEH.Structures.MapTile;
 
 public class BorderTileData {
 
-	private int originalPointer;
-	private int originalSize;
-	private int dataLoc;
-	private MapData mData;
-	private GBARom rom;
+	private final int originalPointer;
+	private final int originalSize;
+	private final int dataLoc;
+	private final MapData mData;
+	private final GBARom rom;
 	private MapTile[][] mapTiles;
 
 	public BorderTileData(GBARom rom, int offset, MapData mData) {
@@ -27,10 +27,7 @@ public class BorderTileData {
 		this.originalSize = getSize();
 	}
 	
-	public int getSize()
-	{
-		return (int) ((mData.borderWidth * mData.borderHeight) * 2);
-	}
+	public int getSize() {return (mData.borderWidth * mData.borderHeight) * 2;}
 	
 	public MapTile getTile(int x, int y) {
 		if(mapTiles[x][y] != null)
@@ -78,7 +75,8 @@ public class BorderTileData {
 				try {
 					newMapTiles[x][y] = mapTiles[x][y];
 				} catch(Exception e) {
-					newMapTiles[x][y] = new MapTile(0,0);
+                    assert newMapTiles[x] != null;
+                    newMapTiles[x][y] = new MapTile(0,0);
 				}
 			}
 		mapTiles = newMapTiles;

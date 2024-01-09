@@ -15,16 +15,7 @@ public class BorderMap implements ISaveable {
 		mapTileData = new BorderTileData(rom, BitConverter.shortenPointer(mapData.borderTilePtr),mapData);
 	}
 	
-	public MapData getMapData()
-	{
-		return mapData;
-	}
-	public BorderTileData getMapTileData()
-	{
-		return mapTileData;
-	}
-	public void save()
-	{
-		mapTileData.save();
-	}
+	public MapData getMapData() {return mapData;}
+	public BorderTileData getMapTileData() {return mapTileData;}
+	public void save() {mapTileData.save();}
 }
