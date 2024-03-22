@@ -7,7 +7,6 @@ import us.plxhack.MEH.Globals.Version;
 import us.plxhack.MEH.IO.BankLoader;
 import us.plxhack.MEH.IO.Map;
 import us.plxhack.MEH.IO.MapIO;
-import us.plxhack.MEH.IO.Render.BlockRenderer;
 import us.plxhack.MEH.IO.TilesetCache;
 import us.plxhack.MEH.MapElements.WildDataCache;
 import us.plxhack.MEH.MapElements.WildDataType;
@@ -474,10 +473,8 @@ public class MainGUI extends JFrame {
 	void enableMapOperationButtons() {
 		btnSaveMap.setEnabled(true);
 		btnBlockEdit.setEnabled(true);
-		mapBlendComboBox.setEnabled(true);
 		mnSaveMap.setEnabled(true);
 		mnSaveMapToPNG.setEnabled(true);
-		
 	}
 	
 	public class ButtonSeparator extends JSeparator {

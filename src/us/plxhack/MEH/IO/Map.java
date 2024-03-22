@@ -4,7 +4,6 @@ import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ISaveable;
 import org.zzl.minegaming.GBAUtils.ROMManager;
-import us.plxhack.MEH.IO.Render.OverworldSprites;
 import us.plxhack.MEH.IO.Render.OverworldSpritesManager;
 import us.plxhack.MEH.MapElements.*;
 import us.plxhack.MEH.UI.MainGUI;
@@ -15,8 +14,8 @@ import java.awt.image.BufferedImage;
 
 public class Map implements ISaveable {
 
-	private MapData mapData;
-	private MapTileData mapTileData;
+	private final MapData mapData;
+	private final MapTileData mapTileData;
 	public MapHeader mapHeader; 
 	public ConnectionData mapConnections;
 	public HeaderSprites mapSprites;
@@ -25,8 +24,7 @@ public class Map implements ISaveable {
 	public SpritesExitManager mapExitManager;
 	public TriggerManager mapTriggerManager;
 	public OverworldSpritesManager overworldSpritesManager;
-	public int dataOffset = 0;
-	public OverworldSprites[] eventSprites;
+	public int dataOffset;
 	public boolean isEdited;
 	
 	public Map(GBARom rom, int bank, int map) {

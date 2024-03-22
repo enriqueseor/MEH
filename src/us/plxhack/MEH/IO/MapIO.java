@@ -7,7 +7,6 @@ import us.plxhack.MEH.IO.Render.BlockRenderer;
 import us.plxhack.MEH.MapElements.WildData;
 import us.plxhack.MEH.MapElements.WildDataCache;
 import us.plxhack.MEH.Plugins.PluginManager;
-import us.plxhack.MEH.UI.DNPokePatcher;
 import us.plxhack.MEH.UI.MainGUI;
 
 import javax.swing.*;
@@ -156,11 +155,6 @@ public class MapIO {
 
 	public static void repaintTileEditorPanel() {
 		MainGUI.tileEditorPanel.repaint();
-	}
-
-	public static void patchDNPokemon() {
-		DNPokePatcher n = new DNPokePatcher();
-		n.setVisible(true);
 	}
 
 	public static void saveMap() {
