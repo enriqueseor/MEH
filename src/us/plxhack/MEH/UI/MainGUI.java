@@ -25,7 +25,6 @@ import javax.swing.tree.*;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
@@ -46,14 +45,6 @@ public class MainGUI extends JFrame {
 	private static int popupY;
 	private JTabbedPane editorTabs;
 	private JSplitPane splitPane;
-	public static JLabel lblWidth;
-	public static JLabel lblBorderTilesPointer;
-	public static JLabel lblBorderWidth;
-	public static JLabel lblLocalTilesetPointer;
-	public static JLabel lblMapTilesPointer;
-	public static JLabel lblHeight;
-	public static JLabel lblBorderHeight;
-	public static JLabel lblGlobalTilesetPointer;
 	public static JLabel lblEncounterPercent;
 
 	public static JPanel eventScrollPanel;
@@ -80,11 +71,11 @@ public class MainGUI extends JFrame {
 	private final JMenuItem mntmUpCon;
 	private final JMenuItem mntmDownCon;
 
-	// Wild Data Editor
+	// WILD POKEMON
     private static JPanel pkEditorPanel;
 	private static JSpinner pkMin1;
 	private static JSpinner pkMax1;
-	public static JComboBox pkName1;
+	public static JComboBox<String> pkName1;
 	private static JSpinner pkNo1;
 	private static JLabel lblpkmax;
 	private static JLabel lblPkMn;
@@ -93,48 +84,48 @@ public class MainGUI extends JFrame {
 	private static JLabel pkchance1;
 	private static JSpinner pkMin2;
 	private static JSpinner pkMax2;
-	public static JComboBox pkName2;
+	public static JComboBox<String> pkName2;
 	private static JSpinner pkNo2;
 	private static JLabel pkchance2;
 	private static JSpinner pkMin3;
 	private static JSpinner pkMax3;
-	public static JComboBox pkName3;
+	public static JComboBox<String> pkName3;
 	private static JSpinner pkNo3;
 	private static JLabel pkchance3;
 	private static JSpinner pkMin4;
 	private static JSpinner pkMax4;
-	public static JComboBox pkName4;
+	public static JComboBox<String> pkName4;
 	private static JSpinner pkNo4;
 	private static JLabel pkchance4;
 	private static JSpinner pkMin5;
 	private static JSpinner pkMax5;
-	public static JComboBox pkName5;
+	public static JComboBox<String> pkName5;
 	private static JSpinner pkNo5;
 	private static JLabel pkchance5;
 	private static JPanel panelpk6_10;
 	private static JSpinner pkMin6;
 	private static JSpinner pkMax6;
-	public static JComboBox pkName6;
+	public static JComboBox<String> pkName6;
 	private static JSpinner pkNo6;
 	private static JLabel pkchance6;
 	private static JSpinner pkMin7;
 	private static JSpinner pkMax7;
-	public static JComboBox pkName7;
+	public static JComboBox<String> pkName7;
 	private static JSpinner pkNo7;
 	private static JLabel pkchance7;
 	private static JSpinner pkMin8;
 	private static JSpinner pkMax8;
-	public static JComboBox pkName8;
+	public static JComboBox<String> pkName8;
 	private static JSpinner pkNo8;
 	private static JLabel pkchance8;
 	private static JSpinner pkMin9;
 	private static JSpinner pkMax9;
-	public static JComboBox pkName9;
+	public static JComboBox<String> pkName9;
 	private static JSpinner pkNo9;
 	private static JLabel pkchance9;
 	private static JSpinner pkMin10;
 	private static JSpinner pkMax10;
-	public static JComboBox pkName10;
+	public static JComboBox<String> pkName10;
 	private static JSpinner pkNo10;
 	private static JLabel pkchance10;
 	private static JPanel panelpk11_12;
@@ -142,20 +133,15 @@ public class MainGUI extends JFrame {
 	private static JSpinner pkMin12;
 	private static JSpinner pkMax11;
 	private static JSpinner pkMax12;
-	public static JComboBox pkName11;
-	public static JComboBox pkName12;
+	public static JComboBox<String> pkName11;
+	public static JComboBox<String> pkName12;
 	private static JSpinner pkNo11;
 	private static JSpinner pkNo12;
 	private static JLabel pkchance11;
 	private static JLabel pkchance12;
 	private static JScrollPane scrollPaneWildEditor;
-	private JLabel lblPkEnvironment;
-	private JLabel lblPkDayTime;
-	private static JComboBox pkTime;
-	private JComboBox pkEnvironment;
-	private static JButton btnEnableTimebasedPokemon;
 	
-	// Map Creation
+	//MAP CREATION
 	JPanel panelMapTilesContainer;
 	JPanel splitterMapTiles;
 	public static MapEditorPanel mapEditorPanel;
@@ -163,7 +149,6 @@ public class MainGUI extends JFrame {
 	JScrollPane tilesetScrollPane;
 	JPanel eventsPanel;
 
-	private JPanel mimeEditorPanel;
 	JPanel panelTilesContainer;
 	JPanel wildPokemonPanel;
 	JPanel panelPermissions;
@@ -180,11 +165,6 @@ public class MainGUI extends JFrame {
     public static JToolBar panelButtons;
 
     private static JSlider pkEncounter;
-
-    JPanel mimePanel;// Mr. Mime 2 dirty 4 mii
-    private JMenu mnPatches;
-    private JMenuItem mntmDaynightPokemon;
-    private JCheckBoxMenuItem mnEnableDebugging;
 
 	void CreateBorderArea() {
 		JPanel panelBorderTilesContainer = new JPanel();
@@ -387,12 +367,6 @@ public class MainGUI extends JFrame {
 		mntmPreferences.addActionListener(e -> {
         });
 		JMenu mnTools = new JMenu("Tools");
-		mnPatches = new JMenu("Patches");
-		mntmDaynightPokemon = new JMenuItem("Day/Night Pokemon");
-		mntmDaynightPokemon.addActionListener(e -> {
-            if(!ROMManager.getActiveROM().isDNPkmnPatchAdded)
-                MapIO.patchDNPokemon();
-        });
         mnHelp = new JMenu("Help");
         mnAbout = new JMenuItem("About");
         mnAbout.addActionListener(e -> {
@@ -417,30 +391,9 @@ public class MainGUI extends JFrame {
         menuBar.add(mnSettings);
         mnSettings.add(mntmPreferences);
         menuBar.add(mnTools);
-        mnTools.add(mnPatches);
-        mnPatches.add(mntmDaynightPokemon);
         
         mntmNewMenuItem = new JMenuItem("Triple-Layer Tiles (FR)");
         mntmNewMenuItem.addActionListener(e -> new TripleTilePatcher().setVisible(true));
-        mnPatches.add(mntmNewMenuItem);
-        
-        mnEnableDebugging = new JCheckBoxMenuItem("Enable Debugging");
-        mnEnableDebugging.addActionListener(e -> {
-            MapIO.DEBUG = mnEnableDebugging.getState();
-            if(MapIO.DEBUG) {
-                panelButtons.add(btnImportMap);
-                panelButtons.add(btnNewMap);
-                validate();
-            } else {
-                try {
-                    panelButtons.remove(btnImportMap);
-                    panelButtons.remove(btnNewMap);
-                } catch(Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-        mnTools.add(mnEnableDebugging);
         menuBar.add(mnHelp);
         mnHelp.add(mnAbout);
 	}
@@ -516,36 +469,11 @@ public class MainGUI extends JFrame {
             new BlockEditor(ownerframe, "Block Editor", Dialog.ModalityType.APPLICATION_MODAL).setVisible(true);
         });
 		panelButtons.add(btnBlockEdit);
-		
-		btnDNPokePatcher = new TopRowButton("","D/N PKMN",false);
-		btnDNPokePatcher.addActionListener(e -> {
-            //testXorColors();
-            new WizardPatcher().setVisible(true);
-        });
-		panelButtons.add(btnDNPokePatcher);
-		
-		mapBlendComboBox = new JComboBox();
-		mapBlendComboBox.addItemListener(e -> {
-            BlockRenderer.currentTime = mapBlendComboBox.getSelectedIndex();
-            MapIO.blockRenderer.getGlobalTileset().renderGraphics();
-            MapIO.blockRenderer.getLocalTileset().renderGraphics();
-            //Refresh block picker
-            tileEditorPanel.RerenderTiles(TileEditorPanel.imgBuffer, 0);
-            tileEditorPanel.repaint();
-            //Refresh Map Editor
-            MapEditorPanel.Redraw = true;
-            MainGUI.mapEditorPanel.repaint();
-        });
-		mapBlendComboBox.setModel(new DefaultComboBoxModel(new String[] {"Day", "Morning", "Evening", "Night"}));
-		mapBlendComboBox.setPreferredSize(new Dimension(80, 20));
-		mapBlendComboBox.setEnabled(false);
-		panelButtons.add(mapBlendComboBox);
 	}
 	
 	void enableMapOperationButtons() {
 		btnSaveMap.setEnabled(true);
 		btnBlockEdit.setEnabled(true);
-		btnDNPokePatcher.setEnabled(true);
 		mapBlendComboBox.setEnabled(true);
 		mnSaveMap.setEnabled(true);
 		mnSaveMapToPNG.setEnabled(true);
@@ -592,34 +520,6 @@ public class MainGUI extends JFrame {
 		panelWildHeader.setBounds(12, 12, 745, 83);
 		panelWildEditor.add(panelWildHeader);
 		panelWildHeader.setLayout(null);
-
-        lblPkEnvironment = new JLabel("Environment:");
-        lblPkEnvironment.setBounds(0, 5, 93, 15);
-		panelWildHeader.add(lblPkEnvironment);
-
-        lblPkDayTime = new JLabel("Time of Day:");
-        lblPkDayTime.setBounds(320, 5, 93, 15);
-		panelWildHeader.add(lblPkDayTime);
-
-		pkTime = new JComboBox();
-		pkTime.setModel(new DefaultComboBoxModel(new String[] { "Morning", "Day", "Evening", "Night" }));
-		pkTime.setSelectedIndex(0);
-		pkTime.setBounds(409, 0, 112, 24);
-		pkTime.addActionListener(e -> {
-                selectedTime = pkTime.getSelectedIndex();
-                loadWildPokemon();
-                System.out.println(selectedTime);
-        });
-		panelWildHeader.add(pkTime);
-
-		pkEnvironment = new JComboBox();
-		pkEnvironment.addActionListener(e -> {
-            currentType = pkEnvironment.getSelectedIndex();
-            loadWildPokemon();
-        });
-		pkEnvironment.setModel(new DefaultComboBoxModel(new String[] { "Grass", "Water", "Rock Smash", "Fishing" }));
-		pkEnvironment.setBounds(98, 0, 144, 24);
-		panelWildHeader.add(pkEnvironment);
 
 		JLabel lblNewLabel_3 = new JLabel("Total Encounter Rate:");
 		lblNewLabel_3.setBounds(0, 55, 154, 15);
@@ -671,24 +571,6 @@ public class MainGUI extends JFrame {
         });
 		splitPane_1.setRightComponent(btnRemovePokeData);
 		splitPane_1.setDividerLocation(25);
-		
-		btnEnableTimebasedPokemon = new JButton("Enable Time-Based Edits");
-		btnEnableTimebasedPokemon.addActionListener(e -> {
-            if(!ROMManager.getActiveROM().isDNPkmnPatchAdded) {
-                int result = JOptionPane.showConfirmDialog(new JFrame(),"It appears that you haven't patched your ROM for time-based Pok�mon changes.\nWould you like to do that now?","Peer Pressure", JOptionPane.YES_NO_OPTION);
-                if(result == JOptionPane.YES_OPTION) {
-                    MapIO.patchDNPokemon();
-                    return;
-                }
-            }
-            int result = JOptionPane.showConfirmDialog(new JFrame(),"This option will permanantely convert your wild Pok�mon data to a new format unsupported by other map editors.\nAre you sure you want to continue?","No More A-Map 4 u", JOptionPane.YES_NO_OPTION);
-            if(result == JOptionPane.YES_OPTION) {
-                MapIO.wildData.aWildPokemon[currentType].convertToDN();
-                loadWildPokemon();
-            }
-        });
-		btnEnableTimebasedPokemon.setBounds(533, 0, 212, 25);
-		panelWildHeader.add(btnEnableTimebasedPokemon);
 
 		pkEditorPanel = new JPanel();
 		pkEditorPanel.setBounds(12, 100, 544, 202);
@@ -1327,51 +1209,6 @@ public class MainGUI extends JFrame {
 		panelpk11_12.setVisible(false);
 	}
 
-	void CreateMimeTab() {
-		mimePanel = new JPanel();
-		editorTabs.addTab("Mime", null, mimePanel, null);
-		mimePanel.setLayout(new BorderLayout(0, 0));
-		mimeEditorPanel = new JPanel();
-		mimePanel.add(mimeEditorPanel);
-		mimeEditorPanel.setLayout(null);
-
-		JLabel lblWelcome = new JLabel("<html><center>Welcome to the map mime!\n<br>\nHere we will mime out your map so you can like see it, but without actually physically seeing it and stuff.</center></html>");
-		lblWelcome.setBounds(90, 12, 559, 63);
-		mimeEditorPanel.add(lblWelcome);
-
-		lblWidth = new JLabel("Width: ");
-		lblWidth.setBounds(64, 107, 65, 15);
-		mimeEditorPanel.add(lblWidth);
-
-		lblHeight = new JLabel("Height: ");
-		lblHeight.setBounds(64, 134, 65, 15);
-		mimeEditorPanel.add(lblHeight);
-
-		lblBorderHeight = new JLabel("Border Height: ");
-		lblBorderHeight.setBounds(64, 178, 164, 15);
-		mimeEditorPanel.add(lblBorderHeight);
-
-		lblMapTilesPointer = new JLabel("Map Tiles Pointer: ");
-		lblMapTilesPointer.setBounds(245, 107, 339, 15);
-		mimeEditorPanel.add(lblMapTilesPointer);
-
-		lblBorderTilesPointer = new JLabel("Border Tiles Pointer:");
-		lblBorderTilesPointer.setBounds(245, 123, 339, 15);
-		mimeEditorPanel.add(lblBorderTilesPointer);
-
-		lblGlobalTilesetPointer = new JLabel("Global Tileset Pointer:");
-		lblGlobalTilesetPointer.setBounds(245, 151, 164, 15);
-		mimeEditorPanel.add(lblGlobalTilesetPointer);
-
-		lblLocalTilesetPointer = new JLabel("Local  Tileset  Pointer:");
-		lblLocalTilesetPointer.setBounds(245, 176, 164, 15);
-		mimeEditorPanel.add(lblLocalTilesetPointer);
-
-		lblBorderWidth = new JLabel("Border Width: ");
-		lblBorderWidth.setBounds(64, 162, 157, 15);
-		mimeEditorPanel.add(lblBorderWidth);
-	}
-
 	void CreateTabbedPanels() {
 		getContentPane().add(splitPane, BorderLayout.CENTER);
 
@@ -1417,7 +1254,6 @@ public class MainGUI extends JFrame {
 
 		CreateEventsPanel();
 		CreateWildPokemonPanel();
-		CreateMimeTab();
 	}
 
 	void CreateSplitPane() {
@@ -1487,8 +1323,6 @@ public class MainGUI extends JFrame {
 		setPreferredSize(new Dimension(800, 1800));
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
-				// TODO: Are you *sure* you want to exit / Check for saved
-				// changes
 				PluginManager.unloadAllPlugins();
 				System.exit(0);
 			}
@@ -1501,17 +1335,6 @@ public class MainGUI extends JFrame {
 		CreateButtons();
 		CreateSplitPane();
 		CreateTabbedPanels();
-
-		BufferedImage mime = null;
-
-		try {
-			mime = ImageIO.read(MainGUI.class.getResourceAsStream("/resources/mime.jpg"));
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		ImagePanel mimePic = new ImagePanel(mime);
-		mimePic.setBounds(545, 71, 164, 164);
-		mimeEditorPanel.add(mimePic);
 
 		spnWidth = new JSpinner(new SpinnerNumberModel(1, 1, 9001, 1));
 		spnWidth.addChangeListener(e -> {
@@ -1531,7 +1354,6 @@ public class MainGUI extends JFrame {
         });
 		spnWidth.setPreferredSize(new Dimension(40, 24));
 		spnWidth.setBounds(130, 105, 50, 24);
-		mimeEditorPanel.add(spnWidth);
 
 		spnHeight = new JSpinner(new SpinnerNumberModel(1, 1, 9001, 1));
 		spnHeight.setPreferredSize(new Dimension(40, 24));
@@ -1551,18 +1373,14 @@ public class MainGUI extends JFrame {
                 ex.printStackTrace();
             }
         });
-
-		mimeEditorPanel.add(spnHeight);
 		
 		txtGlobalTileset = new JTextField();
 		txtGlobalTileset.setBounds(409, 148, 102, 20);
-		mimeEditorPanel.add(txtGlobalTileset);
 		txtGlobalTileset.setColumns(10);
 		
 		txtLocalTileset = new JTextField();
 		txtLocalTileset.setColumns(10);
 		txtLocalTileset.setBounds(409, 175, 102, 20);
-		mimeEditorPanel.add(txtLocalTileset);
 
 		connectionsTabPanel = new JPanel();
 		editorTabs.addTab("Connections", null, connectionsTabPanel, null);
@@ -1716,31 +1534,12 @@ public class MainGUI extends JFrame {
 		});
 	}
 
-	public static void reloadMimeLabels() {
-		spnWidth.setValue((int) MapIO.loadedMap.getMapData().mapWidth);
-		spnHeight.setValue((int) MapIO.loadedMap.getMapData().mapHeight);
-		lblBorderWidth.setText("Border Width: " + MapIO.loadedMap.getMapData().borderWidth);
-		lblBorderHeight.setText("Border Height: " + MapIO.loadedMap.getMapData().borderHeight);
-		lblMapTilesPointer.setText("Map Tiles Pointer: " + BitConverter.toHexString(MapIO.loadedMap.getMapData().mapTilesPtr));
-		lblBorderTilesPointer.setText("Border Tiles Pointer: " + BitConverter.toHexString(MapIO.loadedMap.getMapData().borderTilePtr));
-		txtGlobalTileset.setText(BitConverter.toHexString(MapIO.loadedMap.getMapData().globalTileSetPtr));
-		txtLocalTileset.setText(BitConverter.toHexString(MapIO.loadedMap.getMapData().localTileSetPtr));
-	}
-
 	public static void loadWildPokemon() {
 		if (MapIO.wildData == null || MapIO.wildData.aWildPokemon == null) {
 			pkEditorPanel.setVisible(false);
 			panelpk6_10.setVisible(false);
 			panelpk11_12.setVisible(false);
 			return;
-		}
-		if(MapIO.wildData.aWildPokemon[currentType].bDNEnabled == 1) {
-			pkTime.setEnabled(true);
-			btnEnableTimebasedPokemon.setVisible(false);
-		} else {
-			pkTime.setEnabled(false);
-			selectedTime = 0;
-			btnEnableTimebasedPokemon.setVisible(true);
 		}
 		if(MapIO.DEBUG)
 			System.out.println(selectedTime);
@@ -1931,77 +1730,4 @@ public class MainGUI extends JFrame {
         lblX.setText("X: " + x);
         lblY.setText("Y: " + y);
     }
-
-	private static class __Tmp {
-		private static void __tmp() {
-			  javax.swing.JPanel __wbp_panel = new javax.swing.JPanel();
-			  
-			  javax.swing.JMenuItem menuItem = new javax.swing.JMenuItem("New menu item");
-			  __wbp_panel.add(menuItem);
-		}
-	}
-
-	public void testXorColors() {
-		BufferedImage img = (BufferedImage)Map.renderMap(MapIO.loadedMap, true);
-		Image orig = img.getScaledInstance(img.getWidth(), img.getHeight(), 0);
-		GradientTest t = new GradientTest(orig);
-		t.setVisible(true);
-		
-		Color night = new Color(42,0,168,80);
-		Color evening = new Color(56,2,0,40);
-		Color day = new Color(0,0,0,0);
-		Color morning = new Color(255,86,59,20);
-		
-		int stepsPH = 6;
-		
-		Color[] nightN = Palette.gradient(night, night, 3*stepsPH);
-		Color[] nightM = Palette.gradient(night, morning, 5*stepsPH);
-		Color[] morningD = Palette.gradient(morning, day, 6*stepsPH);
-		Color[] dayE = Palette.gradient(day, evening, 4*stepsPH);
-		Color[] eveningN = Palette.gradient(evening, night, stepsPH);
-		
-		Color[] gradient = new Color[24*stepsPH];
-		for(int i = 0; i < 24*stepsPH; i++)
-			gradient[i] = night;
-
-
-        System.arraycopy(nightN, 0, gradient, 0, nightN.length);
-        System.arraycopy(nightM, 0, gradient, nightN.length, nightM.length);
-		
-		for(int i = 0; i < morningD.length; i++)
-			gradient[i+nightN.length+nightM.length] = morningD[i];
-		
-		for(int i = 0; i < dayE.length; i++)
-			gradient[i+nightN.length+nightM.length+morningD.length] = dayE[i];
-		
-		for(int i = 0; i < eveningN.length; i++)
-			gradient[i+nightN.length+nightM.length+morningD.length+dayE.length] = eveningN[i];
-		
-		for(int i = 0; i < nightN.length; i++)
-			gradient[i+nightN.length+nightM.length+morningD.length+dayE.length+eveningN.length] = nightN[i];
-		
-		for(int i = 0; i < (24*stepsPH); i++) {
-			Graphics g = img.getGraphics();
-			g.drawImage(orig, 0,0, null);
-			g.setColor(gradient[i]);
-			g.fillRect(0, 0, img.getWidth(), img.getHeight());
-			try {
-				ImageIO.write(img, "png", new File("cycle/time" + String.format("%03d", i) + ".png"));
-			} catch (IOException e) {e.printStackTrace();}
-		}
-		
-		BufferedImage b = new BufferedImage(gradient.length * 8, 8, BufferedImage.TYPE_INT_ARGB);
-		for(int i = 0; i < 24*stepsPH; i++) {
-			Graphics g = b.getGraphics();
-			g.setColor(gradient[i]);
-			g.fillRect(i*8, 0, 8, 8);
-		}
-		try {
-			ImageIO.write(b, "png", new File("cycle/gradient.png"));
-		} catch (IOException e) {e.printStackTrace();}
-		System.out.println();
-		for(Color c : gradient) {
-			System.out.print("0x" + String.format("%02X", c.getAlpha()) + String.format("%02X", c.getRed()) + String.format("%02X", c.getGreen()) + String.format("%02X", c.getBlue()) + ", ");
-		}
-	}
 }

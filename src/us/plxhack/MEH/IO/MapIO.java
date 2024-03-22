@@ -14,7 +14,6 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.Date;
 
 public class MapIO {
 
@@ -50,7 +49,6 @@ public class MapIO {
 		}
 
 		new Thread(() -> {
-            Date d = new Date();
             doneLoading = false;
             if (loadedMap != null)
                 TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).resetCustomTiles();
@@ -61,7 +59,6 @@ public class MapIO {
             TilesetCache.switchTileset(loadedMap);
 
             borderMap = new BorderMap(ROMManager.getActiveROM(), loadedMap);
-            MainGUI.reloadMimeLabels();
             MainGUI.mapEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
             MainGUI.mapEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
             MainGUI.eventEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
@@ -93,8 +90,6 @@ public class MapIO {
 
             MainGUI.loadWildPokemon();
             MainGUI.mapEditorPanel.repaint();
-            Date eD = new Date();
-            long time = eD.getTime() - d.getTime();
             doneLoading = true;
             PluginManager.fireMapLoad(selectedBank, selectedMap);
         }).start();
@@ -146,18 +141,19 @@ public class MapIO {
 		}
 	}
 
-	public static void addStringArray(JComboBox b, String[] strs) {
-		if (b != null) {
-			b.removeAllItems();
-			for (String s : strs) {
-				b.addItem(s);
+	public static void addStringArray(JComboBox<String> wildPokemon, String[] strings) {
+		if (wildPokemon != null) {
+			wildPokemon.removeAllItems();
+			for (String s : strings) {
+				wildPokemon.addItem(s);
 			}
-			b.repaint();
+			wildPokemon.repaint();
 		} else {
-			System.out.println("Error: The JComboBox instance is null. MAPIO.class Line157");
+			System.out.println("Error: The JComboBox instance is null. MapIO.class Line157");
 		}
 	}
-	
+
+
 	public static void repaintTileEditorPanel() {
 		MainGUI.tileEditorPanel.repaint();
 	}
