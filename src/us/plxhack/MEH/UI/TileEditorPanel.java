@@ -11,6 +11,7 @@ import us.plxhack.MEH.UI.MapEditorPanel.SelectRect;
 import javax.swing.*;
 
 import java.awt.*;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -20,34 +21,16 @@ import java.awt.image.BufferedImage;
 public class TileEditorPanel extends JPanel {
 
 	private static final long serialVersionUID = -877213633894324075L;
-	public int baseSelectedTile;	// Called it base in case of multiple tile
-	// selection in the future.
+	public int baseSelectedTile; // Called it base in case of multiple tile
 	public static int editorWidth = 8; //Editor width in 16x16 tiles
 	public static boolean tripleSelectMode = false; //We really need events...
 	public Tileset globalTiles;
 	public Tileset localTiles;
     private boolean Redraw = false;
-    private boolean tiedToEditor = false;
+    private final boolean tiedToEditor;
 	static Rectangle mouseTracker;
 	public static SelectRect selectBox;
 	public Color selectRectColor = MainGUI.uiSettings.cursorColor;
-
-	public void SetRect(int width, int height) {
-		if (height > 16)
-			height = 16;
-		if (width > 16)
-			width = 16;
-		mouseTracker.height = height;
-		mouseTracker.width = width;
-	}
-
-	public void SetRect() {
-		mouseTracker.height = 16;
-		mouseTracker.width = 16;
-	}
-
-	int srcX;
-	int srcY;
 
 	public TileEditorPanel(boolean tied) {
 		tiedToEditor = tied;
@@ -56,7 +39,7 @@ public class TileEditorPanel extends JPanel {
 
 		this.addMouseMotionListener(new MouseMotionListener() {
             public void mouseDragged(MouseEvent e) {
-            	if (e.getModifiersEx() == 1024)  {
+            	if (e.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK)  {
 					mouseTracker.x = e.getX();
 					mouseTracker.y = e.getY();
 				}
@@ -129,11 +112,6 @@ public class TileEditorPanel extends JPanel {
 			}
 		});
 	}
-	
-	public void tieToEditor()
-	{
-		tiedToEditor = true;
-	}
 
 	public void setGlobalTileset(Tileset global) {
 		globalTiles = global;
@@ -146,7 +124,7 @@ public class TileEditorPanel extends JPanel {
 	public static Image imgBuffer = null;
 
 	public void DrawTileset() {
-		imgBuffer = RerenderTiles(imgBuffer, 0, DataStore.MainTSBlocks+0x200,true);//(DataStore.EngineVersion == 1 ? 0x11D : 0x200), true);
+		imgBuffer = RerenderTiles(imgBuffer, 0, DataStore.MainTSBlocks+0x200,true);
 	}
 	
 	public Image RerenderSecondary(Image i) {
@@ -187,7 +165,7 @@ public class TileEditorPanel extends JPanel {
 				Redraw=false;
 			}
 			try {
-				g.drawImage(((BufferedImage)imgBuffer).getSubimage(0, 0, 128, 2048), 0, 0, this); //Weird fix for a weird bug. :/
+				g.drawImage(((BufferedImage)imgBuffer).getSubimage(0, 0, 128, 2048), 0, 0, this);
 			} catch(Exception e) {
 				if(MapIO.DEBUG)
 					e.printStackTrace();
@@ -215,13 +193,11 @@ public class TileEditorPanel extends JPanel {
     public void applySelectedTile() {
     	if(tiedToEditor) {
     		MapEditorPanel.selectBuffer = new MapTile[1][1];
-    		MapEditorPanel.selectBuffer[0][0] = new MapTile(baseSelectedTile,-1); //TODO Default movement perms
+    		MapEditorPanel.selectBuffer[0][0] = new MapTile(baseSelectedTile,-1);
     		MapEditorPanel.bufferWidth = 1;
     		MapEditorPanel.bufferHeight = 1;
     		MapEditorPanel.selectBox.width = 16;
     		MapEditorPanel.selectBox.height = 16;
-    		String k = "Current Tile: ";
-    		k += String.format("0x%8s", Integer.toHexString(baseSelectedTile)).replace(' ', '0');
     		MainGUI.lblTileVal.setText("Current Tile: 0x" + BitConverter.toHexString(baseSelectedTile));
     	} else {
     		if(!tripleSelectMode) {
