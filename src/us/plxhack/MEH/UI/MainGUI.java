@@ -33,9 +33,7 @@ import java.io.IOException;
 public class MainGUI extends JFrame {
 
     public static  UISettings uiSettings;
-    public static JFrame frmAbout;
 	public int paneSize = 0;
-	public int initEditorPanePos = -1;
 	public static JLabel lblInfo;
     public static JLabel lblX;
     public static JLabel lblY;
@@ -46,7 +44,6 @@ public class MainGUI extends JFrame {
 	public static int selectedTime = 0;
 	private static int popupX;
 	private static int popupY;
-	int paneSize2;
 	private JTabbedPane editorTabs;
 	private JSplitPane splitPane;
 	public static JLabel lblWidth;

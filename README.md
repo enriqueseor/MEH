@@ -8,7 +8,7 @@ MEH is a Generation III Map Editor for Pokemon games for the GameBoy Advance:
 - Ruby
 - Sapphire
 - Emerald
-- 
+
 ## Table of Contents
 
 - [About](#about)

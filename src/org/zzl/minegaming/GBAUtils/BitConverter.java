@@ -9,8 +9,7 @@ public class BitConverter {
 		return (bytez[0] & 0xFF) + ((bytez[1] & 0xFF) << 8) + ((bytez[2] & 0xFF) << 16) + ((bytez[3] & 0xFF) << 24);
 	}
 	
-	public static int shortenPointer(long pointer)
-	{
+	public static int shortenPointer(long pointer) {
 		return (int)(pointer & 0x1FFFFFF);
 	}
 	
