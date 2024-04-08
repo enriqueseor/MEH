@@ -35,6 +35,7 @@ public class Main {
 
 	private static void setLookAndFeel() throws ClassNotFoundException,
 			InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+		//Personalized look and feel for linux OS
 		if (System.getProperty("os.name").toLowerCase().contains("nix") ||
 				System.getProperty("os.name").toLowerCase().contains("nux") ||
 				System.getProperty("os.name").toLowerCase().contains("aix")) {
