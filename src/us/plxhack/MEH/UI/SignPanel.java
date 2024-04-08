@@ -2,7 +2,7 @@ package us.plxhack.MEH.UI;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import us.plxhack.MEH.IO.MapIO;
-import us.plxhack.MEH.MapElements.SpritesSignManager;
+import us.plxhack.MEH.MapElements.Sprite.SpriteHeader;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -12,16 +12,16 @@ public class SignPanel extends JPanel {
 	private final JTextField textField;
 	int myIndex;
 
-	void Load(SpritesSignManager mgr, int index){
+	void Load(SpriteHeader.SpritesSignManager mgr, int index){
     	textField.setText(BitConverter.toHexString((int) mgr.mapSigns.get(index).pScript));
     }
-    void Save(SpritesSignManager mgr){
+    void Save(SpriteHeader.SpritesSignManager mgr){
     	mgr.mapSigns.get(myIndex).pScript = Integer.parseInt(textField.getText(), 16);
     }
 	/**
 	 * Create the panel.
 	 */
-	public SignPanel(SpritesSignManager mgr, int index) {
+	public SignPanel(SpriteHeader.SpritesSignManager mgr, int index) {
 		myIndex=index;
 		setBorder(new TitledBorder(null, "Sign", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		setLayout(null);

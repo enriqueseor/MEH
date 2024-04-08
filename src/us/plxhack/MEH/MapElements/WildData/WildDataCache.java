@@ -1,4 +1,4 @@
-package us.plxhack.MEH.MapElements;
+package us.plxhack.MEH.MapElements.WildData;
 
 import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.GBARom;
@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 public class WildDataCache extends Thread implements Runnable {
 
-	private static final HashMap<Integer,WildData> dataCache = new HashMap<>();
+	private static final HashMap<Integer, WildData> dataCache = new HashMap<>();
 	private static GBARom rom;
 	private static int initialNum;
 	

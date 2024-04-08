@@ -1,4 +1,4 @@
-package us.plxhack.MEH.MapElements;
+package us.plxhack.MEH.MapElements.Sprite;
 
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ISaveable;

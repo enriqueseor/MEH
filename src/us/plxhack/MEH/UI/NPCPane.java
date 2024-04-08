@@ -2,8 +2,8 @@ package us.plxhack.MEH.UI;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import us.plxhack.MEH.IO.MapIO;
-import us.plxhack.MEH.MapElements.SpriteNPC;
-import us.plxhack.MEH.MapElements.SpritesNPCManager;
+import us.plxhack.MEH.MapElements.Sprite.SpriteNPC;
+import us.plxhack.MEH.MapElements.Sprite.SpriteNPCManager;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -43,7 +43,7 @@ public class NPCPane extends JPanel{
 	
 	private JTextField textField;
 	private JTextField textField_1;
-	void Load(SpritesNPCManager mgr, int NPCIndex){
+	void Load(SpriteNPCManager mgr, int NPCIndex){
 		SpriteNPC t = mgr.mapNPCs.get(NPCIndex);
 		txtSpriteSet.setValue(t.bSpriteSet & 0xFF);
 		txtBehavior1.setText(Byte.toString(t.bBehavior1));
@@ -53,7 +53,7 @@ public class NPCPane extends JPanel{
 		txtScript.setText(String.format("%X", ((int)t.pScript)));
 		txtiFlag.setText(BitConverter.toHexString(t.iFlag));
 	}
-	void Save(SpritesNPCManager mgr){
+	void Save(SpriteNPCManager mgr){
 		try {
 		SpriteNPC t = mgr.mapNPCs.get(myIndex);
 		mgr.mapNPCs.get(myIndex).bSpriteSet = (byte)((int)((Integer)txtSpriteSet.getValue()));
@@ -71,7 +71,7 @@ public class NPCPane extends JPanel{
 	
     void CreateNPCPane(){}
 
-	NPCPane(SpritesNPCManager mgr, int NPCIndex){
+	NPCPane(SpriteNPCManager mgr, int NPCIndex){
 		myIndex=NPCIndex;
 		setBorder(new TitledBorder(null, "NPC", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));

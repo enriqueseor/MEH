@@ -1,4 +1,4 @@
-package us.plxhack.MEH.MapElements;
+package us.plxhack.MEH.MapElements.Sprite;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.DataStore;
@@ -8,7 +8,7 @@ import us.plxhack.MEH.IO.Map;
 
 import java.util.ArrayList;
 
-public class SpritesExitManager implements ISaveable {
+public class SpriteExitManager implements ISaveable {
 
 	public ArrayList<SpriteExit> mapExits;
 	private final Map loadedMap;
@@ -27,7 +27,7 @@ public class SpritesExitManager implements ISaveable {
 		return -1;
 	}
 
-	public SpritesExitManager(GBARom rom, Map m, int offset, int count) {
+	public SpriteExitManager(GBARom rom, Map m, int offset, int count) {
 		rom.Seek(offset);
 		mapExits = new ArrayList<>();
 		for (int i = 0; i < count; i++) {

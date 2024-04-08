@@ -7,9 +7,9 @@ import us.plxhack.MEH.IO.MapIO;
 import us.plxhack.MEH.IO.Render.BlockRenderer;
 import us.plxhack.MEH.IO.Render.OverworldSpritesManager;
 import us.plxhack.MEH.IO.Tileset;
-import us.plxhack.MEH.MapElements.SpriteExit;
-import us.plxhack.MEH.MapElements.SpriteNPC;
-import us.plxhack.MEH.MapElements.SpriteSign;
+import us.plxhack.MEH.MapElements.Sprite.SpriteExit;
+import us.plxhack.MEH.MapElements.Sprite.SpriteNPC;
+import us.plxhack.MEH.MapElements.Sprite.SpriteSign;
 import us.plxhack.MEH.MapElements.Trigger;
 import us.plxhack.MEH.Structures.EventType;
 

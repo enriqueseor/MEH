@@ -4,8 +4,8 @@ import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.ROMManager;
 
 import us.plxhack.MEH.IO.Render.BlockRenderer;
-import us.plxhack.MEH.MapElements.WildData;
-import us.plxhack.MEH.MapElements.WildDataCache;
+import us.plxhack.MEH.MapElements.WildData.WildData;
+import us.plxhack.MEH.MapElements.WildData.WildDataCache;
 import us.plxhack.MEH.Plugins.PluginManager;
 import us.plxhack.MEH.UI.MainGUI;
 

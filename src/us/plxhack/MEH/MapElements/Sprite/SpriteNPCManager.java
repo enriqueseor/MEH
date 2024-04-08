@@ -1,4 +1,4 @@
-package us.plxhack.MEH.MapElements;
+package us.plxhack.MEH.MapElements.Sprite;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.DataStore;
@@ -8,7 +8,7 @@ import us.plxhack.MEH.IO.Map;
 
 import java.util.ArrayList;
 
-public class SpritesNPCManager implements ISaveable {
+public class SpriteNPCManager implements ISaveable {
 
 	public ArrayList<SpriteNPC> mapNPCs;
 	private int internalOffset;
@@ -33,7 +33,7 @@ public class SpritesNPCManager implements ISaveable {
 		return -1;
 	}
 
-	public SpritesNPCManager(GBARom rom, Map m, int offset, int count) {
+	public SpriteNPCManager(GBARom rom, Map m, int offset, int count) {
 		this.rom = rom;
 		internalOffset = offset;
 		loadedMap = m;
