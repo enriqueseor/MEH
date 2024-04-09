@@ -13,8 +13,7 @@ public class Palette {
 			reds = new byte[16];
 			greens = new byte[16];
 			blues = new byte[16];
-		}
-		else {
+		} else {
 			colors = new Color[256];
 			reds = new byte[256];
 			greens = new byte[256];

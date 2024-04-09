@@ -37,11 +37,11 @@ public class PluginManager {
 		JButton btnPlugin = new JButton("");
 		btnPlugin.setToolTipText(plugin.getToolTip());
 		btnPlugin.addActionListener(e -> {
-if(plugin.bLoadROM){
-plugin.loadROM(ROMManager.currentROM);
-}
-plugin.execute();
-});
+			if(plugin.bLoadROM){
+			plugin.loadROM(ROMManager.currentROM);
+			}
+			plugin.execute();
+		});
 		btnPlugin.setIcon(plugin.getButtonImage());
 		btnPlugin.setFocusPainted(false);
 		btnPlugin.setBorderPainted(false);

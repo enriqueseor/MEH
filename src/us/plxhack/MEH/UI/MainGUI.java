@@ -32,9 +32,7 @@ public class MainGUI extends JFrame {
 
     public static  UISettings uiSettings;
 	public int paneSize = 0;
-	public static JLabel lblInfo;
-    public static JLabel lblX;
-    public static JLabel lblY;
+	public static JLabel lblInfo, lblX, lblY;
 	public static JTree mapBanks;
 	private static int eventIndex;
 	private static EventType eventType;
@@ -47,11 +45,7 @@ public class MainGUI extends JFrame {
 	public static JLabel lblEncounterPercent;
 
 	public static JPanel eventScrollPanel;
-	private JMenuItem mnOpen;
-	private JMenuItem mnSave;
-	private JMenuItem mnSaveMap;
-	private JMenuItem mnSaveMapToPNG;
-	private JMenuItem mnExit;
+	private JMenuItem mnOpen, mnSave, mnSaveMap, mnSaveMapToPNG, mnExit;
     private JMenu mnHelp;
     private JMenuItem mnAbout;
     private PermissionTilePanel permissionTilePanel;
@@ -61,83 +55,21 @@ public class MainGUI extends JFrame {
 	private final JScrollPane connectionsEditorScroll;
 	private JLabel lblNewLabel;
 	private JPanel panelWildEditor;
-	private static JSpinner spnHeight;
-	private static JSpinner spnWidth;
-	private final JMenu mnAddCon;
-	private final JMenuItem mntmLeftCon;
+	private static JSpinner spnHeight, spnWidth;
+	private JMenu mnAddCon, mnRemCon;
+	private JMenuItem mntmLeftCon, mntmRightCon, mntmUpCon, mntmDownCon;
 	private final JMenuBar mbMain;
-	private final JMenuItem mntmRightCon;
-	private final JMenuItem mntmUpCon;
-	private final JMenuItem mntmDownCon;
 
 	// WILD POKEMON
     private static JPanel pkEditorPanel;
-	private static JSpinner pkMin1;
-	private static JSpinner pkMax1;
-	public static JComboBox<String> pkName1;
-	private static JSpinner pkNo1;
-	private static JLabel lblpkmax;
-	private static JLabel lblPkMn;
-	private static JLabel lblpknum;
-	private static JLabel lblpkchance;
-	private static JLabel pkchance1;
-	private static JSpinner pkMin2;
-	private static JSpinner pkMax2;
-	public static JComboBox<String> pkName2;
-	private static JSpinner pkNo2;
-	private static JLabel pkchance2;
-	private static JSpinner pkMin3;
-	private static JSpinner pkMax3;
-	public static JComboBox<String> pkName3;
-	private static JSpinner pkNo3;
-	private static JLabel pkchance3;
-	private static JSpinner pkMin4;
-	private static JSpinner pkMax4;
-	public static JComboBox<String> pkName4;
-	private static JSpinner pkNo4;
-	private static JLabel pkchance4;
-	private static JSpinner pkMin5;
-	private static JSpinner pkMax5;
-	public static JComboBox<String> pkName5;
-	private static JSpinner pkNo5;
-	private static JLabel pkchance5;
+	private static JSpinner pkMin1,pkMin2,pkMin3,pkMin4,pkMin5,pkMin6,pkMin7,pkMin8,pkMin9,pkMin10,pkMin11,pkMin12;
+	private static JSpinner pkMax1,pkMax2,pkMax3,pkMax4,pkMax5,pkMax6,pkMax7,pkMax8,pkMax9,pkMax10,pkMax11,pkMax12;
+	public static JComboBox<String> pkName1,pkName2,pkName3,pkName4,pkName5,pkName6,pkName7,pkName8,pkName9,pkName10,pkName11,pkName12;
+	private static JSpinner pkNo1,pkNo2,pkNo3,pkNo4,pkNo5,pkNo6,pkNo7,pkNo8,pkNo9,pkNo10,pkNo11,pkNo12;
+	private static JLabel lblpkmax, lblPkMn, lblpknum, lblpkchance;
+	private static JLabel pkchance1,pkchance2,pkchance3,pkchance4,pkchance5,pkchance6,pkchance7,pkchance8,pkchance9,pkchance10,pkchance11,pkchance12;
 	private static JPanel panelpk6_10;
-	private static JSpinner pkMin6;
-	private static JSpinner pkMax6;
-	public static JComboBox<String> pkName6;
-	private static JSpinner pkNo6;
-	private static JLabel pkchance6;
-	private static JSpinner pkMin7;
-	private static JSpinner pkMax7;
-	public static JComboBox<String> pkName7;
-	private static JSpinner pkNo7;
-	private static JLabel pkchance7;
-	private static JSpinner pkMin8;
-	private static JSpinner pkMax8;
-	public static JComboBox<String> pkName8;
-	private static JSpinner pkNo8;
-	private static JLabel pkchance8;
-	private static JSpinner pkMin9;
-	private static JSpinner pkMax9;
-	public static JComboBox<String> pkName9;
-	private static JSpinner pkNo9;
-	private static JLabel pkchance9;
-	private static JSpinner pkMin10;
-	private static JSpinner pkMax10;
-	public static JComboBox<String> pkName10;
-	private static JSpinner pkNo10;
-	private static JLabel pkchance10;
 	private static JPanel panelpk11_12;
-	private static JSpinner pkMin11;
-	private static JSpinner pkMin12;
-	private static JSpinner pkMax11;
-	private static JSpinner pkMax12;
-	public static JComboBox<String> pkName11;
-	public static JComboBox<String> pkName12;
-	private static JSpinner pkNo11;
-	private static JSpinner pkNo12;
-	private static JLabel pkchance11;
-	private static JLabel pkchance12;
 	private static JScrollPane scrollPaneWildEditor;
 	
 	//MAP CREATION
@@ -1379,6 +1311,7 @@ public class MainGUI extends JFrame {
 		txtLocalTileset.setColumns(10);
 		txtLocalTileset.setBounds(409, 175, 102, 20);
 
+		//CONNECTIONS BUTTON PANEL
 		connectionsTabPanel = new JPanel();
 		editorTabs.addTab("Connections", null, connectionsTabPanel, null);
 		connectionsTabPanel.setLayout(new BorderLayout(0, 0));
@@ -1388,40 +1321,35 @@ public class MainGUI extends JFrame {
 		connectionsTabPanel.add(connectionsInfoPanel, BorderLayout.NORTH);
 		connectionsInfoPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 0));
 
+		//ADD.. REM.. BUTTONS
 		mbMain = new JMenuBar();
-		mbMain.setBorderPainted(false);
+		mbMain.setBorderPainted(true);
 		connectionsInfoPanel.add(mbMain);
+		addConnection();
+		remConnection();
 
-		mnAddCon = new JMenu("Add...");
-		mbMain.add(mnAddCon);
+		JSplitPane splitPane_1 = new JSplitPane();
+		splitPane_1.setDividerSize(0);
+		splitPane_1.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		splitPane_1.setEnabled(false);
+		splitPane_1.setBounds(409, 30, 99, 52);
 
-		mntmLeftCon = new JMenuItem("Left Connection");
-		mntmLeftCon.addActionListener(e -> {
-            ConnectionAddGUI g = new ConnectionAddGUI(ConnectionType.LEFT);
-            g.setVisible(true);
-        });
-		mnAddCon.add(mntmLeftCon);
+		JButton btnAddPokeData = new JButton("Add");
+		btnAddPokeData.addActionListener(e -> {
+			WildDataCache.createWildDataIfNotExists(MapIO.currentBank, MapIO.currentMap).addWildData(WildDataType.values()[currentType]);
+			loadWildPokemon();
+		});
+		splitPane_1.setLeftComponent(btnAddPokeData);
 
-		mntmRightCon = new JMenuItem("Right Connection");
-		mntmRightCon.addActionListener(e -> {
-            ConnectionAddGUI g = new ConnectionAddGUI(ConnectionType.RIGHT);
-            g.setVisible(true);
-        });
-		mnAddCon.add(mntmRightCon);
-
-		mntmUpCon = new JMenuItem("Up Connection");
-		mntmUpCon.addActionListener(e -> {
-            ConnectionAddGUI g = new ConnectionAddGUI(ConnectionType.UP);
-            g.setVisible(true);
-        });
-		mnAddCon.add(mntmUpCon);
-
-		mntmDownCon = new JMenuItem("Down Connection");
-		mntmDownCon.addActionListener(e -> {
-            ConnectionAddGUI g = new ConnectionAddGUI(ConnectionType.DOWN);
-            g.setVisible(true);
-        });
-		mnAddCon.add(mntmDownCon);
+		JButton btnRemovePokeData = new JButton("Remove");
+		btnRemovePokeData.addActionListener(e -> {
+			if (MapIO.wildData == null)
+				return;
+			MapIO.wildData.removeWildData(WildDataType.values()[currentType]);
+			loadWildPokemon();
+		});
+		splitPane_1.setRightComponent(btnRemovePokeData);
+		splitPane_1.setDividerLocation(25);
 
 		connectionEditorPanel = new ConnectionEditorPanel();
 		connectionsEditorScroll = new JScrollPane(connectionEditorPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -1496,6 +1424,74 @@ public class MainGUI extends JFrame {
 		JScrollPane mapPane = new JScrollPane(mapBanks, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		mapPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
 		mapPanelFrame.add(mapPane);
+	}
+
+	private void addConnection(){
+		mnAddCon = new JMenu("Add...");
+		mbMain.add(mnAddCon);
+
+		mntmLeftCon = new JMenuItem("Left Connection");
+		mntmLeftCon.addActionListener(e -> {
+			ConnectionAddGUI g = new ConnectionAddGUI(ConnectionType.LEFT);
+			g.setVisible(true);
+		});
+		mnAddCon.add(mntmLeftCon);
+
+		mntmRightCon = new JMenuItem("Right Connection");
+		mntmRightCon.addActionListener(e -> {
+			ConnectionAddGUI g = new ConnectionAddGUI(ConnectionType.RIGHT);
+			g.setVisible(true);
+		});
+		mnAddCon.add(mntmRightCon);
+
+		mntmUpCon = new JMenuItem("Up Connection");
+		mntmUpCon.addActionListener(e -> {
+			ConnectionAddGUI g = new ConnectionAddGUI(ConnectionType.UP);
+			g.setVisible(true);
+		});
+		mnAddCon.add(mntmUpCon);
+
+		mntmDownCon = new JMenuItem("Down Connection");
+		mntmDownCon.addActionListener(e -> {
+			ConnectionAddGUI g = new ConnectionAddGUI(ConnectionType.DOWN);
+			g.setVisible(true);
+		});
+		mnAddCon.add(mntmDownCon);
+		mbMain.add(mnAddCon);
+	}
+
+	private void remConnection(){
+		mnRemCon = new JMenu("Rem...");
+		mbMain.add(mnRemCon);
+
+		mntmLeftCon = new JMenuItem("Left Connection");
+		mntmLeftCon.removeActionListener(e -> {
+			ConnectionAddGUI g = new ConnectionAddGUI(ConnectionType.LEFT);
+			g.setVisible(true);
+		});
+		mnRemCon.add(mntmLeftCon);
+
+		mntmRightCon = new JMenuItem("Right Connection");
+		mntmRightCon.removeActionListener(e -> {
+			ConnectionAddGUI g = new ConnectionAddGUI(ConnectionType.RIGHT);
+			g.setVisible(true);
+		});
+		mnRemCon.add(mntmRightCon);
+
+		mntmUpCon = new JMenuItem("Up Connection");
+		mntmUpCon.removeActionListener(e -> {
+			ConnectionAddGUI g = new ConnectionAddGUI(ConnectionType.UP);
+			g.setVisible(true);
+		});
+		mnRemCon.add(mntmUpCon);
+
+		mntmDownCon = new JMenuItem("Down Connection");
+		mntmDownCon.removeActionListener(e -> {
+			ConnectionAddGUI g = new ConnectionAddGUI(ConnectionType.DOWN);
+			g.setVisible(true);
+		});
+		mnRemCon.add(mntmDownCon);
+		mbMain.add(mnRemCon);
 	}
 
     public static void updateTree() {
@@ -1635,8 +1631,7 @@ public class MainGUI extends JFrame {
 					pkchance10.setText("4%");
 					pkchance11.setText("1%");
 					pkchance12.setText("1%");
-				}
-				else {
+				} else {
 					pkchance1.setText("70%  (old rod)");
 					pkchance2.setText("30%  (old rod)");
 					pkchance3.setText("60%  (good rod)");
@@ -1645,12 +1640,11 @@ public class MainGUI extends JFrame {
 					pkchance6.setText("40%  (super rod)");
 					pkchance7.setText("40%  (super rod)");
 					pkchance8.setText("15%  (super rod)");
-					pkchance9.setText("4%    (super rod)");
-					pkchance10.setText("1%    (super rod)");
+					pkchance9.setText("4%   (super rod)");
+					pkchance10.setText("1%  (super rod)");
 					panelpk11_12.setVisible(false);
 				}
-			}
-			else {
+			} else {
 				pkchance1.setText("60%");
 				pkchance2.setText("30%");
 				pkchance3.setText("5%");
@@ -1659,8 +1653,7 @@ public class MainGUI extends JFrame {
 				panelpk6_10.setVisible(false);
 				panelpk11_12.setVisible(false);
 			}
-		}
-		else {
+		} else {
 			pkEditorPanel.setVisible(false);
 			panelpk6_10.setVisible(false);
 			panelpk11_12.setVisible(false);

@@ -33,8 +33,7 @@ public class Main {
 		System.setProperty("swing.aatext", "true");
 	}
 
-	private static void setLookAndFeel() throws ClassNotFoundException,
-			InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+	private static void setLookAndFeel() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
 		//Personalized look and feel for linux OS
 		if (System.getProperty("os.name").toLowerCase().contains("nix") ||
 				System.getProperty("os.name").toLowerCase().contains("nux") ||
@@ -53,7 +52,8 @@ public class Main {
 				screenSize.width / 2 - window.getSize().width / 2,
 				screenSize.height / 2 - window.getSize().height / 2);
 		window.setTitle("Map Editor of Happiness | No ROM Loaded");
-		window.setMinimumSize(new Dimension(640, 360));
+		window.setMinimumSize(new Dimension(1280, 720));
+		//window.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		BankLoader.reset();
 		return window;
 	}

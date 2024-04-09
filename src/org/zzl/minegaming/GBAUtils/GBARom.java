@@ -167,20 +167,15 @@ public class GBARom implements Cloneable {
 	 * Throws an IOException if there's an issue reading the file.
 	 */
 	public void loadRomToBytes() throws IOException {
-		// Create a File object using the provided input file path
 		File file = new File(input_filepath);
-		// Create an InputStream to read the file content
 		try (InputStream is = Files.newInputStream(file.toPath())) {
-			// Determine the length of the file
 			long length = file.length();
-			// Initialize the byte array to hold the ROM file content
 			rom_bytes = new byte[(int) length];
 			int offset = 0, bytesRead;
-			// Read content from the file into the byte array
 			while (offset < rom_bytes.length && (bytesRead = is.read(rom_bytes, offset, rom_bytes.length - offset)) >= 0) {
-				offset += bytesRead; // Update the offset after each read
+				offset += bytesRead;
 			}
-		} // The try-with-resources block will automatically close the InputStream
+		}
 	}
 
 	/**
