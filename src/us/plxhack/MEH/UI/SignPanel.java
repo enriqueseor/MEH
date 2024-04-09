@@ -1,7 +1,7 @@
 package us.plxhack.MEH.UI;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
-import us.plxhack.MEH.IO.MapIO;
+import us.plxhack.MEH.IO.Map.MapIO;
 import us.plxhack.MEH.MapElements.Sprite.SpriteHeader;
 
 import javax.swing.*;

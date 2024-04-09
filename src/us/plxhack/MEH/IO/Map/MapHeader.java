@@ -1,4 +1,4 @@
-package us.plxhack.MEH.IO;
+package us.plxhack.MEH.IO.Map;
 
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ISaveable;

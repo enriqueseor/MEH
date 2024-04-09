@@ -2,6 +2,7 @@ package us.plxhack.MEH.IO;
 
 import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.GBARom;
+import us.plxhack.MEH.IO.Map.MapData;
 import us.plxhack.MEH.Structures.MapTile;
 
 public class BorderTileData {

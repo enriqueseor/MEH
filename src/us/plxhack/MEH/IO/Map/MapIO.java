@@ -1,9 +1,12 @@
-package us.plxhack.MEH.IO;
+package us.plxhack.MEH.IO.Map;
 
 import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.ROMManager;
 
+import us.plxhack.MEH.IO.BankLoader;
+import us.plxhack.MEH.IO.BorderMap;
 import us.plxhack.MEH.IO.Render.BlockRenderer;
+import us.plxhack.MEH.IO.Tile.TilesetCache;
 import us.plxhack.MEH.MapElements.WildData.WildData;
 import us.plxhack.MEH.MapElements.WildData.WildDataCache;
 import us.plxhack.MEH.Plugins.PluginManager;
@@ -81,8 +84,8 @@ public class MapIO {
             MainGUI.borderTileEditor.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
             MainGUI.borderTileEditor.setMap(borderMap);
             MainGUI.borderTileEditor.repaint();
-            MainGUI.connectionsEditorPanel.loadConnections(loadedMap);
-            MainGUI.connectionsEditorPanel.repaint();
+            MainGUI.connectionEditorPanel.loadConnections(loadedMap);
+            MainGUI.connectionEditorPanel.repaint();
             try {
                 wildData = (WildData) WildDataCache.getWildData(currentBank, currentMap).clone();
             } catch (Exception ignored) {}
@@ -162,7 +165,7 @@ public class MapIO {
 		MapIO.borderMap.save();
 		TilesetCache.get(MapIO.loadedMap.getMapData().globalTileSetPtr).save();
 		TilesetCache.get(MapIO.loadedMap.getMapData().localTileSetPtr).save();
-		MainGUI.connectionsEditorPanel.save(); // Save surrounding maps
+		MainGUI.connectionEditorPanel.save(); // Save surrounding maps
 		WildDataCache.setWildData(currentBank, currentMap, wildData);
 		PluginManager.fireMapSave(MapIO.currentBank, MapIO.currentMap);
 	}

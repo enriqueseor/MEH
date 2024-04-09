@@ -1,4 +1,4 @@
-package us.plxhack.MEH.IO;
+package us.plxhack.MEH.IO.Map;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.DataStore;

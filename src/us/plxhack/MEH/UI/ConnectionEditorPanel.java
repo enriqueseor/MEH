@@ -2,9 +2,9 @@ package us.plxhack.MEH.UI;
 
 import org.zzl.minegaming.GBAUtils.ROMManager;
 import us.plxhack.MEH.IO.BankLoader;
-import us.plxhack.MEH.IO.Connection;
-import us.plxhack.MEH.IO.Map;
-import us.plxhack.MEH.IO.MapIO;
+import us.plxhack.MEH.IO.Connection.Connection;
+import us.plxhack.MEH.IO.Map.Map;
+import us.plxhack.MEH.IO.Map.MapIO;
 import us.plxhack.MEH.Structures.ConnectionType;
 
 import javax.swing.*;
@@ -14,7 +14,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 
-public class ConnectionsEditorPanel extends JPanel {
+public class ConnectionEditorPanel extends JPanel {
 
 	private static final long serialVersionUID = 7594967420892677608L;
 
@@ -70,7 +70,7 @@ public class ConnectionsEditorPanel extends JPanel {
 	private Point startDrag = new Point(-1,-1);
 	private Point mouseTracker = new Point(-1,-1);
 	
-	public ConnectionsEditorPanel() {
+	public ConnectionEditorPanel() {
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {

@@ -1,4 +1,4 @@
-package us.plxhack.MEH.IO;
+package us.plxhack.MEH.IO.Connection;
 
 import org.zzl.minegaming.GBAUtils.GBARom;
 import us.plxhack.MEH.Structures.ConnectionType;

@@ -2,7 +2,7 @@ package us.plxhack.MEH.UI;
 
 import org.zzl.minegaming.GBAUtils.ROMManager;
 import us.plxhack.MEH.IO.BankLoader;
-import us.plxhack.MEH.IO.Map;
+import us.plxhack.MEH.IO.Map.Map;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,7 +1,7 @@
 package us.plxhack.MEH.UI;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
-import us.plxhack.MEH.IO.Tileset;
+import us.plxhack.MEH.IO.Tile.Tileset;
 import us.plxhack.MEH.Structures.MapTile;
 import us.plxhack.MEH.Structures.PermissionTileMode;
 

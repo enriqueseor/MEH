@@ -14,7 +14,7 @@ import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.ROMManager;
 
 import us.plxhack.MEH.IO.Block;
-import us.plxhack.MEH.IO.Tileset;
+import us.plxhack.MEH.IO.Tile.Tileset;
 import us.plxhack.MEH.IO.Render.BlockRenderer;
 
 public class TripleEditorPanel extends JPanel {

@@ -14,10 +14,10 @@ import javax.swing.JPanel;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
 
-import us.plxhack.MEH.IO.MapIO;
+import us.plxhack.MEH.IO.Map.MapIO;
 import us.plxhack.MEH.IO.Render.BlockRenderer;
-import us.plxhack.MEH.IO.Tile;
-import us.plxhack.MEH.IO.Tileset;
+import us.plxhack.MEH.IO.Tile.Tile;
+import us.plxhack.MEH.IO.Tile.Tileset;
 
 public class TilesetPickerPanel extends JPanel {
 

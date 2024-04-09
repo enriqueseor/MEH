@@ -1,8 +1,10 @@
-package us.plxhack.MEH.IO;
+package us.plxhack.MEH.IO.Connection;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.GBARom;
+import us.plxhack.MEH.IO.Map.MapHeader;
+import us.plxhack.MEH.IO.Map.MapIO;
 import us.plxhack.MEH.Structures.ConnectionType;
 import us.plxhack.MEH.UI.MainGUI;
 
@@ -61,6 +63,6 @@ public class ConnectionData {
 		if(originalSize < getConnectionDataSize()) {
 			pData = rom.findFreespace(DataStore.FreespaceStart, getConnectionDataSize());
 		}
-		MainGUI.connectionsEditorPanel.loadConnections(MapIO.loadedMap);
+		MainGUI.connectionEditorPanel.loadConnections(MapIO.loadedMap);
 	}
 }

@@ -1,6 +1,6 @@
 package us.plxhack.MEH.UI;
 
-import us.plxhack.MEH.IO.MapIO;
+import us.plxhack.MEH.IO.Map.MapIO;
 import us.plxhack.MEH.MapElements.Sprite.SpriteExitManager;
 
 import javax.swing.*;

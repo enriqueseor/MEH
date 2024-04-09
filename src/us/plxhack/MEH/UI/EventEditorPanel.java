@@ -2,11 +2,11 @@ package us.plxhack.MEH.UI;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.DataStore;
-import us.plxhack.MEH.IO.Map;
-import us.plxhack.MEH.IO.MapIO;
+import us.plxhack.MEH.IO.Map.Map;
+import us.plxhack.MEH.IO.Map.MapIO;
 import us.plxhack.MEH.IO.Render.BlockRenderer;
 import us.plxhack.MEH.IO.Render.OverworldSpritesManager;
-import us.plxhack.MEH.IO.Tileset;
+import us.plxhack.MEH.IO.Tile.Tileset;
 import us.plxhack.MEH.MapElements.Sprite.SpriteExit;
 import us.plxhack.MEH.MapElements.Sprite.SpriteNPC;
 import us.plxhack.MEH.MapElements.Sprite.SpriteSign;
@@ -30,7 +30,7 @@ public class EventEditorPanel extends JPanel {
 	public boolean Redraw = true;
 	public static boolean renderPalette = false;
 	public static boolean renderTileset = false;
-	public static NPCPane paneNPC;
+	public static NPCPanel paneNPC;
 	public Image imgTrigger;
 	public Image imgWarp;
 	public Image imgSign;
@@ -103,7 +103,7 @@ public class EventEditorPanel extends JPanel {
 					// If there's two events on tile, we'll handle that later with some kind of picker
 					switch (selectedEvent) {
 						case NPC:
-							MainGUI.eventScrollPanel.add(new NPCPane(map.mapNPCManager, IndexNPC));
+							MainGUI.eventScrollPanel.add(new NPCPanel(map.mapNPCManager, IndexNPC));
 
 							break;
 						case SIGN:

@@ -57,7 +57,7 @@ import javax.swing.JMenuItem;
 import org.zzl.minegaming.GBAUtils.Lz77;
 import org.zzl.minegaming.GBAUtils.ROMManager;
 
-import us.plxhack.MEH.IO.MapIO;
+import us.plxhack.MEH.IO.Map.MapIO;
 
 import javax.swing.JRadioButton;
 import javax.swing.border.TitledBorder;

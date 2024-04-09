@@ -1,10 +1,13 @@
-package us.plxhack.MEH.IO;
+package us.plxhack.MEH.IO.Map;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ISaveable;
 import org.zzl.minegaming.GBAUtils.ROMManager;
+import us.plxhack.MEH.IO.*;
+import us.plxhack.MEH.IO.Connection.ConnectionData;
 import us.plxhack.MEH.IO.Render.OverworldSpritesManager;
+import us.plxhack.MEH.IO.Tile.TilesetCache;
 import us.plxhack.MEH.MapElements.*;
 import us.plxhack.MEH.MapElements.Sprite.SpriteHeader;
 import us.plxhack.MEH.MapElements.Sprite.SpriteExitManager;
@@ -19,7 +22,7 @@ public class Map implements ISaveable {
 
 	private final MapData mapData;
 	private final MapTileData mapTileData;
-	public MapHeader mapHeader; 
+	public MapHeader mapHeader;
 	public ConnectionData mapConnections;
 	public SpriteHeader mapSprites;
 	public SpriteNPCManager mapNPCManager;

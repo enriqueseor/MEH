@@ -4,7 +4,7 @@ import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ISaveable;
-import us.plxhack.MEH.IO.Map;
+import us.plxhack.MEH.IO.Map.Map;
 
 import java.util.ArrayList;
 
@@ -28,9 +28,8 @@ public class TriggerManager implements ISaveable {
 
 	public void LoadTriggers(GBARom rom, Map m, int count) {
 		internalOffset = rom.internalOffset;
-		mapTriggers = new ArrayList<Trigger>();
-		int i = 0;
-		for (i = 0; i < count; i++) {
+		mapTriggers = new ArrayList<>();
+		for (int i = 0; i < count; i++) {
 			mapTriggers.add(new Trigger(rom));
 		}
 		originalSize = getSize();

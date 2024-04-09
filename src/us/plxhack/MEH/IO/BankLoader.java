@@ -13,6 +13,7 @@ import javax.swing.tree.TreePath;
 import java.util.*;
 
 public class BankLoader extends Thread implements Runnable {
+
 	private static GBARom rom;
 	int tblOffs;
 	JLabel lbl;
@@ -68,7 +69,6 @@ public class BankLoader extends Thread implements Runnable {
 					long dataPtr = BitConverter.ToInt32(b);
 					mapList.add(dataPtr);
 					int mapName = BitConverter.GrabBytesAsInts(rom.getData(), (int)((dataPtr - (8 << 24)) + 0x14), 1)[0];
-					//mapName -= 0x58; //TODO: Add Jambo51's map header hack
 					int mapNamePokePtr;
 					String convMapName = "";
 					if(DataStore.EngineVersion==1) {

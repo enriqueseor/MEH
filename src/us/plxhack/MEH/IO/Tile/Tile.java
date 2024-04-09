@@ -1,4 +1,4 @@
-package us.plxhack.MEH.IO;
+package us.plxhack.MEH.IO.Tile;
 
 public class Tile {
 

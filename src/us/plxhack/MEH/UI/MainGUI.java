@@ -5,9 +5,9 @@ import org.zzl.minegaming.GBAUtils.*;
 import us.plxhack.MEH.Globals.UISettings;
 import us.plxhack.MEH.Globals.Version;
 import us.plxhack.MEH.IO.BankLoader;
-import us.plxhack.MEH.IO.Map;
-import us.plxhack.MEH.IO.MapIO;
-import us.plxhack.MEH.IO.TilesetCache;
+import us.plxhack.MEH.IO.Map.Map;
+import us.plxhack.MEH.IO.Map.MapIO;
+import us.plxhack.MEH.IO.Tile.TilesetCache;
 import us.plxhack.MEH.MapElements.WildData.WildDataCache;
 import us.plxhack.MEH.MapElements.WildData.WildDataType;
 import us.plxhack.MEH.Plugins.Plugin;
@@ -154,7 +154,7 @@ public class MainGUI extends JFrame {
 	public static BorderEditorPanel borderTileEditor;
 	public static EventEditorPanel eventEditorPanel;
 	public static TileEditorPanel tileEditorPanel;
-	public static ConnectionsEditorPanel connectionsEditorPanel;
+	public static ConnectionEditorPanel connectionEditorPanel;
 	public static JLabel lblTileVal;
 	static {lblTileVal = new JLabel();}
 	public static JPopupMenu popupMenu;
@@ -1343,7 +1343,7 @@ public class MainGUI extends JFrame {
                 MapIO.loadedMap.getMapTileData().resize(x, y);
                 MapEditorPanel.Redraw = true;
                 eventEditorPanel.Redraw = true;
-                connectionsEditorPanel.loadConnections(MapIO.loadedMap);
+                connectionEditorPanel.loadConnections(MapIO.loadedMap);
                 mapEditorPanel.repaint();
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -1364,7 +1364,7 @@ public class MainGUI extends JFrame {
                 MapIO.loadedMap.getMapTileData().resize(x, y);
                 MapEditorPanel.Redraw = true;
                 eventEditorPanel.Redraw = true;
-                connectionsEditorPanel.loadConnections(MapIO.loadedMap);
+                connectionEditorPanel.loadConnections(MapIO.loadedMap);
                 mapEditorPanel.repaint();
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -1423,20 +1423,20 @@ public class MainGUI extends JFrame {
         });
 		mnAddCon.add(mntmDownCon);
 
-		connectionsEditorPanel = new ConnectionsEditorPanel();
-		connectionsEditorScroll = new JScrollPane(connectionsEditorPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		connectionEditorPanel = new ConnectionEditorPanel();
+		connectionsEditorScroll = new JScrollPane(connectionEditorPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		connectionsEditorScroll.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
 		connectionsEditorScroll.getVerticalScrollBar().setUnitIncrement(16);
 		connectionsEditorScroll.getHorizontalScrollBar().setUnitIncrement(16);
 		connectionsEditorScroll.addMouseWheelListener(e -> {
             if (e.isControlDown() || e.isAltDown()) {
-                connectionsEditorPanel.scale += e.getWheelRotation() / 5d;
-                if (connectionsEditorPanel.scale < 0.3)
-                    connectionsEditorPanel.scale = 0.3;
-                else if (connectionsEditorPanel.scale > 10)
-                    connectionsEditorPanel.scale = 10;
-                connectionsEditorPanel.RescaleImages(false);
-                connectionsEditorPanel.repaint();
+                connectionEditorPanel.scale += e.getWheelRotation() / 5d;
+                if (connectionEditorPanel.scale < 0.3)
+                    connectionEditorPanel.scale = 0.3;
+                else if (connectionEditorPanel.scale > 10)
+                    connectionEditorPanel.scale = 10;
+                connectionEditorPanel.RescaleImages(false);
+                connectionEditorPanel.repaint();
             }
             else {
                 // Vertical scrolling

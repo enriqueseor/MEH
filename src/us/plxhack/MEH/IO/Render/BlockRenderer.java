@@ -3,9 +3,9 @@ package us.plxhack.MEH.IO.Render;
 import org.zzl.minegaming.GBAUtils.DataStore;
 
 import us.plxhack.MEH.IO.Block;
-import us.plxhack.MEH.IO.MapIO;
-import us.plxhack.MEH.IO.Tile;
-import us.plxhack.MEH.IO.Tileset;
+import us.plxhack.MEH.IO.Map.MapIO;
+import us.plxhack.MEH.IO.Tile.Tile;
+import us.plxhack.MEH.IO.Tile.Tileset;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

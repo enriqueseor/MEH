@@ -1,8 +1,10 @@
-package us.plxhack.MEH.IO;
+package us.plxhack.MEH.IO.Tile;
 
 import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ROMManager;
+import us.plxhack.MEH.IO.Map.Map;
+import us.plxhack.MEH.IO.Tile.Tileset;
 
 import java.util.HashMap;
 

@@ -1,7 +1,7 @@
 package us.plxhack.MEH.UI;
 
 import org.zzl.minegaming.GBAUtils.DataStore;
-import us.plxhack.MEH.IO.MapIO;
+import us.plxhack.MEH.IO.Map.MapIO;
 import us.plxhack.MEH.Structures.ConnectionType;
 
 import javax.swing.*;
@@ -10,8 +10,6 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class ConnectionAddGUI extends JFrame {
 

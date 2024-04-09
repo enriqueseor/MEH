@@ -2,6 +2,8 @@ package us.plxhack.MEH.IO;
 
 import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.GBARom;
+import us.plxhack.MEH.IO.Map.MapIO;
+import us.plxhack.MEH.IO.Tile.Tile;
 
 public class Block {
 
@@ -13,7 +15,7 @@ public class Block {
 	private final GBARom rom;
 
 	public Block(int blockID, GBARom rom) {
-		this(blockID,MapIO.blockRenderer.getBehaviorByte(blockID),rom);
+		this(blockID, MapIO.blockRenderer.getBehaviorByte(blockID),rom);
 	}
 	
 	public Block(int blockID, long bgBytes, GBARom rom) {

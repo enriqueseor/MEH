@@ -1,7 +1,7 @@
 package us.plxhack.MEH.UI;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
-import us.plxhack.MEH.IO.MapIO;
+import us.plxhack.MEH.IO.Map.MapIO;
 import us.plxhack.MEH.MapElements.Sprite.SpriteNPC;
 import us.plxhack.MEH.MapElements.Sprite.SpriteNPCManager;
 
@@ -11,7 +11,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 
-public class NPCPane extends JPanel{
+public class NPCPanel extends JPanel{
 
 	//NPC Controls
 	JLabel lblNPCNum;
@@ -71,7 +71,7 @@ public class NPCPane extends JPanel{
 	
     void CreateNPCPane(){}
 
-	NPCPane(SpriteNPCManager mgr, int NPCIndex){
+	NPCPanel(SpriteNPCManager mgr, int NPCIndex){
 		myIndex=NPCIndex;
 		setBorder(new TitledBorder(null, "NPC", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
